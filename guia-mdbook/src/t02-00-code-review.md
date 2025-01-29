@@ -2,7 +2,9 @@
 
 ## O que é um Pull Request?
 
-Um Pull Request (PR) é uma funcionalidade oferecida por plataformas de versionamento de código, como GitHub, GitLab e Bitbucket, que permite aos desenvolvedores informar aos outros membros da equipe que suas alterações no código estão aguardando revisão. Se as alterações que constam no PR forem aceitas ocorrerá o processo de merge para a branch requisitada.
+Um Pull Request (PR) é uma funcionalidade oferecida por plataformas de versionamento de código, como GitHub, GitLab e Bitbucket, que permite aos desenvolvedores informar aos outros membros da equipe que suas alterações no código estão aguardando revisão. Se as alterações que constam no PR forem aceitas ocorrerá o processo de merge para a branch requisitada, como a main, develop ou outra branch relevante.
+
+O PR é mais do que uma simples solicitação de merge ele é um espaço colaborativo onde os desenvolvedores podem discutir, propor melhorias e garantir que o código atenda aos padrões e requisitos do projeto.
 
 ## Para que serve um Pull Request?
 
