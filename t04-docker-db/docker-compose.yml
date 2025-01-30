@@ -1,9 +1,32 @@
-version: '3.1'
 services:
-  db:
-      image: mysql
-      restart: always
-      environment:
-        MYSQL_ROOT_PASSWORD: example
-        MYSQL_DATABASE: example
-      
+  php_apache:
+    container_name: php_8.2_apache_container
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "80:80"
+    volumes:
+      - ./src/:/var/www/html/
+    networks:
+      - conex
+    depends_on:
+      - mysql
+
+  mysql:
+    image: mysql:8.1.0
+    container_name: mysql_8.1.0_container
+    environment:
+      MYSQL_ROOT_PASSWORD: example
+      MYSQL_DATABASE: example
+      MYSQL_USER: root
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./mysql_data:/var/lib/mysql
+    networks:
+      - conex
+
+networks:
+  conex:
+    driver: bridge
