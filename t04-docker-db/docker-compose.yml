@@ -1,32 +1,21 @@
-services:
-  php_apache:
-    container_name: php_8.2_apache_container
-    build:
-      context: .
-      dockerfile: Dockerfile
-    ports:
-      - "80:80"
-    volumes:
-      - ./src/:/var/www/html/
-    networks:
-      - conex
-    depends_on:
-      - mysql
+version: '3.8'
 
-  mysql:
-    image: mysql:8.1.0
-    container_name: mysql_8.1.0_container
+services:
+  postgres:
+    image: postgres:15-alpine
+    container_name: postgres_db
     environment:
-      MYSQL_ROOT_PASSWORD: example
-      MYSQL_DATABASE: example
-      MYSQL_USER: root
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: root
+      POSTGRES_DB: postgres
     ports:
-      - "3306:3306"
+      - "5433:5432"
     volumes:
-      - ./mysql_data:/var/lib/mysql
-    networks:
-      - conex
+      - postgres_data:/var/lib/postgresql/data
 
 networks:
-  conex:
+  postgres_network:
     driver: bridge
+
+volumes:
+  postgres_data:
