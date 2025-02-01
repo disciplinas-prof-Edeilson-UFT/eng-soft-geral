@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="/view/css/cadastro.css">
 </head>
 <body>
-    <form class="form-group">
+    <form method="POST" action="../../post-user.php" class="form-group">
         <div class="icon">
             <img src="/img/logo.svg" alt="logo" class="logo">
         </div>

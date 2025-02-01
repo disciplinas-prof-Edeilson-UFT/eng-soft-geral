@@ -6,8 +6,8 @@ class Users{
     public function __construct() {
         $this->db = new Database();
     }
-    public function createUser($name, $email, $password){
-        $sql = $this->db->connection()->prepare("INSERT INTO users (name, email, password) VALUES ('$name', '$email', '$password')");
+    public function createUser($name, $email, $password, $phone){
+        $sql = $this->db->connection()->prepare("INSERT INTO users (name, email, password, phone) VALUES ('$name', '$email', '$password', '$phone')");
         $sql->execute();
     }
 }
