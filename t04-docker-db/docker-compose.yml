@@ -7,10 +7,10 @@ services:
       POSTGRES_PASSWORD: root
       POSTGRES_DB: postgres
     ports:
-      - "5433:5432"
+      - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
-
+      
   pgadmin:
     image: dpage/pgadmin4:8.11.0 
     ports:
@@ -20,10 +20,6 @@ services:
       - PGADMIN_DEFAULT_PASSWORD=root
     depends_on:
       - db
-
-networks:
-  postgres_network:
-    driver: bridge
 
 volumes:
   postgres_data:
