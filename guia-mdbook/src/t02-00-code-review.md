@@ -1,4 +1,4 @@
-# Code Review (Pull Request)
+# Code Review e Pull Request
 
 ## O que é um Pull Request?
 
