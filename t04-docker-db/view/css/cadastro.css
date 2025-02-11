@@ -1,0 +1,93 @@
+@import url(global.css);
+
+body {
+    align-items: center;
+    justify-content: center;
+}
+
+.logo {
+    width: 70%;
+    
+}
+
+.icon {
+    display: flex;
+    justify-content: center;
+}
+
+.form-group {
+    margin-bottom: 1rem;
+    align-items: center;
+    flex-direction: column;
+    display: flex;
+    width: 30%;
+    gap: 1px;
+    border-bottom: 5px solid rgb(206, 202, 202);
+    border-right: 5px solid rgb(206, 202, 202);
+    border-left: 2px solid rgb(235, 233, 233);
+    border-top: 2px solid rgb(235, 233, 233);
+    padding: 1rem;
+}
+
+.form-control {
+    width: 100%;
+    padding: 0.5rem;
+    font-size: 1rem;
+}
+
+.form-control label {
+    display: block;
+    color: gray;
+}
+
+.form-control input {
+    border: none;
+    border-bottom: 1px solid #000;
+    padding: 0.5rem;
+    outline: none;
+    transition: border-color 0.3s ease;
+    display: flex;
+    width: 80%;
+}
+
+.btn-wrapper {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    margin-top: 1rem;
+    margin-bottom: 2rem;
+}
+
+.btn {
+    background-color: #4938FF;
+    color: white;
+    border-radius: 4px;
+    padding: 0.5rem 3rem;
+    border: none;
+    width: 100%;
+}
+
+.btn:hover {
+    background-color: #4938FF;
+    color: white;
+    border-radius: 4px;
+    padding: 0.5rem 3rem;
+    border: none;
+    cursor: pointer;
+    width: 100%;
+}
+
+.login-link {
+    margin-top: 15px;
+    text-align: center;
+    color: gray;
+}
+
+.link {
+    color: #4938FF;
+    text-decoration: none;
+}
+
+.form-wrapper {
+    width: 70%;
+}
