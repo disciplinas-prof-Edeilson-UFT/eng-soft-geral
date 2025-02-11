@@ -1,6 +1,4 @@
 <?php 
-// filepath: /c:/Users/Usuario/Desktop/eng-soft-geral/t05-crud-php/crud/delete-profile.php
-
 include('../database.php');
 include('repository/profile-repository.php');
 

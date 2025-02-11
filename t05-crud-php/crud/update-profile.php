@@ -23,11 +23,3 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 } else {
     echo "Dados inválidos";
 }
-try {
-    if (isset($_GET['id'])) {
-        $id = $_GET['id'];
-        $profileRepository->updateProfile($db, $name, $email, $bio, $phone, $id);
-    } 
-} catch(Exception $e) { 
-    echo $e->getMessage();
-}
