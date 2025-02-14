@@ -3,7 +3,7 @@ session_start();
 
 if (!isset($_SESSION['user_id'])) {
     $_SESSION['error'] = "Você precisa fazer login para acessar esta página!";
-    header("Location: C:/xampp/htdocs/eng-soft-geral/t05-sessao/view/html/login.php");
+    header("Location: /eng-soft-geral/t05-sessao/view/html/login.php");
     exit();
 }
 
