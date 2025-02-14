@@ -1,7 +1,7 @@
 <?php
 session_start();
 
-require_once __DIR__ . '/database.php';
+require_once __DIR__ . '../database.php';
 require_once __DIR__ . '/users.php';
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {

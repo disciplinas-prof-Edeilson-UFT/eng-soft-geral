@@ -91,25 +91,7 @@ class Users
         return $result;
     }
 
-    public function deleteUser($id)
-    {
-        $conn = $this->db->getConnection();
-
-        $sql = "DELETE FROM users WHERE id = ?";
-        $stmt = $conn->prepare($sql);
-
-        if ($stmt === false) {
-            throw new Exception("Erro na preparação da query: " . $conn->error);
-        }
-
-        $stmt->bind_param("i", $id);
-
-        $result = $stmt->execute();
-
-        $stmt->close();
-
-        return $result;
-    }
+    
 
     public function getUserByEmail($email)
     {
