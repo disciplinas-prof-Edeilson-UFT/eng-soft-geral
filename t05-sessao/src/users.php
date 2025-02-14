@@ -71,28 +71,7 @@ class Users
         return $user;
     }
 
-    public function updateUser($id, $name, $email, $phone)
-    {
-        $conn = $this->db->getConnection();
-
-        $sql = "UPDATE users SET name = ?, email = ?, phone = ? WHERE id = ?";
-        $stmt = $conn->prepare($sql);
-
-        if ($stmt === false) {
-            throw new Exception("Erro na preparação da query: " . $conn->error);
-        }
-
-        $stmt->bind_param("sssi", $name, $email, $phone, $id);
-
-        $result = $stmt->execute();
-
-        $stmt->close();
-
-        return $result;
-    }
-
     
-
     public function getUserByEmail($email)
     {
         $conn = $this->db->getConnection();

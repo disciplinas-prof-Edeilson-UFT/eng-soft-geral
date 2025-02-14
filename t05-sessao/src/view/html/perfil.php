@@ -1,25 +1,27 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-    <link rel="stylesheet" href="/view/css/perfil.css">
+    <link rel="stylesheet" href="../css/perfil.css">
 </head>
+
 <body>
     <aside class="side-bar">
-        <img src="/img/logo.svg" alt="logo" class="logo">
+        <img src="../img/logo.svg" alt="logo" class="logo">
         <div class="side-bar-links">
             <a href="home">
-                <img src="/img/home.svg" class="icon">
+                <img src="../img/home.svg" class="icon">
                 Página principal
             </a>
             <a href="search">
-                <img src="/img/search.svg" class="icon">
+                <img src="../img/search.svg" class="icon">
                 Pesquisar
             </a>
             <a href="perfil.html">
-                <img src="/img/profile.svg" class="icon">
+                <img src="../img/profile.svg" class="icon">
                 Perfil
             </a>
         </div>
@@ -27,7 +29,7 @@
     <main class="profile-container">
         <section class="info-section">
             <div class="photo-container">
-                <img src="/img/profile-photo.svg" alt="user" class="profile-photo">
+                <img src="../img/profile-photo.svg" alt="user" class="profile-photo">
                 <button class="btn-edit">Editar Perfil</button>
             </div>
             <div class="user-info">
@@ -39,11 +41,16 @@
             </div>
         </section>
         <section class="feed-section">
-            <a href="perfil" class="add-post">
-                <img src="/img/add-photo.svg" class="icon"> <br>
-                adicionar post
-            </a>
+            <form action="upload_photo.php" method="POST" enctype="multipart/form-data" class="add-post">
+                <label for="photo">
+                    <img src="../img/add-photo.svg" class="icon"> <br>
+                    Adicionar foto
+                </label>
+                <input type="file" id="photo" name="photo" accept="image/*" style="display: none;">
+                <button type="submit" class="btn-upload">Enviar</button>
+            </form>
         </section>
     </main>
 </body>
+
 </html>

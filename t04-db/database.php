@@ -42,7 +42,10 @@ class Database {
     }
 }
 
-/*<?php
+/*
+
+
+<?php
 
 class Database {
     private $connection;

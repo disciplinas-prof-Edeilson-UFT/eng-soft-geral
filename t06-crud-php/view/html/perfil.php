@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <link rel="stylesheet" href="/view/css/perfil.css">
 </head>
+
 <body>
     <aside class="side-bar">
         <img src="/img/logo.svg" alt="logo" class="logo">
@@ -38,12 +40,13 @@
                 </div>
             </div>
         </section>
-        <section class="feed-section">
+        <form action="../../repositories/upload_photo.php" method="POST" enctype="multipart/form-data" class="add-post">
             <a href="perfil" class="add-post">
                 <img src="/img/add-photo.svg" class="icon"> <br>
                 adicionar post
             </a>
-        </section>
+        </form>
     </main>
 </body>
+
 </html>
