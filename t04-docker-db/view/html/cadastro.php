@@ -4,12 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-    <link rel="stylesheet" href="/view/css/cadastro.css">
+    <link rel="stylesheet" href="../css/cadastro.css">
 </head>
 <body>
     <form method="POST" action="../../post-user.php" class="form-group">
         <div class="icon">
-            <img src="/img/logo.svg" alt="logo" class="logo">
+            <img src="../img/logo.svg" alt="logo" class="logo">
         </div>
         <div class="form-wrapper">
             <div class="form-control">
