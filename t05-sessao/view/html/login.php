@@ -16,7 +16,7 @@
         </div>
         <!-- Seção direita com formulário -->
         <div class="right">
-            <form class="form-group" method="POST" action="../controller/login.php">
+            <form class="form-group" method="POST" action="../../login-user.php">
 
                 <div class="form-control">
                     <label for="email">Email</label>
@@ -28,7 +28,7 @@
                 </div>
                 <button type="submit" class="btn">Fazer Login</button>
                 <div class="login-link">
-                    Não tem uma conta? <a href="#">Cadastre-se</a>
+                    Não tem uma conta? <a href="./cadastro.php">Cadastre-se</a>
                 </div>
             </form>
         </div>

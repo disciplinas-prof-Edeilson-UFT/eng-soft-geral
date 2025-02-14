@@ -1,0 +1,34 @@
+<?php
+class Database {
+    private static $instance = null;
+    private $conn;
+
+    private function __construct($servername, $username, $password, $dbname) {
+        $this->conn = new mysqli($servername, $username, $password, $dbname);
+
+        if ($this->conn->connect_error) {
+            throw new Exception("Conexão falhou: " . $this->conn->connect_error);
+        }
+    }
+
+    public static function getInstance() {
+        if (self::$instance === null) {
+            $config = require __DIR__ . '/config/config.php';
+            self::$instance = new self(
+                $config['database']['servername'],
+                $config['database']['username'],
+                $config['database']['password'],
+                $config['database']['dbname']
+            );
+        }
+        return self::$instance;
+    }
+
+    public function getConnection() {
+        return $this->conn;
+    }
+
+    public function closeConnection() {
+        $this->conn->close();
+    }
+}
