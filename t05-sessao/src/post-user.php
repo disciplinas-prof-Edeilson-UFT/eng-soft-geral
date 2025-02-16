@@ -1,7 +1,7 @@
 <?php
 session_start();
 
-require_once __DIR__ . '/database.php';
+require_once __DIR__ . '/../database.php';
 require_once __DIR__ . '/users.php';
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
@@ -13,25 +13,25 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     if (empty($name) || empty($phone) || empty($email) || empty($password) || empty($password_confirm)) {
         $_SESSION['error'] = "Todos os campos são obrigatórios!";
-        header("Location: /eng-soft-geral/t05-sessao/view/html/cadastro.php");
+        header("Location: ../view/signup.php");
         exit();
     }
 
     if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
         $_SESSION['error'] = "Email inválido!";
-        header("Location: /eng-soft-geral/t05-sessao/view/html/cadastro.phpp");
+        header("Location: ../view/signup.php");
         exit();
     }
 
     if ($password !== $password_confirm) {
         $_SESSION['error'] = "As senhas não coincidem!";
-        header("Location: /eng-soft-geral/t05-sessao/view/html/cadastro.php");
+        header("Location: ../view/signup.php?error=confirmação-de-senha-diferente");
         exit();
     }
 
     if (strlen($password) < 8) {
         $_SESSION['error'] = "A senha deve ter pelo menos 8 caracteres!";
-        header("Location: /eng-soft-geral/t05-sessao/view/html/cadastro.php");
+        header("Location: ../view/signup.php?error=senha-deve-ter-8-digitos");
         exit();
     }
 
@@ -40,7 +40,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     if ($users->checkEmailExists($email)) {
         $_SESSION['error'] = "Este email já está registrado!";
-        header("Location: /eng-soft-geral/t05-sessao/view/html/cadastro.php");
+        header("Location: ../view/signup.php");
         exit();
     }
 
@@ -48,11 +48,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     if ($users->createUser($name, $email, $password_hash, $phone)) {
         $_SESSION['success'] = "Usuário cadastrado com sucesso!";
-        header("Location: /eng-soft-geral/t05-sessao/view/html/login.php");
+        header("Location: ../view/login.php");
         exit();
     } else {
         $_SESSION['error'] = "Erro ao cadastrar o usuário!";
-        header("Location: /eng-soft-geral/t05-sessao/view/html/cadastro.php");
+        header("Location: ../view/signup.php");
         exit();
     }
 }

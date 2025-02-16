@@ -3,7 +3,7 @@ session_start();
 
 if (!isset($_SESSION['user_id'])) {
     $_SESSION['error'] = "Você precisa fazer login para acessar esta página!";
-    header("Location: /eng-soft-geral/t05-sessao/view/html/login.php");
+    header("Location: /eng-soft-geral/t05-sessao/view/login.php");
     exit();
 }
 
@@ -17,7 +17,7 @@ $userName = htmlspecialchars($_SESSION['user_name']);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard</title>
-    <link rel="stylesheet" href="./view/css/dashboard.css">
+    <link rel="stylesheet" href="../public/css/dashboard.css">
 </head>
 
 <body>

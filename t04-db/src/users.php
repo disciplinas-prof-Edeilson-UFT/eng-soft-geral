@@ -9,40 +9,32 @@ class Users {
     public function createUser($name, $email, $password, $phone) {
         $conn = $this->db->getConnection();
 
-        $sql = "INSERT INTO users (name, email, password, phone) VALUES (?, ?, ?, ?)";
+        $sql = "INSERT INTO users (name, email, password_hash, phone) VALUES (:name, :email, :password, :phone)";
         $stmt = $conn->prepare($sql);
 
         if ($stmt === false) {
             throw new Exception("Erro na preparação da query: " . $conn->error);
         }
 
-        $stmt->bind_param("ssss", $name, $email, $password, $phone);
-
-        $result = $stmt->execute();
-
-        $stmt->close();
-
+        $result = $stmt->execute([':name' => $name,':email' => $email,':password'=> $password,':phone' => $phone]);
+        
         return $result;
     }
 
-    public function checkEmailExists($email) {
+    public function checkEmailExists($email): bool {
         $conn = $this->db->getConnection();
 
-        $sql = "SELECT * FROM users WHERE email = ?";
+        $sql = "SELECT * FROM users WHERE email = :email";
         $stmt = $conn->prepare($sql);
 
         if ($stmt === false) {
             throw new Exception("Erro na preparação da query: " . $conn->error);
         }
 
-        $stmt->bind_param("s", $email);
-        $stmt->execute();
-        $stmt->store_result();
-        $num_rows = $stmt->num_rows;
+        $stmt->execute([':email' => $email]);
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        $stmt->close();
-
-        return $num_rows > 0;
+        return $result ? true : false;
     }
 
     public function getUserById($id) {
@@ -55,13 +47,10 @@ class Users {
             throw new Exception("Erro na preparação da query: " . $conn->error);
         }
 
-        $stmt->bind_param("i", $id);
-        $stmt->execute();
-        $result = $stmt->get_result();
-        $user = $result->fetch_assoc();
+        $stmt->execute([':id' => $id]);
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        $stmt->close();
 
-        return $user;
+        return $result;
     }
 }

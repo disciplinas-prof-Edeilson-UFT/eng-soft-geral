@@ -1,9 +1,8 @@
 <?php
 session_start();
 
-require_once __DIR__ . '/../database.php';
-require_once __DIR__ . '/users.php';
-
+require_once __DIR__ . '/../../../database.php';
+require_once __DIR__ . "/../../dao/user-dao.php";
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $email = trim($_POST['email']);
     $password = trim($_POST['password']);
@@ -16,12 +15,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
         $_SESSION['error'] = "Formato de email inválido!";
-        header("Location: ../view/login.php");
+        header("Location: ../../../view/login.php?error=credenciais-invalidas");
         exit();
     }
 
     $database = Database::getInstance();
-    $users = new Users($database);
+    $users = new UserDao($database);
 
     $user = $users->getUserByEmail($email);
 
@@ -31,11 +30,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $_SESSION['user_email'] = $user['email'];
         $_SESSION['LAST_ACTIVITY'] = time();
         $_SESSION['success'] = "Login realizado com sucesso!";
-        header("Location: ../view/profile.php");
+        header("Location: ../../../view/profile.php");
         exit();
     } else {
         $_SESSION['error'] = "Credenciais inválidas!";
-        header("Location: ../view/login.php?error=credencial-errada");
+        header("Location: ../../../view/login.php?error=credencial-errada");
         exit();
     }
 }
