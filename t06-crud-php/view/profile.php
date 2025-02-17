@@ -1,8 +1,21 @@
 <?php
 session_start();
-$userName = isset($_SESSION['user_name']) ? htmlspecialchars($_SESSION['user_name']) : header('Location: login.php');
-?>
+require '../database.php'; // Arquivo com a conexão PDO
+$pdo = Database::getInstance()->getConnection();
 
+if (!isset($_SESSION['user_id'], $_SESSION['user_name'])) {
+    header('Location: login.php');
+    exit;
+}
+
+$user_id = $_SESSION['user_id'];
+$userName = htmlspecialchars($_SESSION['user_name']);
+
+// Verifica se o usuário já tem uma foto salva
+$stmt = $pdo->prepare("SELECT photo_url FROM user_photos WHERE user_id = :user_id LIMIT 1");
+$stmt->execute(['user_id' => $user_id]);
+$userPhoto = $stmt->fetch(PDO::FETCH_ASSOC);
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -45,16 +58,48 @@ $userName = isset($_SESSION['user_name']) ? htmlspecialchars($_SESSION['user_nam
                 </div>
             </div>
         </section>
-        <section class="feed-section">
-            <form action="upload_photo.php" method="POST" enctype="multipart/form-data" class="add-post">
-                <label for="photo">
-                    <img src="../public/img/add-photo.svg" class="icon"> <br>
-                    Adicionar foto
-                </label>
-                <input type="file" id="photo" name="photo" accept="image/*" style="display: none;">
-                <button type="submit" class="btn-upload">Enviar</button>
-            </form>
+        <section class="info-section">
+            <!-- Foto de perfil do usuário -->
+            <div class="profile-photo-container">
+
+            </div>
+
+            <!-- Imagem do feed -->
+            <div class="feed-photo-container">
+                <?php
+                if (is_array($userPhoto) && isset($userPhoto['photo_url'])) {
+                    $photoUrl = $userPhoto['photo_url']; 
+                    $absolutePath = 'C:/xampp/htdocs/eng-soft-geral/t06-crud-php/src/uploads/' . $photoUrl;
+
+                    $relativePath = '/eng-soft-geral/t06-crud-php/src/uploads/' . $photoUrl;
+
+                    if (file_exists($absolutePath)) {
+                        echo '<img src="' . htmlspecialchars($relativePath) . '" alt="Imagem do Feed" class="feed-image">';
+                    } else {
+                        echo '<p>Imagem não encontrada.</p>';
+                    }
+                } 
+                ?>
+            </div>
+
+
+
+            <?php if (!$userPhoto): ?>
+                <div class="upload-container">
+                    <form action="../src/dao/upload-photo.php" method="POST" enctype="multipart/form-data" class="add-post">
+                        <label for="photo">
+                            <img src="../public/img/add-photo.svg" class="icon"> <br>
+                            Adicionar foto
+                        </label>
+                        <input type="file" id="photo" name="photo" accept="image/*">
+                        <button type="submit" class="btn-upload">Enviar</button>
+                    </form>
+                </div>
+            <?php endif; ?>
+
         </section>
+
+
     </main>
 </body>
 
