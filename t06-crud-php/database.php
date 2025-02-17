@@ -1,51 +1,47 @@
 <?php
-/*
-class Database {
+class Database
+{
     private static $instance = null;
-    private $servername;
-    private $username;
-    private $password;
-    private $dbname;
     private $conn;
 
-    private function __construct($servername, $username, $password, $dbname) {
-        $this->servername = $servername;
-        $this->username = $username;
-        $this->password = $password;
-        $this->dbname = $dbname;
+    private function __construct()
+    {
+        $config = require __DIR__ . '/config.php';
 
-        $this->conn = new mysqli($this->servername, $this->username, $this->password, $this->dbname);
+        if (!isset($config['database']['host'], $config['database']['port'], $config['database']['username'], $config['database']['password'], $config['database']['dbname'])) {
+            throw new Exception("Configuração do banco de dados incompleta");
+        }
 
-        if ($this->conn->connect_error) {
-            throw new Exception("Conexão falhou: " . $this->conn->connect_error);
+        $dsn = "mysql:host={$config['database']['host']};port={$config['database']['port']};dbname={$config['database']['dbname']};charset=utf8mb4";
+
+        try {
+            $this->conn = new PDO($dsn, $config['database']['username'], $config['database']['password'], [
+                PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+                PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC
+            ]);
+        } catch (PDOException $e) {
+            throw new Exception("Falha na conexão com o banco de dados: " . $e->getMessage());
         }
     }
 
-    public static function getInstance() {
+    public static function getInstance()
+    {
         if (self::$instance === null) {
-            $config = require __DIR__ . '/config.php';
-            self::$instance = new self(
-                $config['database']['servername'],
-                $config['database']['username'],
-                $config['database']['password'],
-                $config['database']['dbname']
-            );
+            self::$instance = new self();
         }
         return self::$instance;
     }
 
-    public function getConnection() {
+    public function getConnection()
+    {
         return $this->conn;
     }
-
-    public function closeConnection() {
-        $this->conn->close();
-    }
 }
-*/
+
+
 
 #Conexão com o banco postgres no contatiner docker:
-class Database {
+/*class Database {
     private static $instance = null;
     private $connection;
 
@@ -76,3 +72,4 @@ class Database {
          return $this->connection;
     }
 }
+*/
