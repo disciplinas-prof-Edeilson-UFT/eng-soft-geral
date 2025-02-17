@@ -1,14 +1,14 @@
 <?php
 session_start();
 require '../../database.php'; // Arquivo com a conexão PDO
-$pdo = Database::getInstance()->getConnection();
+
 if (!isset($_SESSION['user_id'], $_SESSION['user_name'])) {
     header('Location: login.php');
     exit;
 }
 
+$pdo = Database::getInstance()->getConnection();
 $user_id = $_SESSION['user_id'];
-$userName = htmlspecialchars($_SESSION['user_name']);
 
 // Verifica se o usuário já tem uma foto salva
 $stmt = $pdo->prepare("SELECT photo_url FROM user_photos WHERE user_id = :user_id LIMIT 1");
@@ -21,7 +21,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['photo'])) {
     $targetFile = $uploadDir . $fileName;
     
     if (move_uploaded_file($_FILES['photo']['tmp_name'], $targetFile)) {
-        $photoUrl = $targetFile;
+        $photoUrl = $fileName;
 
         if ($userPhoto) {
             // Atualiza a foto existente
@@ -33,7 +33,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['photo'])) {
         
         $stmt->execute(['user_id' => $user_id, 'photo_url' => $photoUrl]);
         
-        header('Location: profile.php');
+        header('Location: /eng-soft-geral/t06-crud-php/view/profile.php');
         exit;
     } else {
         $error = "Erro ao enviar a imagem.";

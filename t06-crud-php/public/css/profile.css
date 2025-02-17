@@ -1,15 +1,26 @@
 @import url(global.css);
 
+:root {
+    --primary-color: #007bff;
+    --secondary-color: #0056b3;
+    --background-color: #f2f2f2;
+    --border-color: rgb(235, 233, 233);
+    --text-color: black;
+    --text-gray: gray;
+    --white: #ffffff;
+}
+
+/* Sidebar Styles */
 .side-bar {
     width: 25%;
     display: flex;
     flex-direction: column;
-    border-right: 2px solid rgb(235, 233, 233);
+    border-right: 2px solid var(--border-color);
 }
 
 .side-bar a {
     text-decoration: none;
-    color: black;
+    color: var(--text-color);
     padding: 10px;
     font-size: 16px;
 }
@@ -29,13 +40,13 @@
 }
 
 .side-bar-links a:hover {
-    background-color: #f2f2f2;
+    background-color: var(--background-color);
     border-radius: 5px;
     width: 100%;
-    text-decoration: none;
 }
 
-.profile-container{
+/* Profile Container Styles */
+.profile-container {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -46,7 +57,7 @@
     display: flex;
     align-items: center;
     padding-bottom: 2%;
-    border-bottom: 2px solid rgb(235, 233, 233);
+    border-bottom: 2px solid var(--border-color);
 }
 
 .stats-container {
@@ -57,7 +68,7 @@
 
 .following, .followers {
     font-size: 14px;
-    color: gray;
+    color: var(--text-gray);
 }
 
 .profile-data-container {
@@ -82,11 +93,6 @@
     margin: 0;
 }
 
-.stats-container {
-    display: flex;
-    gap: 6rem;
-}
-
 .photo-container {
     display: flex;
     flex-direction: column;
@@ -95,41 +101,36 @@
     margin-top: 60px;
 }
 
-.profile-photo {
-    width: 100px;
-    height: 100px;
-}
-
 .btn-edit {
-    background-color: #EBEBEB;
-    color: gray;
+    background-color: var(--background-color);
+    color: var(--text-gray);
     border-radius: 4px;
     padding: 0.2rem 3rem;
     border: none;
     cursor: pointer;
 }
 
-
+/* Feed Photo Container Styles */
 .feed-photo-container {
-    width: 300px; 
-    max-width: 100%; 
-    height: 300px; 
-    margin: 20px auto; 
-    border-radius: 10px; 
-    overflow: hidden; 
+    width: 300px;
+    max-width: 100%;
+    height: 300px;
+    margin: 20px auto;
+    border-radius: 10px;
+    overflow: hidden;
     display: flex;
     justify-content: center;
     align-items: center;
-    background: #ffffff; 
+    background: var(--white);
 }
 
 .feed-photo-container img {
-    width: 100%; 
+    width: 100%;
     height: 100%;
-    object-fit: cover; 
-    
+    object-fit: cover;
 }
 
+/* Upload Container Styles */
 .upload-container {
     display: flex;
     flex-direction: column;
@@ -145,26 +146,25 @@
     flex-direction: column;
     align-items: center;
     cursor: pointer;
-    background: none; 
+    background: none;
     border: none;
     padding: 1px;
 }
 
 .upload-container .icon {
-    width: 100px; 
-    
+    width: 100px;
     opacity: 0.7;
 }
 
 .upload-container input[type="file"] {
-    display: none; 
+    display: none;
 }
 
 .upload-container .btn-upload {
     margin-top: 10px;
     padding: 8px 30px;
-    background-color: #007bff;
-    color: white;
+    background-color: var(--primary-color);
+    color: var(--white);
     border: none;
     border-radius: 5px;
     cursor: pointer;
@@ -172,7 +172,5 @@
 }
 
 .upload-container .btn-upload:hover {
-    background-color: #0056b3;
+    background-color: var(--secondary-color);
 }
-
-

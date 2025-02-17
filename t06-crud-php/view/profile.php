@@ -1,13 +1,13 @@
 <?php
 session_start();
 require '../database.php'; // Arquivo com a conexão PDO
-$pdo = Database::getInstance()->getConnection();
 
 if (!isset($_SESSION['user_id'], $_SESSION['user_name'])) {
     header('Location: login.php');
     exit;
 }
 
+$pdo = Database::getInstance()->getConnection();
 $user_id = $_SESSION['user_id'];
 $userName = htmlspecialchars($_SESSION['user_name']);
 
@@ -22,7 +22,7 @@ $userPhoto = $stmt->fetch(PDO::FETCH_ASSOC);
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Profile</title>
     <link rel="stylesheet" href="../public/css/profile.css">
 </head>
 
@@ -59,30 +59,20 @@ $userPhoto = $stmt->fetch(PDO::FETCH_ASSOC);
             </div>
         </section>
         <section class="info-section">
-            <!-- Foto de perfil do usuário -->
-            <div class="profile-photo-container">
-
-            </div>
-
-            <!-- Imagem do feed -->
             <div class="feed-photo-container">
-                <?php
-                if (is_array($userPhoto) && isset($userPhoto['photo_url'])) {
-                    $photoUrl = $userPhoto['photo_url']; 
+                <?php if (is_array($userPhoto) && isset($userPhoto['photo_url'])): ?>
+                    <?php
+                    $photoUrl = $userPhoto['photo_url'];
                     $absolutePath = 'C:/xampp/htdocs/eng-soft-geral/t06-crud-php/src/uploads/' . $photoUrl;
-
                     $relativePath = '/eng-soft-geral/t06-crud-php/src/uploads/' . $photoUrl;
-
-                    if (file_exists($absolutePath)) {
-                        echo '<img src="' . htmlspecialchars($relativePath) . '" alt="Imagem do Feed" class="feed-image">';
-                    } else {
-                        echo '<p>Imagem não encontrada.</p>';
-                    }
-                } 
-                ?>
+                    ?>
+                    <?php if (file_exists($absolutePath)): ?>
+                        <img src="<?php echo htmlspecialchars($relativePath); ?>" alt="Imagem do Feed" class="feed-image">
+                    <?php else: ?>
+                        <p>Imagem não encontrada.</p>
+                    <?php endif; ?>
+                <?php endif; ?>
             </div>
-
-
 
             <?php if (!$userPhoto): ?>
                 <div class="upload-container">
@@ -96,10 +86,7 @@ $userPhoto = $stmt->fetch(PDO::FETCH_ASSOC);
                     </form>
                 </div>
             <?php endif; ?>
-
         </section>
-
-
     </main>
 </body>
 
