@@ -7,9 +7,14 @@ if (!isset($_SESSION['user_id'], $_SESSION['user_name'])) {
     exit;
 }
 
+// Cria a conexão com o banco de dados
 $pdo = Database::getInstance()->getConnection();
 
+// Inclui o arquivo com as funções
+require '../src/dao/seguirUsuario.php';
+
 $user_id = isset($_GET['id']) ? $_GET['id'] : $_SESSION['user_id'];
+$logged_in_user_id = $_SESSION['user_id'];
 
 // Busca os dados do usuário no banco
 $stmt = $pdo->prepare("SELECT id, name FROM users WHERE id = :id LIMIT 1");
@@ -23,14 +28,32 @@ if (!$user) {
 
 $userName = htmlspecialchars($user['name']);
 
-
 // Verifica se o usuário já tem uma foto salva
 $stmt = $pdo->prepare("SELECT photo_url FROM user_photos WHERE user_id = :user_id LIMIT 1");
 $stmt->execute(['user_id' => $user_id]);
 $userPhoto = $stmt->fetch(PDO::FETCH_ASSOC);
+
+// Verifica se o usuário já está seguindo
+$estaSeguindo = verificarSeguimento($pdo, $logged_in_user_id, $user_id);
+
+// Se o botão for pressionado, chama a função
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['seguir'])) {
+    $usuario_id = $_POST['usuario_id'];
+    $seguindo_id = $_POST['seguindo_id'];
+    $acao = $_POST['acao'];
+
+    if ($acao === 'seguir') {
+        $mensagem = seguirUsuario($pdo, $usuario_id, $seguindo_id);
+    } elseif ($acao === 'parar_de_seguir') {
+        $mensagem = pararDeSeguir($pdo, $usuario_id, $seguindo_id);
+    }
+
+    if (empty($mensagem)) {
+        header("Location: profile.php?id=$user_id"); // Redireciona para evitar reenvio
+        exit();
+    }
+}
 ?>
-
-
 
 <!DOCTYPE html>
 <html lang="en">
@@ -57,6 +80,19 @@ $userPhoto = $stmt->fetch(PDO::FETCH_ASSOC);
                     <span class="following"> 99 seguindo</span>
                     <span class="followers"> 99 seguidores</span>
                 </div>
+                <?php if ($user_id !== $logged_in_user_id): ?>
+                    <form method="POST" action="">
+                        <input type="hidden" name="usuario_id" value="<?php echo $logged_in_user_id; ?>">
+                        <input type="hidden" name="seguindo_id" value="<?php echo $user_id; ?>">
+                        <?php if ($estaSeguindo): ?>
+                            <input type="hidden" name="acao" value="parar_de_seguir">
+                            <button type="submit" name="seguir">Deixar de seguir</button>
+                        <?php else: ?>
+                            <input type="hidden" name="acao" value="seguir">
+                            <button type="submit" name="seguir">Seguir</button>
+                        <?php endif; ?>
+                    </form>
+                <?php endif; ?>
             </div>
         </section>
         <section class="info-section">
@@ -76,7 +112,6 @@ $userPhoto = $stmt->fetch(PDO::FETCH_ASSOC);
             </div>
 
             <?php if (!$userPhoto && $user_id == $_SESSION['user_id']): ?>
-
                 <div class="upload-container">
                     <form action="../src/dao/upload-photo.php" method="POST" enctype="multipart/form-data" class="add-post">
                         <label for="photo">
