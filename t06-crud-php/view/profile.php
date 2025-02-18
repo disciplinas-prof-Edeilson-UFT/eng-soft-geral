@@ -27,30 +27,7 @@ $userPhoto = $stmt->fetch(PDO::FETCH_ASSOC);
 </head>
 
 <body>
-    <aside class="side-bar">
-        <img src="../public/img/logo.svg" alt="logo" class="logo">
-        <div class="side-bar-links">
-            <a href="home">
-                <img src="../public/img/home.svg" class="icon">
-                Página principal
-            </a>
-            <button id="searchButton" onclick="toggleSearch()">
-                <img src="../public/img/search.svg" class="icon">
-                Pesquisar
-            </button>
-            <div id="searchBox" class="search-box">
-                <label for="searchInput" class="search-label">Pesquisa</label>
-                <form action="../src/controllers/users/search.php" method="GET">
-                    <input id="searchInput" type="text" name="query" placeholder="Pesquisar" required>
-                    <button type="submit">Ir</button>
-                </form>
-            </div>
-            <a href="perfil.html">
-                <img src="../public/img/profile.svg" class="icon">
-                Perfil
-            </a>
-        </div>
-    </aside>
+    <?php include 'sidebar.php'; ?>
 
     <main class="profile-container">
         <section class="info-section">

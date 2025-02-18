@@ -110,7 +110,6 @@
     cursor: pointer;
 }
 
-/* Feed Photo Container Styles */
 .feed-photo-container {
     width: 300px;
     max-width: 100%;
@@ -180,14 +179,7 @@
 
 
 
-
-
-
-
-
-/* Estilos para o botão de pesquisa */
-/* Estilos para o botão de pesquisa */
-/* Estilos para o botão de pesquisa */
+/* ======================sidebar========================= */
 #searchButton {
     background: none;
     border: none;
@@ -204,7 +196,7 @@
     border-radius: 5px;
 }
 
-/* Estilos para o campo de pesquisa */
+
 .search-box {
     display: none;
     position: absolute;
@@ -223,7 +215,6 @@
     transition: transform 0.3s ease-in-out; 
 }
 
-/* Classe para abrir o search-box */
 .search-box.open {
     transform: translateX(-50%) scaleX(1); 
 }

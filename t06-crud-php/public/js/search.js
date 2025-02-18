@@ -5,11 +5,11 @@ function toggleSearch() {
         searchBox.classList.remove("open");
         setTimeout(() => {
             searchBox.style.display = "none";
-        }, 300); // Tempo igual à duração da transição
+        }, 300); 
     } else {
         searchBox.style.display = "block";
         setTimeout(() => {
             searchBox.classList.add("open");
-        }, 10); // Pequeno delay para garantir que o display: block seja aplicado
+        }, 10); 
     }
 }
