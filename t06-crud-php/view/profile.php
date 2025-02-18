@@ -34,16 +34,24 @@ $userPhoto = $stmt->fetch(PDO::FETCH_ASSOC);
                 <img src="../public/img/home.svg" class="icon">
                 Página principal
             </a>
-            <a href="search">
+            <button id="searchButton" onclick="toggleSearch()">
                 <img src="../public/img/search.svg" class="icon">
                 Pesquisar
-            </a>
+            </button>
+            <div id="searchBox" class="search-box">
+                <label for="searchInput" class="search-label">Pesquisa</label>
+                <form action="../src/controllers/users/search.php" method="GET">
+                    <input id="searchInput" type="text" name="query" placeholder="Pesquisar" required>
+                    <button type="submit">Ir</button>
+                </form>
+            </div>
             <a href="perfil.html">
                 <img src="../public/img/profile.svg" class="icon">
                 Perfil
             </a>
         </div>
     </aside>
+
     <main class="profile-container">
         <section class="info-section">
             <div class="photo-container">
@@ -88,6 +96,7 @@ $userPhoto = $stmt->fetch(PDO::FETCH_ASSOC);
             <?php endif; ?>
         </section>
     </main>
+    <script src="../public/js/search.js"></script>
 </body>
 
 </html>

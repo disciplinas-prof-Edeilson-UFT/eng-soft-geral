@@ -174,3 +174,98 @@
 .upload-container .btn-upload:hover {
     background-color: var(--secondary-color);
 }
+
+
+
+
+
+
+
+
+
+
+
+/* Estilos para o botão de pesquisa */
+/* Estilos para o botão de pesquisa */
+/* Estilos para o botão de pesquisa */
+#searchButton {
+    background: none;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    font-size: 16px;
+    color: var(--text-color);
+}
+
+#searchButton:hover {
+    background-color: var(--background-color);
+    border-radius: 5px;
+}
+
+/* Estilos para o campo de pesquisa */
+.search-box {
+    display: none;
+    position: absolute;
+    left: 30%;
+    top: 70px;
+    transform: translateX(-50%) scaleX(0); 
+    transform-origin: left; 
+    width: 15%; 
+    height: 40%;
+    background-color: var(--white);
+    border: 1px solid var(--border-color);
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    z-index: 1000; 
+    transition: transform 0.3s ease-in-out; 
+}
+
+/* Classe para abrir o search-box */
+.search-box.open {
+    transform: translateX(-50%) scaleX(1); 
+}
+
+.search-label {
+    display: block;
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 10px;
+    color: var(--text-color);
+}
+
+.search-box form {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.search-box input[type="text"] {
+    flex-grow: 1;
+    padding: 10px;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    background-color: #f5f5f5; 
+    font-size: 16px;
+    color: var(--text-color);
+}
+
+.search-box input[type="text"]::placeholder {
+    color: #aaa; 
+}
+
+.search-box button[type="submit"] {
+    padding: 10px 20px;
+    background-color: var(--primary-color);
+    color: var(--white);
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.search-box button[type="submit"]:hover {
+    background-color: var(--secondary-color);
+}
