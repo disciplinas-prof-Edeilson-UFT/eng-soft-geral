@@ -1,7 +1,6 @@
 <?php
 session_start();
-
-$userName = htmlspecialchars($_SESSION['user_name']);
+$userName = isset($_SESSION['user_name']) ? htmlspecialchars($_SESSION['user_name']) : header('Location: login.php');
 ?>
 
 <!DOCTYPE html>
@@ -18,7 +17,7 @@ $userName = htmlspecialchars($_SESSION['user_name']);
     <aside class="side-bar">
         <img src="../public/img/logo.svg" alt="logo" class="logo">
         <div class="side-bar-links">
-            <a href="home">
+            <a href="/">
                 <img src="../public/img/home.svg" class="icon">
                 Página principal
             </a>
@@ -26,7 +25,7 @@ $userName = htmlspecialchars($_SESSION['user_name']);
                 <img src="../public/img/search.svg" class="icon">
                 Pesquisar
             </a>
-            <a href="perfil.html">
+            <a href="/view/profile.php">
                 <img src="../public/img/profile.svg" class="icon">
                 Perfil
             </a>

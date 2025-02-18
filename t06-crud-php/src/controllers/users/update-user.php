@@ -1,30 +1,36 @@
 <?php
-
-require_once __DIR__ . '/../../../database.php';
-require_once __DIR__ . "/../../dao/user-dao.php";
-
 session_start();
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $name  = trim($_POST['name']);
+require_once __DIR__ . "/../../dao/user-dao.php";
+require_once __DIR__ . "/../../../database.php";
+
+$database = Database::getInstance();
+$dao = new UserDao($database);
+
+if (!isset($_GET["id"])) {
+    die("Parâmetro user_id não informado.");
+}
+
+$id = $_GET["id"];
+$user = $dao->getUserById($id);
+
+if (!$user) {
+    die("Usuário não encontrado.");
+}
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['edit'])) {
+    $name = trim($_POST['name']);
     $email = trim($_POST['email']);
     $phone = trim($_POST['phone']);
-    $bio   = trim($_POST['bio']);
+    $bio = trim($_POST['bio']);
 
-    if (isset($_GET["id"])) {
-        $id = $_GET["id"];
-        try {
-            $database = Database::getInstance();
-            $userDao = new UserDao($database);
-            $this->userDao->updateUser($name, $email, $bio, $phone, $id);
-            header("Location: perfil.php?id=$id");
-            exit;
-        } catch(Exception $e) { 
-            echo 'Erro: ' . $e->getMessage();
-        }
-    } else {
-        echo "ID inválido";
+    try {
+        $dao->updateUser($name, $email, $bio, $phone, $id);
+
+        $_SESSION['user_name'] = $name;
+        header("Location: /view/profile.php?id=$id");
+        exit;
+    } catch (Exception $e) {
+        echo 'Erro: ' . $e->getMessage();
     }
-} else {
-    header('Location: index.php');
-    exit;
 }
+include __DIR__ . "/../../../view/profile-update.php";

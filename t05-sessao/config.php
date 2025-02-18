@@ -1,8 +1,8 @@
 <?php
-/*
-return [
+/*return [
     'database' => [
-        'servername' => 'localhost',
+        'host' => 'localhost',  
+        'port' => '3306',       
         'username' => 'root',
         'password' => '',
         'dbname' => 'conex'
@@ -19,3 +19,4 @@ return [
         'port' => 5432
     ]
 ];
+

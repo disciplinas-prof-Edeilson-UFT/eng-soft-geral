@@ -10,7 +10,7 @@ if (isset($_GET['id'])) {
         $database = Database::getInstance();
         $userDao = new UserDao($database);
         $this->userDao->deleteUser($id);
-        header("Location: profile.php?id=$id");
+        header("Location: /view/profile.php?id=$id");
         exit;
     } catch(Exception $e) { 
         echo 'Erro: ' . $e->getMessage();
