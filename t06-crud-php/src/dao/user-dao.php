@@ -57,7 +57,7 @@ class UserDao
         return true;
     }
     public function deleteUser($id): bool {
-        $sql = "DELETE FROM users WHERE id = ?";
+        $sql = "DELETE FROM users WHERE id = :id";
         $stmt = $this->db->prepare($sql);
         $stmt->execute([':id' => $id]);
         return true;

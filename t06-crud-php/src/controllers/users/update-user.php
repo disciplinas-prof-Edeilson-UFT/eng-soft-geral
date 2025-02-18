@@ -25,7 +25,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['edit'])) {
 
     try {
         $dao->updateUser($name, $email, $bio, $phone, $id);
-
+        
         $_SESSION['user_name'] = $name;
         header("Location: /view/profile.php?id=$id");
         exit;

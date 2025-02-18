@@ -49,6 +49,8 @@ if (!$user) {
             </div>
             <div class="btn-wrapper">
                 <button class="btn" name="edit" >Confirmar</button>
+                <button class="btn-delete" name="edit" ><a href="/../src/controllers/users/delete-user.php?id=<?= $id ?>" 
+       onclick="return confirm('Olá <?= addslashes(htmlspecialchars($user['name'])) ?>, deseja realmente excluir sua conta?');">Deletar Conta</a></button>
                 <span class="perfil-link"><a href="/view/profile.php" class="link">Volte ao perfil</a></span>
             </div>
         </form>

@@ -52,6 +52,23 @@ body {
     margin-bottom: 2rem;
 }
 
+.btn-delete {
+    background-color: #ff3838;
+    color: white;
+    border-radius: 4px;
+    padding: 0.5rem 3rem;
+    border: none;
+    width: 100%;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin: 5%;
+}
+
+.btn-delete a {
+    text-decoration: none;
+    color: white;
+}
+
 .btn {
     background-color: #4938FF;
     color: white;
