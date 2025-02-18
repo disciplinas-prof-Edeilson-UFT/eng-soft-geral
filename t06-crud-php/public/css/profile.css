@@ -174,12 +174,6 @@
     background-color: var(--secondary-color);
 }
 
-
-
-
-
-
-/* ======================sidebar========================= */
 #searchButton {
     background: none;
     border: none;
@@ -197,6 +191,11 @@
 }
 
 
+
+
+
+
+/* ======================sidebar========================= */
 .search-box {
     display: none;
     position: absolute;
@@ -231,16 +230,20 @@
     display: flex;
     align-items: center;
     gap: 10px;
+    width: 100%; /* Ocupa toda a largura do container */
 }
 
 .search-box input[type="text"] {
-    flex-grow: 1;
+    flex-grow: 1; /* Ocupa o espaço restante na largura */
     padding: 10px;
     border: 1px solid var(--border-color);
     border-radius: 8px;
     background-color: #f5f5f5; 
     font-size: 16px;
     color: var(--text-color);
+    height: 40px; /* Altura fixa */
+    box-sizing: border-box; /* Garante que o padding não aumente o tamanho */
+    min-width: 50px; /* Largura mínima para evitar que fique muito pequeno */
 }
 
 .search-box input[type="text"]::placeholder {
@@ -248,6 +251,7 @@
 }
 
 .search-box button[type="submit"] {
+    flex-shrink: 0; /* Impede que o botão diminua demais */
     padding: 10px 20px;
     background-color: var(--primary-color);
     color: var(--white);
@@ -255,6 +259,9 @@
     border-radius: 8px;
     cursor: pointer;
     font-size: 16px;
+    height: 40px; /* Altura fixa, igual ao campo de pesquisa */
+    box-sizing: border-box; /* Garante que o padding não aumente o tamanho */
+    min-width: 60px; /* Largura mínima para o botão */
 }
 
 .search-box button[type="submit"]:hover {
