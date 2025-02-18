@@ -1,6 +1,6 @@
 <?php
 session_start();
-require '../database.php'; // Arquivo com a conexão PDO
+require '../database.php';
 
 if (!isset($_SESSION['user_id'], $_SESSION['user_name'])) {
     header('Location: login.php');
@@ -8,14 +8,30 @@ if (!isset($_SESSION['user_id'], $_SESSION['user_name'])) {
 }
 
 $pdo = Database::getInstance()->getConnection();
-$user_id = $_SESSION['user_id'];
-$userName = htmlspecialchars($_SESSION['user_name']);
+
+$user_id = isset($_GET['id']) ? $_GET['id'] : $_SESSION['user_id'];
+
+// Busca os dados do usuário no banco
+$stmt = $pdo->prepare("SELECT id, name FROM users WHERE id = :id LIMIT 1");
+$stmt->execute(['id' => $user_id]);
+$user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+if (!$user) {
+    echo "<p>Usuário não encontrado.</p>";
+    exit;
+}
+
+$userName = htmlspecialchars($user['name']);
+
 
 // Verifica se o usuário já tem uma foto salva
 $stmt = $pdo->prepare("SELECT photo_url FROM user_photos WHERE user_id = :user_id LIMIT 1");
 $stmt->execute(['user_id' => $user_id]);
 $userPhoto = $stmt->fetch(PDO::FETCH_ASSOC);
 ?>
+
+
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -59,7 +75,8 @@ $userPhoto = $stmt->fetch(PDO::FETCH_ASSOC);
                 <?php endif; ?>
             </div>
 
-            <?php if (!$userPhoto): ?>
+            <?php if (!$userPhoto && $user_id == $_SESSION['user_id']): ?>
+
                 <div class="upload-container">
                     <form action="../src/dao/upload-photo.php" method="POST" enctype="multipart/form-data" class="add-post">
                         <label for="photo">

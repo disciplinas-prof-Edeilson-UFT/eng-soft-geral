@@ -13,3 +13,21 @@ function toggleSearch() {
         }, 10); 
     }
 }
+
+async function handleSearch(event) {
+    event.preventDefault();
+
+    const query = document.getElementById('searchInput').value;
+    const resultsContainer = document.getElementById('searchResults');
+    resultsContainer.innerHTML = 'Carregando...';
+
+    try {
+        const response = await fetch(`../src/controllers/users/search.php?query=${encodeURIComponent(query)}`);
+        const results = await response.text();
+
+        resultsContainer.innerHTML = results;
+    } catch (error) {
+        resultsContainer.innerHTML = '<p class="no-results">Erro ao buscar resultados.</p>';
+        console.error('Erro na busca:', error);
+    }
+}

@@ -10,11 +10,11 @@ class UserRepository
         $this->conn = Database::getInstance()->getConnection();
     }
 
-    public function buscarUsuarios($nome)
+    public function buscarUsuarios($name)
     {
-        $sql = "SELECT name, email FROM users WHERE name LIKE :nome";
+        $sql = "SELECT id, name, email, profile_pic FROM users WHERE name LIKE :name";
         $stmt = $this->conn->prepare($sql);
-        $stmt->execute(['nome' => "%$nome%"]);
+        $stmt->execute(['name' => "%$name%"]);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 }

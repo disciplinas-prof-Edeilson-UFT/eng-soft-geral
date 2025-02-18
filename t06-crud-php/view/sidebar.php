@@ -11,11 +11,13 @@
         </button>
         <div id="searchBox" class="search-box">
             <label for="searchInput" class="search-label">Pesquisa</label>
-            <form action="../src/controllers/users/search.php" method="GET">
+            <form action="../src/controllers/users/search.php" method="GET" onsubmit="handleSearch(event)">
                 <input id="searchInput" type="text" name="query" placeholder="Pesquisar" required>
                 <button type="submit">Ir</button>
             </form>
+            <div id="searchResults" class="search-results"></div> 
         </div>
+
         <a href="perfil.html">
             <img src="../public/img/profile.svg" class="icon">
             Perfil
