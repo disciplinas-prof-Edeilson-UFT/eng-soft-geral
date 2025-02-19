@@ -25,3 +25,6 @@ function pararDeSeguir($pdo, $usuario_id, $seguindo_id) {
     $stmt = $pdo->prepare($query);
     return $stmt->execute([$usuario_id, $seguindo_id]) ? "" : "Erro ao parar de seguir o usuário.";
 }
+
+
+/*seguirUsuario*/

@@ -11,7 +11,7 @@
         </button>
         <div id="searchBox" class="search-box">
             <label for="searchInput" class="search-label">Pesquisa</label>
-            <form action="../src/controllers/users/search.php" method="GET" onsubmit="handleSearch(event)">
+            <form action="../src/controllers/pesquisa.php" method="GET" onsubmit="handleSearch(event)">
                 <input id="searchInput" type="text" name="query" placeholder="Pesquisar" required>
                 <button type="submit">Ir</button>
             </form>

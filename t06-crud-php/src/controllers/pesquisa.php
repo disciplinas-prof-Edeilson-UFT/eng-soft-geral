@@ -1,5 +1,5 @@
 <?php
-require_once __DIR__ . '../../../dao/search-dao.php';
+require_once __DIR__ . '../../dao/pesquisa-dao.php';
 
 if (isset($_GET['query'])) {
     $query = $_GET['query'];
@@ -24,3 +24,6 @@ if (isset($_GET['query'])) {
         echo "<p class='no-results'>Nenhum usuário encontrado.</p>";
     }
 }
+
+
+/*search.php*/

@@ -11,7 +11,7 @@ if (!isset($_SESSION['user_id'], $_SESSION['user_name'])) {
 $pdo = Database::getInstance()->getConnection();
 
 // Inclui o arquivo com as funções
-require '../src/dao/seguirUsuario.php';
+require '../src/controllers/seguir.php';
 
 $user_id = isset($_GET['id']) ? $_GET['id'] : $_SESSION['user_id'];
 $logged_in_user_id = $_SESSION['user_id'];
@@ -113,7 +113,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['seguir'])) {
 
             <?php if (!$userPhoto && $user_id == $_SESSION['user_id']): ?>
                 <div class="upload-container">
-                    <form action="../src/dao/upload-photo.php" method="POST" enctype="multipart/form-data" class="add-post">
+                    <form action="../src/controllers/upload-photo-feed.php" method="POST" enctype="multipart/form-data" class="add-post">
                         <label for="photo">
                             <img src="../public/img/add-photo.svg" class="icon"> <br>
                             Adicionar foto
