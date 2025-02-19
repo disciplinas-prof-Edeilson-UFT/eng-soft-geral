@@ -1,0 +1,96 @@
+@import url(global.css);
+
+body {
+    align-items: center;
+    justify-content: center;
+}
+
+.icon {
+    display: flex;
+    justify-content: center;
+}
+
+.form-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.form-wrapper {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-control {
+    width: 100%;
+    padding: 0.5rem;
+    font-size: 1rem;
+}
+
+.form-control label {
+    display: block;
+    color: gray;
+}
+
+.form-control input {
+    display: flex;
+    width: 80%;
+    padding: 0.5rem;
+    border: none;
+    border-bottom: 1px solid #000;
+    outline: none;
+    transition: border-color 0.3s ease;
+}
+
+.btn-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 1rem;
+    margin-bottom: 2rem;
+}
+
+.btn-delete {
+    background-color: #ff3838;
+    color: white;
+    border-radius: 4px;
+    padding: 0.5rem 3rem;
+    border: none;
+    width: 100%;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin: 5%;
+}
+
+.btn-delete a {
+    text-decoration: none;
+    color: white;
+}
+
+.btn {
+    background-color: #4938FF;
+    color: white;
+    border-radius: 4px;
+    padding: 0.5rem 3rem;
+    border: none;
+    width: 100%;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.btn:hover {
+    background-color: #4938FF;
+}
+
+.login-link {
+    margin-top: 15px;
+    text-align: center;
+    color: gray;
+}
+
+.link {
+    color: #4938FF;
+    text-decoration: none;
+}

@@ -1,5 +1,5 @@
 <?php
-return [
+/*return [
     'database' => [
         'host' => 'localhost',  
         'port' => '3306',       
@@ -8,8 +8,8 @@ return [
         'dbname' => 'conex'
     ]
 ];
+*/
 
-/*
 return [
     'database' => [
         'host' => 'localhost',
@@ -19,4 +19,4 @@ return [
         'port' => 5432
     ]
 ];
-*/
+

@@ -1,6 +1,6 @@
 <?php
 session_start();
-$userName = isset($_SESSION['user_name']) ? htmlspecialchars($_SESSION['user_name']) : header('Location: login.php');
+$userName = isset($_SESSION['user_name']) ? htmlspecialchars($_SESSION['user_name']) : 'Visitante';
 ?>
 
 <!DOCTYPE html>

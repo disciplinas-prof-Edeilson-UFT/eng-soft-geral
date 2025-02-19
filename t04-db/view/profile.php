@@ -10,7 +10,7 @@
     <aside class="side-bar">
         <img src="../public/img/logo.svg" alt="logo" class="logo">
         <div class="side-bar-links">
-            <a href="home">
+            <a href="/">
                 <img src="../public/img/home.svg" class="icon">
                 Página principal
             </a>
@@ -18,7 +18,7 @@
                 <img src="../public/img/search.svg" class="icon">
                 Pesquisar
             </a>
-            <a href="perfil.html">
+            <a href="/view/profile.php">
                 <img src="../public/img/profile.svg" class="icon">
                 Perfil
             </a>
