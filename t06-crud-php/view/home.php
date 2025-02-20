@@ -9,7 +9,7 @@
 </head>
 
 <body>
-    <!-- Barra Lateral -->
+    <!-- Barra Lateral --> 
     <aside class="side-bar">
         <img src="../public/img/logo.svg" alt="Logo da empresa" class="logo">
         <nav class="side-bar-links">

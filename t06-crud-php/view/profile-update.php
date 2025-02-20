@@ -53,7 +53,7 @@ if (!$user) {
        onclick="return confirm('Olá <?= addslashes(htmlspecialchars($user['name'])) ?>, deseja realmente excluir sua conta?');">Deletar Conta</a></button>
                 <span class="perfil-link"><a href="/view/profile.php" class="link">Volte ao perfil</a></span>
             </div>
-        </form>
+        </form> 
     </div>
 </body>
 </html>

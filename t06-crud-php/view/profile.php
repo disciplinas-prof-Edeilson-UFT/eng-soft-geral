@@ -38,7 +38,7 @@ $userId = isset($_SESSION['user_id']) ? htmlspecialchars($_SESSION['user_id']) :
             <div class="photo-container">
                 <img src="../public/img/profile-photo.svg" alt="user" class="profile-photo">
                 <button class="btn-edit"><a href="/view/profile-update.php?id=<?php echo $userId; ?>">Editar Perfil</a></button>
-            </div>
+            </div> 
             <div class="user-info">
                 <h1 class="user-name"><?php echo $userName; ?></h1>
                 <div class="stats-container">

@@ -34,7 +34,7 @@
             </div>
         </div>
         <div class="btn-wrapper">
-            <button class="btn">continuar</button>
+            <button class="btn">continuar</button> 
             <span class="login-link">já possui conta? <a href="/view/login.php" class="link">Faça Login</a></span>
         </div>
         
