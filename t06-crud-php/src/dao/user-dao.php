@@ -10,7 +10,7 @@ class UserDao
 
     public function createUser($name, $email, $password, $phone)
     {
-        $sql = "INSERT INTO users (name, email, password_hash, phone) VALUES (:name, :email, :password, :phone)";
+        $sql = "INSERT INTO users (name, email, password, phone) VALUES (:name, :email, :password, :phone)";
         $stmt = $this->db->prepare($sql);
         return $stmt->execute([
             ':name' => $name,
@@ -30,7 +30,7 @@ class UserDao
 
     public function getUserByEmail($email)
     {
-        $sql = "SELECT id, name, email, password_hash, phone FROM users WHERE email = :email";
+        $sql = "SELECT id, name, email, password, phone FROM users WHERE email = :email";
         $stmt = $this->db->prepare($sql);
         $stmt->execute([':email' => $email]);
         return $stmt->fetch();
