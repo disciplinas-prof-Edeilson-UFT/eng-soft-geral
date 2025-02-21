@@ -7,24 +7,31 @@ if (!isset($userData) || !is_array($userData)) {
 }
 
 extract($userData);
+
+
+$userName = isset($_SESSION['user_name']) ? htmlspecialchars($_SESSION['user_name']) : header('Location: /view/login.php');
+$userId = isset($_SESSION['user_id']) ? htmlspecialchars($_SESSION['user_id']) : header('Location: /view/login.php');
 ?>
+
 
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Perfil</title>
     <link rel="stylesheet" href="../public/css/profile.css">
 </head>
+
 <body>
     <?php include 'sidebar.php'; ?>
 
     <main class="profile-container">
         <section class="info-section">
             <div class="photo-container">
-                <img src="../public/img/profile-photo.svg" alt="Foto do Usuário" class="profile-photo">
-                <button class="btn-edit">Editar Perfil</button>
+                <img src="../public/img/profile-photo.svg" alt="user" class="profile-photo">
+                <button class="btn-edit"><a href="/eng-soft-geral/t06-crud-php/view/profile-update.php?id=<?php echo $userId; ?>">Editar Perfil</a></button>
             </div>
             <div class="user-info">
                 <h1 class="user-name"><?= $userName; ?></h1>
@@ -70,4 +77,5 @@ extract($userData);
     </main>
     <script src="../public/js/search.js"></script>
 </body>
+
 </html>

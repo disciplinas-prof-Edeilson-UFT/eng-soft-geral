@@ -17,7 +17,7 @@
         <!-- Seção direita com formulário -->
         <div class="right">
             <form method="POST" action="../src/controllers/users/login-user.php">
-                <div class="form-control">
+                <div class="form-control">  
                     <label for="email">Email</label>
                     <input type="email" id="email" name="email" required>
                 </div>
