@@ -3,6 +3,7 @@ session_start();
 
 require_once __DIR__ . '/../../../database.php';
 require_once __DIR__ . "/../../dao/user-dao.php";
+require_once __DIR__ . '/../../../config.php';
 
 if (isset($_GET['id'])) {
     $id = $_GET["id"];
@@ -12,7 +13,7 @@ if (isset($_GET['id'])) {
         $userDao->deleteUser($id);
         session_destroy();
 
-        header("Location: /view/login.php");
+        header("Location: " . BASE_URL . "view/login.php");
         exit;
     } catch(Exception $e) { 
         echo 'Erro: ' . $e->getMessage();

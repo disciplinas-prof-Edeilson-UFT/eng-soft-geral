@@ -2,6 +2,7 @@
 session_start();
 require_once __DIR__ . "/../../dao/user-dao.php";
 require_once __DIR__ . "/../../../database.php";
+require_once __DIR__ . '/../../../config.php';
 
 $database = Database::getInstance();
 $dao = new UserDao($database);
@@ -27,7 +28,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['edit'])) {
         $dao->updateUser($name, $email, $bio, $phone, $id);
         
         $_SESSION['user_name'] = $name;
-        header("Location: /view/profile.php?id=$id");
+        header("Location: " . BASE_URL . "view/profile.php?id=$id");
         exit;
     } catch (Exception $e) {
         echo 'Erro: ' . $e->getMessage();

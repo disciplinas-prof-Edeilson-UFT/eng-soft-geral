@@ -1,5 +1,6 @@
 <?php
-/*return [
+/*
+return [
     'database' => [
         'host' => 'localhost',  
         'port' => '3306',       
@@ -9,7 +10,6 @@
     ]
 ];
 */
-
 return [
     'database' => [
         'host' => 'localhost',
@@ -19,4 +19,3 @@ return [
         'port' => 5432
     ]
 ];
-

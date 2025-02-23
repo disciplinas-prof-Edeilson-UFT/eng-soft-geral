@@ -37,8 +37,8 @@ class Database
     {
         return $this->conn;
     }
-}*/
-
+}
+*/
 
 
 #Conexão com o banco postgres no contatiner docker:
