@@ -1,5 +1,6 @@
 <?php
 session_start();
+require_once __DIR__ . '/configs.php';
 $userName = isset($_SESSION['user_name']) ? htmlspecialchars($_SESSION['user_name']) : 'Visitante';
 ?>
 
@@ -12,6 +13,6 @@ $userName = isset($_SESSION['user_name']) ? htmlspecialchars($_SESSION['user_nam
     <link rel="stylesheet" href="../public/css/home.css">
 </head>
 <body>
-    <?php require_once __DIR__ . '/view/home.php'; ?>
+    <?php  header("Location: " . BASE_URL . "/view/login.php"); ?>
 </body>
 </html>

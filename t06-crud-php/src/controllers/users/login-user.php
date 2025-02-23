@@ -22,12 +22,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 
     $database = Database::getInstance();
-    $userDao = new UserDao($database);
+    $users = new UserDao($database);
 
     $user = $userDao->getUserAuthDataByEmail($email);
 
-    if ($user && password_verify($password, $user['password'])) {
-        $_SESSION['user_id'] = $user['id'];
+    if ($user && password_verify($password, $user['password_hash'])) {
+        $id = $_SESSION['user_id'] = $user['id'];
         $_SESSION['user_name'] = $user['name'];
         $_SESSION['user_email'] = $user['email'];
         $_SESSION['LAST_ACTIVITY'] = time();
