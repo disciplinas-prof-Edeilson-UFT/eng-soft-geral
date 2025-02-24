@@ -1,3 +1,10 @@
+<?php
+require __DIR__ . '/../src/dao/fetch-posts.php';
+
+// Busca os posts dos usuários que o usuário logado segue
+$posts = fetchPosts();
+?>
+
 <!DOCTYPE html>
 <html lang="pt-br">
 
@@ -5,77 +12,58 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Página Principal</title>
-    <link rel="stylesheet" href="../public/css/home.css">
+    <link rel="stylesheet" href="../public/css/home.css"> 
 </head>
 
-<body>
-    <!-- Barra Lateral --> 
-    <aside class="side-bar">
-        <img src="../public/img/logo.svg" alt="Logo da empresa" class="logo">
-        <nav class="side-bar-links">
-            <a href="/">
-                <img src="../public/img/home.svg" class="icon" alt="Ícone Página Principal">
-                Página principal
-            </a>
-            <a href="search">
-                <img src="../public/img/search.svg" class="icon" alt="Ícone Pesquisar">
-                Pesquisar
-            </a>
-            <a href="/view/profile.php">
-                <img src="../public/img/profile.svg" class="icon" alt="Ícone Perfil">
-                Perfil
-            </a>
-        </nav>
-    </aside>
+<body class="home-page">
+    <!-- Inclui a barra lateral -->
+    <?php include './sidebar.php'; ?>
 
     <!-- Conteúdo Principal -->
     <main class="container">
-        <!-- Seção de Posts -->
+        <!-- Seção de Feed de Posts -->
         <section class="feed">
-            <article class="post">
-                <header class="user-info">
-                    <div class="avatar" aria-label="Foto do Usuário"></div>
-                    <span class="username">Usuário1233</span>
-                </header>
-                <div class="image-placeholder" aria-label="Imagem do Post"></div>
-            </article>
-            <hr class="divider">
-            <article class="post">
-                <header class="user-info">
-                    <div class="avatar" aria-label="Foto do Usuário"></div>
-                    <span class="username">Usuário1233</span>
-                </header>
-                <div class="image-placeholder" aria-label="Imagem do Post"></div>
-            </article>
+            <?php if ($posts): ?>
+                <!-- Itera sobre cada post -->
+                <?php foreach ($posts as $post): ?>
+                    <article class="post">
+                        <!-- Cabeçalho do Post: Informações do Usuário -->
+                        <header class="user-info">
+                            <!-- Container da Foto de Perfil -->
+                            <div class="avatar" aria-label="Foto do Usuário">
+                                <?php
+                                // Define a foto de perfil do usuário
+                                $profilePhoto = !empty($post['profile_pic'])
+                                    ? 'http://localhost/eng-soft-geral/t06-crud-php/src/uploads/' . htmlspecialchars($post['profile_pic'])
+                                    : 'http://localhost/eng-soft-geral/t06-crud-php/public/img/default-avatar.png'; // Foto padrão
+                                ?>
+                                <img src="<?= $profilePhoto; ?>" alt="Foto de Perfil" class="profile-picture">
+                            </div>
+
+                            <!-- Link para o Perfil do Usuário -->
+                            <a href="/eng-soft-geral/t06-crud-php/view/profile.php?id=<?= htmlspecialchars($post['id']) ?>" class="username">
+                                <?= htmlspecialchars($post['name']) ?> <!-- Nome do Usuário -->
+                            </a>
+                        </header>
+
+                        <!-- Container da Imagem do Post -->
+                        <div class="image-placeholder" aria-label="Imagem do Post">
+                            <?php if (!empty($post['photo_url'])): ?>
+                                <!-- Exibe a imagem do post, se houver -->
+                                <img src="<?= 'http://localhost/eng-soft-geral/t06-crud-php/src/uploads/' . htmlspecialchars($post['photo_url']) ?>" alt="Imagem do post">
+                            <?php endif; ?>
+                        </div>
+                    </article>
+
+                    <!-- Divisor entre os posts -->
+                    <hr class="divider">
+                <?php endforeach; ?>
+            <?php else: ?>
+                <p>Nenhuma postagem disponível.</p>
+            <?php endif; ?>
         </section>
-
-        <!-- Barra Lateral Direita -->
-        <aside class="sidebar">
-            <!-- Perfil do Usuário -->
-            <section class="user-profile">
-                <header>
-                    <div class="avatar" aria-label="Avatar do Usuário"></div>
-                    <div class="profile-info">
-                        <span class="username"><?php echo $userName; ?></span>
-                        <a href="#" class="change-link">Mudar</a>
-                    </div>
-                </header>
-            </section>
-
-            <!-- Sugestões -->
-            <section class="suggestions">
-                <h2>Sugestões para você</h2>
-                <ul class="suggestion-list">
-                    <li class="suggestion-item">
-                        <div class="avatar" aria-label="Foto de Sugestão"></div>
-                        <span class="username">Usuário1233</span>
-                        <a href="#" class="follow-link">Seguir</a>
-                    </li>
-                    <!-- Mais sugestões aqui -->
-                </ul>
-            </section>
-        </aside>
     </main>
+    <script src="../public/js/search.js"></script>
 </body>
 
 </html>
