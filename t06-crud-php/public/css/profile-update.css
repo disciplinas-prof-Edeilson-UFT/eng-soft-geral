@@ -1,13 +1,21 @@
 @import url(global.css);
 
+:root {
+    --primary-color: #007bff;
+    --secondary-color: #0056b3;
+    --background-color: #f2f2f2;
+    --border-color: rgb(235, 233, 233);
+    --text-color: black;
+    --text-gray: gray;
+    --white: #ffffff;
+    --danger-color: #ff3838;
+}
+
 body {
     align-items: center;
     justify-content: center;
-}
-
-.icon {
-    display: flex;
-    justify-content: center;
+    background-color: var(--background-color);
+    font-family: Arial, sans-serif;
 }
 
 .form-container {
@@ -16,81 +24,92 @@ body {
     justify-content: center;
     align-items: center;
     height: 100vh;
+    background-color: var(--white);
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    max-width: 800px; /* Aumentei a largura máxima do container */
+    width: 90%; /* Garante que o container não ultrapasse a largura da tela em dispositivos menores */
+    margin: 0 auto;
+}
+
+.form-container h1 {
+    font-size: 24px;
+    font-weight: 600;
+    color: var(--text-color);
+    margin-bottom: 1.5rem;
 }
 
 .form-wrapper {
     display: flex;
     flex-direction: column;
+    width: 100%;
+    gap: 1rem;
 }
 
 .form-control {
     width: 100%;
-    padding: 0.5rem;
-    font-size: 1rem;
 }
 
 .form-control label {
     display: block;
-    color: gray;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text-gray);
+    margin-bottom: 0.5rem;
 }
 
 .form-control input {
-    display: flex;
-    width: 80%;
-    padding: 0.5rem;
-    border: none;
-    border-bottom: 1px solid #000;
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    font-size: 14px;
+    color: var(--text-color);
+    background-color: var(--background-color);
     outline: none;
     transition: border-color 0.3s ease;
+}
+
+.form-control input:focus {
+    border-color: var(--primary-color);
+}
+
+.form-control input[type="file"] {
+    padding: 0.5rem;
+    background-color: var(--white);
 }
 
 .btn-wrapper {
     display: flex;
     flex-direction: column;
-    align-items: center;
-    margin-top: 1rem;
-    margin-bottom: 2rem;
-}
-
-.btn-delete {
-    background-color: #ff3838;
-    color: white;
-    border-radius: 4px;
-    padding: 0.5rem 3rem;
-    border: none;
+    gap: 1rem;
     width: 100%;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-    margin: 5%;
-}
-
-.btn-delete a {
-    text-decoration: none;
-    color: white;
+    margin-top: 1.5rem;
 }
 
 .btn {
-    background-color: #4938FF;
-    color: white;
-    border-radius: 4px;
-    padding: 0.5rem 3rem;
-    border: none;
     width: 100%;
+    padding: 0.75rem;
+    border: none;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--white);
+    background-color: var(--primary-color);
     cursor: pointer;
     transition: background-color 0.3s ease;
 }
 
 .btn:hover {
-    background-color: #4938FF;
+    background-color: var(--secondary-color);
 }
 
-.login-link {
-    margin-top: 15px;
-    text-align: center;
-    color: gray;
+.btn-danger {
+    background-color: var(--danger-color);
+    color: var(--white);
 }
 
-.link {
-    color: #4938FF;
-    text-decoration: none;
+.btn-danger:hover {
+    background-color: darken(var(--danger-color), 10%);
 }

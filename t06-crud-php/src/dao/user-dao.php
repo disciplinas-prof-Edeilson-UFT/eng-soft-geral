@@ -44,7 +44,8 @@ class UserDao
         return $stmt->fetch();
     }
 
-    public function updateUser($name, $email, $bio, $phone, $id): bool {
+    public function updateUser($name, $email, $bio, $phone, $id): bool
+    {
         $sql = "UPDATE users SET name = :name, email = :email, bio = :bio, phone = :phone WHERE id = :id";
         $stmt = $this->db->prepare($sql);
         $stmt->execute([
@@ -56,10 +57,21 @@ class UserDao
         ]);
         return true;
     }
-    public function deleteUser($id): bool {
+    public function deleteUser($id): bool
+    {
         $sql = "DELETE FROM users WHERE id = :id";
         $stmt = $this->db->prepare($sql);
         $stmt->execute([':id' => $id]);
         return true;
+    }
+
+
+    public function updateProfilePic($profilePic, $id): bool {
+        $sql = "UPDATE users SET profile_pic = :profile_pic WHERE id = :id";
+        $stmt = $this->db->prepare($sql);
+        return $stmt->execute([
+            ":profile_pic" => $profilePic,
+            ":id" => $id
+        ]);
     }
 }

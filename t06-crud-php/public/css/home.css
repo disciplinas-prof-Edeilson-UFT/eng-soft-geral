@@ -1,220 +1,97 @@
-/* Importando CSS global */
-@import url(global.css);
-
-/* Variáveis de cores */
-:root {
-    --primary-color: #2a2a2a;
-    --secondary-color: #007bff;
-    --background-color: #ffffff;
-    --hover-background-color: #f2f2f2;
-    --avatar-background-color: #ccc;
-    --divider-color: rgb(235, 233, 233);
-    --box-shadow-color: rgba(73, 73, 73, 0.1);
-}
-
-/* Estilos gerais do corpo */
-body {
-    font-family: Arial, sans-serif;
+/* Reset básico */
+* {
     margin: 0;
     padding: 0;
-    background-color: var(--background-color);
+    box-sizing: border-box;
+    font-family: 'Inter', sans-serif; /* Fonte moderna */
 }
 
-/* Barra lateral esquerda */
-.side-bar {
-    width: 20%;
-    height: 100vh;
+body {
+    background-color: #ffffff; /* Fundo suave */
     display: flex;
-    flex-direction: column;
-    border-right: 2px solid var(--divider-color);
-}
-
-.side-bar a {
-    text-decoration: none;
-    color: var(--primary-color);
-    padding: 10px;
-    font-size: 16px;
-}
-
-.side-bar-links {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    margin-top: 20px;
-    width: 80%;
-}
-
-.logo {
-    width: 70%;
-    margin-top: 30px;
-}
-
-.side-bar-links a:hover {
-    background-color: var(--hover-background-color);
-    border-radius: 10px;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 20px;
 }
 
 /* Container principal */
 .container {
-    width: 500px;
-    position: absolute;
-    left: 23%;
-    top: 5%;
-}
-
-/* Área principal do conteúdo */
-main {
+    width: 100%;
+    max-width: 600px; /* Largura máxima para melhor leitura */
     display: flex;
     flex-direction: column;
     gap: 20px;
 }
 
-/* Feed de posts */
-.feed {
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-}
-
+/* Cada post */
 .post {
-    background-color: var(--background-color);
-    padding: 15px;
-    border-radius: 8px;
-    box-shadow: 0 1px 3px var(--box-shadow-color);
-    width: 90%;
-    margin: 0 auto;
+    background: white;
+    border-radius: 12px; /* Bordas mais arredondadas */
+    padding: 20px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05); /* Sombra suave */
 }
 
-/* Informações do usuário no post */
+/* Cabeçalho do post */
 .user-info {
     display: flex;
     align-items: center;
-    margin-bottom: 10px;
+    gap: 16px; /* Espaçamento maior entre a foto e o nome */
+    margin-bottom: 16px;
 }
 
 .avatar {
-    width: 40px;
-    height: 40px;
-    background-color: var(--avatar-background-color);
-    border-radius: 50%;
-    margin-right: 10px;
-}
-
-.username {
-    font-size: 12px;
-    font-weight: bold;
-    color: var(--primary-color);
-}
-
-/* Espaço reservado para imagem do post */
-.image-placeholder {
-    width: 100%;
-    height: 200px;
-    background-color: #e0e0e0;
+    width: 64px; /* Tamanho maior para a foto */
+    height: 64px; /* Tamanho maior para a foto */
+    border-radius: 50%; /* Foto redonda */
+    overflow: hidden; /* Garante que a imagem não ultrapasse o container */
+    border: 1px solid #eee; /* Borda sutil */
     display: flex;
     justify-content: center;
     align-items: center;
-    border-radius: 8px;
 }
 
-/* Barra lateral direita */
-.sidebar {
-    gap: 20px;
-    margin-left: 800px;
-    margin-top: -125%;
-    width: 50%;
+.avatar img {
+    width: 100%; /* Ocupa 100% do container */
+    height: 100%; /* Ocupa 100% do container */
+    object-fit: cover; /* Mantém a proporção e cobre o espaço */
 }
 
-/* Perfil do usuário */
-.user-profile {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-bottom: 20px;
+.username {
+    font-weight: 600; /* Peso da fonte mais forte */
+    font-size: 18px; /* Tamanho maior */
+    color: #333; /* Cor escura para contraste */
 }
 
-.user-profile .avatar {
-    width: 50px;
-    height: 50px;
-    background-color: var(--avatar-background-color);
-    border-radius: 50%;
-}
-
-.profile-info {
-    display: flex;
-    flex-direction: column;
-}
-
-.profile-info .username {
-    font-size: 16px;
-    color: var(--primary-color);
-    margin-bottom: 5px;
-}
-
-.change-link {
-    font-size: 14px;
-    color: var(--secondary-color);
-    text-decoration: none;
-}
-
-.change-link:hover {
-    text-decoration: underline;
-}
-
-/* Sugestões de usuários */
-.suggestions h2 {
-    font-size: 14px;
-    font-weight: bold;
-    margin-bottom: 15px;
-}
-
-.suggestion-list {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-}
-
-.suggestion-item {
-    display: flex;
-    align-items: center;
-    margin-bottom: 10px;
+/* Imagem do post */
+.image-placeholder {
     width: 100%;
+    border-radius: 8px; /* Bordas arredondadas */
+    overflow: hidden;
+    background-color: #f0f0f0; /* Cor de fundo suave */
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
-.suggestion-item .avatar {
-    width: 40px;
-    height: 40px;
-    background-color: var(--avatar-background-color);
-    border-radius: 50%;
-    margin-right: 10px;
+.image-placeholder img {
+    width: 100%;
+    height: 100%; /* Ocupa 100% do container */
+    object-fit: cover; /* Mantém a proporção e cobre o espaço */
+    max-height: 500px; /* Altura máxima para evitar imagens muito grandes */
 }
 
-.follow-link {
-    margin-left: auto;
-    font-size: 14px;
-    color: var(--secondary-color);
-    text-decoration: none;
+/* Linha divisória */
+.divider {
+    border: none;
+    height: 1px;
+    background: #eee; /* Linha mais suave */
+    margin: 20px 0;
 }
 
-.follow-link:hover {
-    text-decoration: underline;
-}
-
-/* Responsividade para telas menores */
-@media (max-width: 768px) {
-    .side-bar {
-        display: none;
-    }
-
-    .container {
-        flex-direction: column;
-    }
-
-    .post {
-        width: 100%;
-    }
-
-    .sidebar {
-        margin-left: 0;
-    }
+/* home.css */
+.home-page .search-box {
+    background-color: #ffffff; /* Cor sólida */
+    opacity: 1; /* Garantir que não há transparência */
+    z-index: 9999; /* Garantir que fique acima de tudo */
 }
