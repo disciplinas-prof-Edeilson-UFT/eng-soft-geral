@@ -1,6 +1,6 @@
 <?php
 
-require_once __DIR__ . '/../../../database.php';
+require_once __DIR__ . '/../../database.php';
 
 class UserDao
 {
@@ -61,17 +61,11 @@ class UserDao
         return $stmt->fetch();
     }
 
-    public function updateUser($name, $email, $bio, $phone, $id): bool
+    public function updateUser($username, $email, $bio, $phone, $id): bool
     {
-        $sql = "UPDATE users SET name = :name, email = :email, bio = :bio, phone = :phone WHERE id = :id";
+        $sql = "UPDATE users SET username = :username, email = :email, bio = :bio, phone = :phone WHERE id = :id";
         $stmt = $this->db->prepare($sql);
-        $stmt->execute([
-            ":name"  => $name,
-            ":email" => $email,
-            ":bio"   => $bio,
-            ":phone" => $phone,
-            ":id"    => $id
-        ]);
+        $stmt->execute([":username"  => $username,":email" => $email,":bio"=> $bio,":phone" => $phone,":id"=> $id ]);
         return true;
     }
     public function deleteUser($id): bool
@@ -91,11 +85,11 @@ class UserDao
     }
 
 
-    public function updateProfilePic($profilePic, $id): bool {
-        $sql = "UPDATE users SET profile_pic = :profile_pic WHERE id = :id";
+    public function updateProfilePic($profilePicUrl, $id): bool {
+        $sql = "UPDATE users SET profile_pic_url = :profile_pic_url WHERE id = :id";
         $stmt = $this->db->prepare($sql);
         return $stmt->execute([
-            ":profile_pic" => $profilePic,
+            ":profile_pic_url" => $profilePicUrl,
             ":id" => $id
         ]);
     }

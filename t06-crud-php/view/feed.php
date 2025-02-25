@@ -1,8 +1,6 @@
 <?php
-require __DIR__ . '/../src/dao/fetch-posts.php';
-
-// Busca os posts dos usuários que o usuário logado segue
-$posts = fetchPosts();
+require_once __DIR__ . '/../dir-config.php';
+require_once __DIR__ . '/../src/controllers/posts/get-all-posts.php';
 ?>
 
 <!DOCTYPE html>
@@ -12,12 +10,11 @@ $posts = fetchPosts();
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Página Principal</title>
-    <link rel="stylesheet" href="../public/css/home.css"> 
+    <link rel="stylesheet" href="<?= BASE_URL ?>public/css/home.css">
 </head>
 
 <body class="home-page">
-    <!-- Inclui a barra lateral -->
-    <?php include './sidebar.php'; ?>
+    <?php include __DIR__ . '/components/side-bar.php'; ?>
 
     <!-- Conteúdo Principal -->
     <main class="container">
@@ -33,16 +30,16 @@ $posts = fetchPosts();
                             <div class="avatar" aria-label="Foto do Usuário">
                                 <?php
                                 // Define a foto de perfil do usuário
-                                $profilePhoto = !empty($post['profile_pic'])
-                                    ? 'http://localhost/eng-soft-geral/t06-crud-php/src/uploads/' . htmlspecialchars($post['profile_pic'])
-                                    : 'http://localhost/eng-soft-geral/t06-crud-php/public/img/default-avatar.png'; // Foto padrão
+                                $profilePhoto = !empty($post['profile_pic_url'])
+                                    ? BASE_URL . 'uploads/' . htmlspecialchars($post['profile_pic_url'])
+                                    : BASE_URL . 'public/img/profile.svg'; 
                                 ?>
                                 <img src="<?= $profilePhoto; ?>" alt="Foto de Perfil" class="profile-picture">
                             </div>
 
                             <!-- Link para o Perfil do Usuário -->
-                            <a href="/eng-soft-geral/t06-crud-php/view/profile.php?id=<?= htmlspecialchars($post['id']) ?>" class="username">
-                                <?= htmlspecialchars($post['name']) ?> <!-- Nome do Usuário -->
+                            <a href="<?= BASE_URL ?>view/profile.php?id=<?= htmlspecialchars($post['id']) ?>" class="username">
+                                <?= htmlspecialchars($post['username'] ?? '') ?>
                             </a>
                         </header>
 
@@ -50,7 +47,7 @@ $posts = fetchPosts();
                         <div class="image-placeholder" aria-label="Imagem do Post">
                             <?php if (!empty($post['photo_url'])): ?>
                                 <!-- Exibe a imagem do post, se houver -->
-                                <img src="<?= 'http://localhost/eng-soft-geral/t06-crud-php/src/uploads/' . htmlspecialchars($post['photo_url']) ?>" alt="Imagem do post">
+                                <img src="<?= BASE_URL . 'uploads/feed/' . htmlspecialchars($post['photo_url']) ?>" alt="Imagem do post">
                             <?php endif; ?>
                         </div>
                     </article>
@@ -59,11 +56,10 @@ $posts = fetchPosts();
                     <hr class="divider">
                 <?php endforeach; ?>
             <?php else: ?>
-                <p>Nenhuma postagem disponível.</p>
+                <p>0 postagens no seu feed</p>
             <?php endif; ?>
         </section>
     </main>
-    <script src="../public/js/search.js"></script>
 </body>
 
 </html>

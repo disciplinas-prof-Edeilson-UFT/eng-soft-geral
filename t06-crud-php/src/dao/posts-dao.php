@@ -1,5 +1,5 @@
 <?php 
-require_once __DIR__ . '/../../../database.php';
+require_once __DIR__ . '/../../database.php';
 class PostsDao {
 
     private $db;
@@ -9,20 +9,32 @@ class PostsDao {
         $this->db = Database::getInstance()->getConnection();
     }
 
-    public function createPost($userId, $photo_url, $description) {
-        $sql = "INSERT INTO posts (user_id, photo_url, description) VALUES (:userId, :photo_url, :description)";
+    public function createPost($userId, $photo_url) {
+        $sql = "INSERT INTO posts (user_id, photo_url) VALUES (:userId, :photo_url)";
         $stmt = $this->db->prepare($sql);
-        return $stmt->execute([
-            ':userId' => $userId,
-            ':photo_url' => $photo_url,
-            ':description' => $description
-        ]);
+        return $stmt->execute([':userId' => $userId,':photo_url' => $photo_url]);
     }
 
-    public function getPosts($userId) {
-        $sql = "SELECT p.id, p.photo_url, p.upload_date, p.description, u.name, u.profile_pic FROM posts p JOIN users u ON p.user_id = u.id WHERE p.user_id = :userId ORDER BY p.upload_date DESC";
+    public function getPostsById($userId) {
+        $sql = "SELECT p.id, p.photo_url, p.upload_date, p.description, u.username, u.profile_pic_url 
+                FROM posts p 
+                JOIN users u ON p.user_id = u.id 
+                WHERE p.user_id = :userId 
+                ORDER BY p.upload_date DESC";
+
         $stmt = $this->db->prepare($sql);
         $stmt->execute([':userId' => $userId]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function getAllPosts() {
+        $sql = "SELECT p.id, p.photo_url, p.upload_date, p.description, u.username, u.profile_pic_url 
+                FROM posts p 
+                JOIN users u ON p.user_id = u.id 
+                ORDER BY p.upload_date DESC";
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 

@@ -15,7 +15,7 @@ $baseUrl = "http://localhost/eng-soft-geral/t06-crud-php/";
     <aside class="side-bar">
         <img src="../public/img/logo.svg" alt="logo" class="logo">
         <div class="side-bar-links">
-            <a href="./home.php">
+            <a href="/">
                 <img src="../public/img/home.svg" class="icon">
                 Página principal
             </a>
@@ -23,7 +23,7 @@ $baseUrl = "http://localhost/eng-soft-geral/t06-crud-php/";
                 <img src="../public/img/search.svg" class="icon">
                 Pesquisar
             </button>
-            <a href="#" onclick="redirectToProfile()">
+            <a href="/view/profile.php" onclick="redirectToProfile()">
                 <img src="../public/img/profile.svg" class="icon">
                 Perfil
             </a>
@@ -38,7 +38,7 @@ $baseUrl = "http://localhost/eng-soft-geral/t06-crud-php/";
     </div>
     <script>
         function redirectToProfile() {
-            window.location.href = "<?php echo $baseUrl; ?>view/profile.php?id=<?php echo isset($_SESSION['user_id']) ? $_SESSION['user_id'] : ''; ?>";
+            window.location.href = "<?= BASE_URL ?>view/profile.php?id=<?php echo isset($_SESSION['user_id']) ? $_SESSION['user_id'] : ''; ?>";
         }
     </script>
     <script src="../public/js/search.js"></script>

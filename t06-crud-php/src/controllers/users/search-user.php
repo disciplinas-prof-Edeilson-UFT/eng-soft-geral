@@ -1,21 +1,21 @@
 <?php
 
 require_once __DIR__ . '/../../dao/search-dao.php';
-require_once __DIR__ . '/../../../config.php';
+require_once __DIR__ . '/../../../dir-config.php';
 
 if (isset($_GET['query'])) {
     $query = $_GET['query'];
 
-    $userRepo = new SearchDao();
-    $usuarios = $userRepo->buscarUsuarios($query);
+    $searchDao = new SearchDao();
+    $users = $searchDao->SearchUsers($query);
 
-    if (count($usuarios) > 0) {
-        foreach ($usuarios as $usuario) {
-            $nome = htmlspecialchars($usuario['name']);
-            $id = htmlspecialchars($usuario['id']);
-            $foto = !empty($usuario['profile_pic'])
-                ? BASE_URL . "src/uploads/" . htmlspecialchars($usuario['profile_pic'])
-                : 'https://via.placeholder.com/150'; 
+    if (count($users) > 0) {
+        foreach ($users as $user) {
+            $nome = htmlspecialchars($user['username']);
+            $id = htmlspecialchars($user['id']);
+            $foto = !empty($user['profile_pic_url'])
+                ? BASE_URL . "uploads/avatars/" . htmlspecialchars($user['profile_pic_url'])
+                : BASE_URL . "public/img/profile.svg"; 
 
             echo "<div class='search-result'>";
             echo "<img src='$foto' alt='Foto de $nome' class='profile-pic'>";

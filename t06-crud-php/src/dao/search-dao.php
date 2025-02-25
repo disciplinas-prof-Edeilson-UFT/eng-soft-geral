@@ -1,5 +1,5 @@
 <?php
-require_once __DIR__ . '/../../../database.php';
+require_once __DIR__ . '/../../database.php';
 
 class SearchDao
 {
@@ -10,11 +10,11 @@ class SearchDao
         $this->db = Database::getInstance()->getConnection();
     }
 
-    public function SearchUsers($name)
+    public function SearchUsers($username)
     {
-        $sql = "SELECT id, username, email, profile_pic_url FROM users WHERE name LIKE :name";
+        $sql = "SELECT id, username, email, profile_pic_url FROM users WHERE username LIKE :username";
         $stmt = $this->db->prepare($sql);
-        $stmt->execute(['name' => $name]);
+        $stmt->execute(['username' => $username]);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 }

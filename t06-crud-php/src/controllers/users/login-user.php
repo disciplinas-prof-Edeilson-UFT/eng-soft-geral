@@ -1,9 +1,9 @@
 <?php
 session_start();
 
-require_once __DIR__ . '/../../../../database.php';
-require_once __DIR__ . '/../../../dao/user-dao.php';
-require_once __DIR__ . '/../../../config.php';
+require_once __DIR__ . '/../../../database.php';
+require_once __DIR__ . '/../../dao/user-dao.php';
+require_once __DIR__ . '/../../../dir-config.php';
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $email = trim($_POST['email']);
@@ -22,13 +22,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 
     $database = Database::getInstance();
-    $users = new UserDao($database);
+    $userDao = new UserDao($database);
 
     $user = $userDao->getUserAuthDataByEmail($email);
 
     if ($user && password_verify($password, $user['password_hash'])) {
         $id = $_SESSION['user_id'] = $user['id'];
-        $_SESSION['user_name'] = $user['name'];
+        $_SESSION['user_name'] = $user['username'];
         $_SESSION['user_email'] = $user['email'];
         $_SESSION['LAST_ACTIVITY'] = time();
         $_SESSION['success'] = "Login realizado com sucesso!";

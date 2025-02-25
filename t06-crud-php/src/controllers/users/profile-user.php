@@ -1,11 +1,11 @@
 <?php
-require __DIR__ . '/../../../database.php';
-require __DIR__ . '/../../follow-dao.php';
-require __DIR__ . '/../../user-dao.php';
-require_once __DIR__ . '/../../../config.php';
+require_once __DIR__ . '/../../../database.php';
+require_once __DIR__ . '/../../dao/follow-dao.php';
+require_once __DIR__ . '/../../dao/user-dao.php';
+require_once __DIR__ . '/../../../dir-config.php';
+require_once __DIR__ . '/../../dao/posts-dao.php';
 
 session_start();
-
 if (!isset($_SESSION['user_id'] )) {
     header("Location: " . BASE_URL . "view/login.php");
     exit;
@@ -21,10 +21,17 @@ if (!$user) {
     die("<p>Usuário não encontrado.</p>");
 }
 
-$userName = $userDao->getUserNameById($logged_in_user_id);
-$userPhoto = $userDao->getUserProfilePhotoById($logged_in_user_id);
 
-$isFollowing = isFollowing($user_id, $logged_in_user_id);
+$userName = $user['username']; 
+$profilePhoto = !empty($user['profile_pic_url'])
+    ? BASE_URL . 'uploads/avatars/' . htmlspecialchars($user['profile_pic_url'])
+    : BASE_URL . 'public/img/profile.svg';
+
+$followDao = new FollowDao();
+$isFollowing = $followDao->isFollowing($user_id, $logged_in_user_id);
+
+$followers = $followDao->getFollowers($user_id);
+$following = $followDao->getFollowing($user_id);
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
     $action = $_POST['action'];
@@ -33,15 +40,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
     $followController->handleFollow($user_id, $logged_in_user_id, $isFollowing, $action);
 }
 
+$postsDao = new PostsDao();
+$userPosts = $postsDao->getPostsById($user_id);
+
 $userProfileData = [
     'username' => htmlspecialchars($user['username']),
     'user_id' => $user_id,
     'logged_in_user_id' => $logged_in_user_id,
-    'profile_Pic_Url' => htmlspecialchars($user['profile_pic_url']),
+    'profile_Pic_Url' => htmlspecialchars($profilePhoto ?? ''),
     'is_Following' => $isFollowing,
-    'followers' => getFollowers($user_id),
-    'following' => getFollowing($user_id),
-    'bio' => htmlspecialchars($user['bio'])
+    'followers' => $followers,
+    'following' => $following,
+    'bio' => htmlspecialchars($user['bio'] ?? ''),
+    'photos' => $userPosts,
 ];
 
+include __DIR__ . '/../../../view/profile.php';
+exit;
 ?>

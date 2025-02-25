@@ -1,10 +1,7 @@
 <?php
-// Inicia a sessão
-session_start();
+require_once __DIR__ . "/../dir-config.php";
+require_once __DIR__ . '/../src/controllers/users/profile-user.php';
 
-// Inclui o arquivo de configuração e o controller
-require_once __DIR__ . "/../configs.php"; 
-require '../src/controllers/profile.php';  
 ?>
 
 <!DOCTYPE html>
@@ -14,37 +11,23 @@ require '../src/controllers/profile.php';
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Perfil</title>
-    <link rel="stylesheet" href="<?= BASE_URL ?>public/css/profile.css"> <!-- Usa BASE_URL -->
+    <link rel="stylesheet" href="<?= BASE_URL ?>public/css/profile.css">
 </head>
 
 <body>
-    <aside class="side-bar">
-        <img src="../public/img/logo.svg" alt="logo" class="logo">
-        <div class="side-bar-links">
-            <a href="/">
-                <img src="../public/img/home.svg" class="icon">
-                Página principal
-            </a>
-            <a href="search">
-                <img src="../public/img/search.svg" class="icon">
-                Pesquisar
-            </a>
-            <a href="/view/profile.php">
-                <img src="../public/img/profile.svg" class="icon">
-                Perfil
-            </a>
-        </div>
-    </aside>
+    <?php include __DIR__ . '/components/side-bar.php'; ?>
+
     <main class="profile-container">
         <!-- Seção de informações do usuário -->
         <section class="info-section">
             <div class="photo-container">
+                
                 <img src="<?= $profilePhoto; ?>" alt="Foto de Perfil" class="profile-picture">
 
                 <!-- Botão de edição de perfil (apenas para o próprio usuário) -->
                 <?php if ((int)$user_id === (int)$logged_in_user_id): ?>
                     <button class="btn-edit">
-                        <a href="<?= BASE_URL ?>view/profile-update.php?id=<?= $userId; ?>">Editar Perfil</a>
+                        <a href="<?= BASE_URL ?>view/profile-update.php?id=<?= $user_id; ?>">Editar Perfil</a>
                     </button>
                 <?php endif; ?>
             </div>
@@ -52,16 +35,16 @@ require '../src/controllers/profile.php';
             <div class="user-info">
                 <h1 class="user-name"><?php echo $userName; ?></h1>
                 <div class="stats-container">
-                    <span class="following"><?= $seguindo; ?> seguindo</span>
-                    <span class="followers"><?= $seguidores; ?> seguidores</span>
+                    <span class="following"><?= $following; ?> seguindo</span>
+                    <span class="followers"><?= $followers; ?> seguidores</span>
                 </div>
 
                 <!-- Formulário para seguir/deixar de seguir (apenas para outros usuários) -->
                 <?php if ((int)$user_id !== (int)$logged_in_user_id): ?>
                     <form method="POST">
-                        <input type="hidden" name="acao" value="<?= $estaSeguindo ? 'parar_de_seguir' : 'seguir' ?>">
+                        <input type="hidden" name="acao" value="<?= $isFollowing ? 'parar_de_seguir' : 'seguir' ?>">
                         <button type="submit" class="btn-follow">
-                            <?= $estaSeguindo ? 'Deixar de seguir' : 'Seguir' ?>
+                            <?= $isFollowing ? 'Deixar de seguir' : 'Seguir' ?>
                         </button>
                     </form>
                 <?php endif; ?>
@@ -71,19 +54,21 @@ require '../src/controllers/profile.php';
         <!-- Seção da foto do feed -->
         <section class="info-section">
             <div class="feed-photo-container">
-                <?php if ($userPhoto): ?>
+                <?php if ($userPosts): ?>
                     <?php
-                    $relativePath = BASE_URL . "src/uploads/" . htmlspecialchars($userPhoto); // Usa BASE_URL
-                    ?>
-                    <img src="<?= $relativePath; ?>" alt="Imagem do Feed" class="feed-image">
+                    if (isset($userPosts[0]['photo_url'])) {
+                        $relativePath = BASE_URL . "uploads/feed/" . htmlspecialchars($userPosts[0]['photo_url']);
+                        ?>
+                        <img src="<?= $relativePath; ?>" alt="Imagem do Feed" class="feed-image">
+                    <?php } ?>
                 <?php endif; ?>
             </div>
 
             <!-- Formulário de upload de foto (apenas para o próprio usuário e se não houver foto) -->
-            <?php if (!$userPhoto && $user_id == $_SESSION['user_id']): ?>
+            <?php if (!$profilePhoto && $user_id == $_SESSION['user_id']): ?>
                 <div class="pai-do-upload-container">
                     <div class="upload-container">
-                        <form action="<?= BASE_URL ?>src/controllers/upload-photo-feed.php" method="POST" enctype="multipart/form-data">
+                        <form action="<?= BASE_URL ?>src/controllers/posts/upload-feed-photo.php" method="POST" enctype="multipart/form-data">
                             <label for="photo">
                                 <img src="<?= BASE_URL ?>public/img/add-photo.svg" class="icon"> <br>
                                 Adicionar foto

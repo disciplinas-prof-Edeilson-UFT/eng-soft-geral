@@ -7,7 +7,7 @@ class Database
 
     private function __construct()
     {
-        $config = require __DIR__ . '/config.php';
+        $config = require __DIR__ . '/db-config.php';
 
         if (!isset($config['database']['host'], $config['database']['port'], $config['database']['username'], $config['database']['password'], $config['database']['dbname'])) {
             throw new Exception("Configuração do banco de dados incompleta");
@@ -57,7 +57,7 @@ class Database {
     
     public static function getInstance() {
         if (self::$instance === null) {
-            $config = require __DIR__ . '/config.php';
+            $config = require __DIR__ . '/db-config.php';
             self::$instance = new self(
                 $config['database']['host'],
                 $config['database']['port'],
