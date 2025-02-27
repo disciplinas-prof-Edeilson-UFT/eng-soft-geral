@@ -5,7 +5,6 @@ class UploadHandler {
         if (!is_dir($uploadDir)) {
             mkdir($uploadDir, 0777, true);
         }
-
         $fileType = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
 
         if (!in_array($fileType, $allowedTypes)) {
@@ -28,5 +27,6 @@ class UploadHandler {
         } else {
             return ['success' => false, 'error' => "Erro ao fazer upload da imagem."];
         }
+        
     }
 }

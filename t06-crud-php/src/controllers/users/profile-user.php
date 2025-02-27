@@ -4,6 +4,7 @@ require_once __DIR__ . '/../../dao/follow-dao.php';
 require_once __DIR__ . '/../../dao/user-dao.php';
 require_once __DIR__ . '/../../../dir-config.php';
 require_once __DIR__ . '/../../dao/posts-dao.php';
+require_once __DIR__ . "/../../utils/follow-handler.php";
 
 session_start();
 if (!isset($_SESSION['user_id'] )) {
@@ -36,7 +37,7 @@ $following = $followDao->getFollowing($user_id);
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
     $action = $_POST['action'];
 
-    $followController = new FollowController();
+    $followController = new FollowHandler();
     $followController->handleFollow($user_id, $logged_in_user_id, $isFollowing, $action);
 }
 

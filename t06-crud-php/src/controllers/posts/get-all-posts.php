@@ -7,8 +7,6 @@ if (!isset($_SESSION['user_id'])) {
     exit;
 }
 
-$user_id = $_SESSION['user_id'];
-
 try {
     $postsDao = new PostsDao();
     $posts = $postsDao->getAllPosts();

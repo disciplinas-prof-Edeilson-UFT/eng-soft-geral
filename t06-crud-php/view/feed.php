@@ -23,6 +23,7 @@ require_once __DIR__ . '/../src/controllers/posts/get-all-posts.php';
             <?php if ($posts): ?>
                 <!-- Itera sobre cada post -->
                 <?php foreach ($posts as $post): ?>
+    
                     <article class="post">
                         <!-- Cabeçalho do Post: Informações do Usuário -->
                         <header class="user-info">
@@ -38,7 +39,7 @@ require_once __DIR__ . '/../src/controllers/posts/get-all-posts.php';
                             </div>
 
                             <!-- Link para o Perfil do Usuário -->
-                            <a href="<?= BASE_URL ?>view/profile.php?id=<?= htmlspecialchars($post['id']) ?>" class="username">
+                            <a href="<?= BASE_URL ?>view/profile.php?id=<?= htmlspecialchars($post['user_id'] ?? '') ?>" class="username">
                                 <?= htmlspecialchars($post['username'] ?? '') ?>
                             </a>
                         </header>

@@ -28,7 +28,7 @@ class PostsDao {
     }
 
     public function getAllPosts() {
-        $sql = "SELECT p.id, p.photo_url, p.upload_date, p.description, u.username, u.profile_pic_url 
+        $sql = "SELECT p.id, p.photo_url, p.user_id, p.upload_date, p.description, u.username, u.profile_pic_url 
                 FROM posts p 
                 JOIN users u ON p.user_id = u.id 
                 ORDER BY p.upload_date DESC";

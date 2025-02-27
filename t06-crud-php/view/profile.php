@@ -1,7 +1,6 @@
 <?php
 require_once __DIR__ . "/../dir-config.php";
 require_once __DIR__ . '/../src/controllers/users/profile-user.php';
-
 ?>
 
 <!DOCTYPE html>
@@ -42,7 +41,7 @@ require_once __DIR__ . '/../src/controllers/users/profile-user.php';
                 <!-- Formulário para seguir/deixar de seguir (apenas para outros usuários) -->
                 <?php if ((int)$user_id !== (int)$logged_in_user_id): ?>
                     <form method="POST">
-                        <input type="hidden" name="acao" value="<?= $isFollowing ? 'parar_de_seguir' : 'seguir' ?>">
+                        <input type="hidden" name="action" value="<?= $isFollowing ? 'unfollow' : 'follow' ?>">
                         <button type="submit" class="btn-follow">
                             <?= $isFollowing ? 'Deixar de seguir' : 'Seguir' ?>
                         </button>

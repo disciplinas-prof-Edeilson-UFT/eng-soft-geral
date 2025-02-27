@@ -37,10 +37,10 @@ class UserDao
 
     public function getUserProfileById($id)
     {
-
-        $query = "SELECT id, username, email, phone, bio, profile_pic_url FROM users WHERE id = :id";
+        $query = "SELECT id, username, email, phone, bio, profile_pic_url, count_followers, count_following FROM users WHERE id = :id";
         $stmt = $this->db->prepare($query);
         $stmt->execute([':id' => $id]);
+
         return $stmt->fetch();
     }
 
@@ -63,15 +63,15 @@ class UserDao
 
     public function updateUser($username, $email, $bio, $phone, $id): bool
     {
-        $sql = "UPDATE users SET username = :username, email = :email, bio = :bio, phone = :phone WHERE id = :id";
-        $stmt = $this->db->prepare($sql);
+        $query = "UPDATE users SET username = :username, email = :email, bio = :bio, phone = :phone WHERE id = :id";
+        $stmt = $this->db->prepare($query);
         $stmt->execute([":username"  => $username,":email" => $email,":bio"=> $bio,":phone" => $phone,":id"=> $id ]);
         return true;
     }
     public function deleteUser($id): bool
     {
-        $sql = "DELETE FROM users WHERE id = :id";
-        $stmt = $this->db->prepare($sql);
+        $query = "DELETE FROM users WHERE id = :id";
+        $stmt = $this->db->prepare($query);
         $stmt->execute([':id' => $id]);
 
         return true;
@@ -86,11 +86,14 @@ class UserDao
 
 
     public function updateProfilePic($profilePicUrl, $id): bool {
-        $sql = "UPDATE users SET profile_pic_url = :profile_pic_url WHERE id = :id";
-        $stmt = $this->db->prepare($sql);
-        return $stmt->execute([
-            ":profile_pic_url" => $profilePicUrl,
-            ":id" => $id
-        ]);
+        $query = "UPDATE users SET profile_pic_url = :profile_pic_url WHERE id = :id";
+        $stmt = $this->db->prepare($query);
+        return $stmt->execute([":profile_pic_url" => $profilePicUrl, ":id" => $id]);
+    }
+
+    public function updateUserFollowerCount($userId, $followers_count) {
+        $query = "UPDATE users SET count_followers = :followers_count WHERE id = :userId";
+        $stmt = $this->db->prepare($query);
+        return $stmt->execute([':followers_count' => $followers_count,':userId' => $userId]);
     }
 }

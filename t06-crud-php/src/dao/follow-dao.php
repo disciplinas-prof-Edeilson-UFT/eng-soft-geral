@@ -8,38 +8,39 @@ class FollowDao {
         $this->db = Database::getInstance()->getConnection();
     }
 
-    public function followUser($followerId, $followingId) {
-        $query = "INSERT INTO follow (user_id, following_id) VALUES (:userId, :followingId)";
-        $stmt = $this->db->prepare($query);
-        return $stmt->execute([":userId" => $followerId, ":followingId" => $followingId]);
+    public function followUser($user_id, $logged_in_user_id) {
+        $sql = "INSERT INTO follow (user_id, follower_id) VALUES (:user_id, :follower_id)";
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute([':user_id' => $user_id, ':follower_id' => $logged_in_user_id]);
+        return true;
     }
 
-    public function isFollowing($followerId, $followingId): bool {
-        $query = "SELECT * FROM follow WHERE user_id = :sourceId AND following_id = :seekerId";
+    public function isFollowing($user_id, $follower_id): bool {
+        $query = "SELECT * FROM follow WHERE user_id = :user_id AND follower_id = :follower_id";
         $stmt = $this->db->prepare($query);
-        $stmt->execute([ ":sourceId"=>$followerId,":seekerId" =>$followingId]);
+        $stmt->execute([ ":user_id"=>$user_id, ":follower_id" =>$follower_id]);
         return $stmt->fetch() ? true : false;
 
     }
 
-    public function unfollowUser($followerId, $followingId) {
-        $query = "DELETE FROM follow WHERE user_id = :userId AND following_id = :followingId";
+    public function unfollowUser($user_id, $follower_id) {
+        $query = "DELETE FROM follow WHERE user_id = :user_id AND follower_id = :follower_id";
         $stmt = $this->db->prepare($query);
-        return $stmt->execute([":userId" => $followerId, ":followingId"=>$followingId]);
+        return $stmt->execute([":user_id" => $user_id, ":follower_id"=>$follower_id]);
     }
 
-    private function getCount($userId, $countColumn) {
-        $query = "SELECT $countColumn FROM users WHERE id = :userId";
+    private function getCount($user_id, $countColumn) {
+        $query = "SELECT $countColumn FROM users WHERE id = :user_id";
         $stmt = $this->db->prepare($query);
-        $stmt->execute([":userId" => $userId]);
+        $stmt->execute([":user_id" => $user_id]);
         return $stmt->fetchColumn();
     }
 
-    public function getFollowers($userId) {
-        return $this->getCount($userId, 'count_followers');
+    public function getFollowers($user_id) {
+        return $this->getCount($user_id, 'count_followers');
     }
 
-    public function getFollowing($userId) {
-        return $this->getCount($userId , 'count_following');
+    public function getFollowing($user_id) {
+        return $this->getCount($user_id , 'count_following');
     }
 }
