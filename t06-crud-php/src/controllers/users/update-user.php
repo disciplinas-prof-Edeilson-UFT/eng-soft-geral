@@ -49,6 +49,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         } catch (Exception $e) {
             echo 'Erro: ' . $e->getMessage();
         }
+    } else if(isset($_POST['delete'])) {
+        try {
+            $userDao->deleteUser($id);
+            session_destroy();
+            header("Location: " . BASE_URL . "view/login.php");
+            exit;
+        } catch (Exception $e) {
+            echo 'Erro: ' . $e->getMessage();
+        }
+    } else if (isset($_POST['logout'])) {
+        session_destroy();
+        header("Location: " . BASE_URL . "view/login.php");
+        exit;
     }
 }
 
