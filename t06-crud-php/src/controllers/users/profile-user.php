@@ -37,8 +37,8 @@ $following = $followDao->getFollowing($user_id);
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
     $action = $_POST['action'];
 
-    $followController = new FollowHandler();
-    $followController->handleFollow($user_id, $logged_in_user_id, $isFollowing, $action);
+    $followHandler = new FollowHandler();
+    $followHandler->handleFollow($user_id, $logged_in_user_id, $isFollowing, $action);
 }
 
 $postsDao = new PostsDao();
