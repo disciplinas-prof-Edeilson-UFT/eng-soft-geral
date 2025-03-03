@@ -5,24 +5,24 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Página Principal</title>
-    <link rel="stylesheet" href="/view/css/home.css">
+    <link rel="stylesheet" href="../public/css/home.css">
 </head>
 
 <body>
     <!-- Barra Lateral -->
     <aside class="side-bar">
-        <img src="/img/logo.svg" alt="Logo da empresa" class="logo">
+        <img src="../public/img/logo.svg" alt="Logo da empresa" class="logo">
         <nav class="side-bar-links">
-            <a href="home">
-                <img src="/img/home.svg" class="icon" alt="Ícone Página Principal">
+            <a href="/">
+                <img src="../public/img/home.svg" class="icon" alt="Ícone Página Principal">
                 Página principal
             </a>
             <a href="search">
-                <img src="/img/search.svg" class="icon" alt="Ícone Pesquisar">
+                <img src="../public/img/search.svg" class="icon" alt="Ícone Pesquisar">
                 Pesquisar
             </a>
-            <a href="perfil.html">
-                <img src="/img/profile.svg" class="icon" alt="Ícone Perfil">
+            <a href="/view/profile.php">
+                <img src="../public/img/profile.svg" class="icon" alt="Ícone Perfil">
                 Perfil
             </a>
         </nav>
@@ -56,7 +56,7 @@
                 <header>
                     <div class="avatar" aria-label="Avatar do Usuário"></div>
                     <div class="profile-info">
-                        <span class="username">Usuário1233</span>
+                        <span class="username"><?php echo $userName; ?></span>
                         <a href="#" class="change-link">Mudar</a>
                     </div>
                 </header>

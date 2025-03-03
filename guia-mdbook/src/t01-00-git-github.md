@@ -1,4 +1,6 @@
-<h1> Tutorial de Git </h1>
+
+
+<h1> 1.Utilizando Git e Github </h1>
 
 <h2> Neste arquivo teremos uma série de exemplos de execução de comandos básicos do git, bem como a recomendação de vídeos demonstrando de forma prática o que eles fazem. </h2>
 
