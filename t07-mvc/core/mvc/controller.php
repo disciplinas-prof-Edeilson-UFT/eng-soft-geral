@@ -11,6 +11,7 @@ class Controller
     
     */
 
+    //Executa o metodo do controller correspondente à rota acessada pelo usuário, passando os parâmetros
     public static function execute(string $router)
     {
         self::validateRouteFormat($router);
