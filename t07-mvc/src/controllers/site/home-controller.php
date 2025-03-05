@@ -1,5 +1,5 @@
 <?php 
-namespace src\controllers;
+namespace src\controllers\site;
 
 use core\mvc\View;
 

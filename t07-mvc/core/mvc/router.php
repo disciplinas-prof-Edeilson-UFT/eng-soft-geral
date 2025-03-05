@@ -80,12 +80,14 @@ class Router {
     public function dispatch(){
         $router = $this->staticIndividualRoute();
         if ($router) {
+           //echo "Rota estática encontrada: " . $router . "<br>";
             Controller::execute($router);
             return;
         }
 
         $router = $this->dynamicIndividualRoute();
         if ($router) {
+            //echo "Rota dinamica encontrada: " . $router . "<br>";
             Controller::execute($router);
             return;
         }

@@ -1,28 +1,32 @@
 <?php
 
-require_once __DIR__ . '/src/controllers/home-controller.php';
-require_once __DIR__ . '/src/controllers/teste-controller.php';
+require_once __DIR__ . '/src/controllers/site/home-controller.php';
+require_once __DIR__ . '/src/controllers/site/teste-controller.php';
 
 class Routes{
     public static function getRouter(){
         return [
             'get' => [
-                '/' => 'HomeController@show',
-                '/teste' => 'TesteController@show'
+                '/' => 'site\HomeController@show',
+                '/teste/{id}/{user}' => 'site\TesteController@show'
             ],
             'post' => [
-                '/teste' => 'TesteController@store'
+                '/teste' => 'site\TesteController@store'
             ],
             'groups' => [
                 '/admin' => [
                     'get' => [
-                        '/teste-group' => 'TesteController@show'
+                        '/teste-group/{id}' => 'site\TesteController@showGroup'
                     ],
                     'post' => [
-                        '/teste-group' => 'TesteController@store'
+                        '/teste-group' => 'site\TesteController@storeGroup'
                     ]
                 ]
             ]
         ];
     }
+    /*
+        $routes = Routes::getRouter();
+        $routes['groups']['/admin']['get']['/teste-group/{id}'] = 'site\TesteController@showGroup';
+    */
 }

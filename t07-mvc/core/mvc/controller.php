@@ -29,7 +29,7 @@ class Controller
         self::methodExists($controllerInstance, $method, $className);
         
         //recupera parametros e executa
-        $params = Parameters::getParams($router);
+        $params = Parameters::getRouterParams($router);
         call_user_func_array([$controllerInstance, $method], $params);
     }
 
