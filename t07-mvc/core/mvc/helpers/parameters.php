@@ -26,28 +26,11 @@ class Parameters
         if(count($uriParts) !== count($routeParts)){
             throw new Exception("Rota {$router} não compatível com a URI: {$requiredUri}");
         }
+        $params = self::matchRoutes($routeParts, $uriParts);
 
-        $params = [];
-
-        
-        foreach ($routeParts as $index => $segment) {
-            if ($segment !== $uriParts[$index]) {
-                if ($routeParts[0] === 'groups'){
-                    $params['groups'][] = $uriParts[$index];
-                }
-                $params[] = $uriParts[$index];
-            }
-
-            //echo 'Índice: ' . $index . '<br>';
-            //echo 'Segmento: ' . $segment . '<br>';
-            //echo 'Segmento referente ao índice: ' . $uriParts[$index]  . '<br>';
-            //echo 'Route Parts: ' . implode(', ', $routeParts) . '<br>';
-            foreach ($params as $param) {
-                echo 'Parâmetros: ' . $param . '<br>';
-            }
-        }
-
-        //echo 'Parâmetros: ' . implode(', ', $params) . '<br>';
+        /*foreach ($params as $param) {
+            echo 'Parâmetros: ' . $param . '<br>';
+        }*/
         return $params;
 
     }
@@ -56,11 +39,20 @@ class Parameters
     {
         $params = [];
 
-        foreach($routeParts as $index => $segment){
-            if ($segment !== $uriParts[$index]){
-                $routeParts[0] == 'groups' ?? $params['groups'][] = $uriParts[$index];
+        foreach ($routeParts as $index => $segment) {
+            if (preg_match('/^\{([a-zA-Z0-9_]+)\}$/', $segment)) {
+                $params[] = $uriParts[$index];
+            }else if ($segment !== $uriParts[$index]) {
+                throw new Exception("Parametro não corresponde a URI");
             }
+
+            //echo 'Índice: ' . $index . '<br>';
+            //echo 'Segmento: ' . $segment . '<br>';
+            //echo 'Segmento referente ao índice: ' . $uriParts[$index]  . '<br>';
+            //echo 'Route Parts: ' . implode(', ', $routeParts) . '<br>';
         }
+
+        return $params;
     }
 
     //localiza o router, aplica o filterRoutes e retorna os parametros ex: /users/{id} é /users/1 retorna ['1']
@@ -93,7 +85,7 @@ class Parameters
             echo 'Parâmetros: ' . $param . '<br>';
         }*/
 
-        if ($params = []) {
+        if (empty($params)) {
             throw new Exception("Rota não encontrada");
         }
 
