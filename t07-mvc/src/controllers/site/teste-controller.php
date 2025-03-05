@@ -2,11 +2,11 @@
 
 namespace src\controllers\site;
 use src\controllers\BaseController;
+use core\mvc\View;
 include_once __DIR__ . '/../base-controller.php';
 class TesteController extends BaseController{
-    public function show(){
-
-        $this->staticView('test', ['name' => 'testeeeeee']);
+    public function show($id, $user){
+        $this->view('test', ['id' => $id, 'user' => $user]);
     }
 
     public function store(){
@@ -19,9 +19,11 @@ class TesteController extends BaseController{
         echo $password;
     }
 
-    public function showGroup(){
-
-        $this->view('test', ['name' => 'testeeeeee']);
+    public function showGroup($id){
+        $this->view('test', [
+            'name' => 'testeeeeee', 
+            'id' => $id
+        ]);
     }
 
     public function storeGroup(){

@@ -13,7 +13,7 @@
         <img src="../../public/img/logo.svg" alt="logo" class="logo">
         <div class="side-bar-links">
             <a href="/">
-                <img src="../../public/img/home.svg" class="icon">
+                <img src="/../../public/img/home.svg" class="icon">
                 Página principal
             </a>
             <button id="searchButton" onclick="toggleSearch()">

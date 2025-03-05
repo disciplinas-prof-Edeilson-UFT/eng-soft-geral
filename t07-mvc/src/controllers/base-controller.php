@@ -5,12 +5,12 @@ use core\http\Request;
 use core\mvc\View;
 
 class BaseController{
-    protected function view(string $view, array $data = []){
+    protected function view(string $view, $data = []){
         echo View::render($view, $data ?? []);
     }
 
-    protected function staticView(string $view){
-        echo View::renderOnlyView($view);
+    protected function staticView(string $view, $data = []){
+        echo View::renderOnlyView($view, $data ?? []);
     }
 
     protected function redirect(string $path){

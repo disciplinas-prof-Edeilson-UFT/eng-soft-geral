@@ -1,5 +1,10 @@
+<?php
+echo "<pre>parmetros passados para a view: ";
+print_r(get_defined_vars());
+echo "</pre>";
+?>
 <h1>Testewwww</h1>
-<p>usuario </p>
+<p>id = <?php echo isset($id) ? $id : 'Nenhum ID disponível'; ?></p>
 
 
 <div class="from">

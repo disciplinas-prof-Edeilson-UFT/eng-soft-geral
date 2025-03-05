@@ -85,10 +85,6 @@ class Parameters
             echo 'Parâmetros: ' . $param . '<br>';
         }*/
 
-        if (empty($params)) {
-            throw new Exception("Rota não encontrada");
-        }
-
         return array_values($params);
     }
 }
