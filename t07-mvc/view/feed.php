@@ -1,6 +1,6 @@
 <?php
-require_once __DIR__ . '/../dir-config.php';
-require_once __DIR__ . '/../src/controllers/posts/get-all-posts.php';
+//require_once __DIR__ . '/../dir-config.php';
+//require_once __DIR__ . '/../src/controllers/posts/get-all-posts.php';
 ?>
 
 <!DOCTYPE html>
@@ -14,7 +14,6 @@ require_once __DIR__ . '/../src/controllers/posts/get-all-posts.php';
 </head>
 
 <body class="home-page">
-    <?php include __DIR__ . '/components/side-bar.php'; ?>
 
     <!-- Conteúdo Principal -->
     <main class="container">

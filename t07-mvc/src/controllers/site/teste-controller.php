@@ -2,7 +2,7 @@
 
 namespace src\controllers\site;
 use src\controllers\BaseController;
-use core\mvc\View;
+
 include_once __DIR__ . '/../base-controller.php';
 class TesteController extends BaseController{
     public function show($id, $user){
