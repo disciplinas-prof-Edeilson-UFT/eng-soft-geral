@@ -1,7 +1,7 @@
 services:
   db:
     image: postgres:15-alpine
-    container_name: postgres_db
+    container_name: t07-mvc-db
     environment:
       POSTGRES_USER: admin
       POSTGRES_PASSWORD: root

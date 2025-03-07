@@ -7,7 +7,7 @@ CREATE TABLE users (
     username VARCHAR(255) NOT NULL,
     count_followers INTEGER DEFAULT 0,
     count_following INTEGER DEFAULT 0,
-    bio TEXT
+    bio TEXT,
 );
 
 CREATE TABLE follow (

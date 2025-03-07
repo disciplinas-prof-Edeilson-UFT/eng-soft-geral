@@ -1,7 +1,7 @@
 <?php
 
-require_once __DIR__ . '/src/controllers/site/home-controller.php';
-require_once __DIR__ . '/src/controllers/site/teste-controller.php';
+require_once __DIR__ . '/src/controllers/site/feed-controller.php';
+require_once __DIR__ . '/src/controllers/site/auth-controller.php';
 
 class Routes{
     public static function getRouter(){
@@ -16,10 +16,20 @@ class Routes{
             'groups' => [
                 '/admin' => [
                     'get' => [
-                        '/teste-group/{id}' => 'site\TesteController@showGroup'
+                        '/teste-group/{id}' => 'TesteController@showGroup'
                     ],
                     'post' => [
-                        '/teste-group' => 'site\TesteController@storeGroup'
+                        '/teste-group' => 'TesteController@storeGroup'
+                    ]
+                ],
+                'auth' => [
+                    'get' => [
+                        '/login' => 'site\AuthController@showLogin',
+                        '/signup' => 'site\AuthController@showSignup'
+                    ],
+                    'post' => [ 
+                        '/login' => 'site\AuthController@login',
+                        '/signup' => 'site\AuthController@signup'
                     ]
                 ]
             ]
