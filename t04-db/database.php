@@ -1,5 +1,5 @@
 <?php
-/*
+
 class Database
 {
     private static $instance = null;
@@ -37,10 +37,10 @@ class Database
     {
         return $this->conn;
     }
-}*/
+}
 
 
-
+/*
 #Conexão com o banco postgres no contatiner docker:
 class Database {
     private static $instance = null;
@@ -74,3 +74,4 @@ class Database {
     }
 }
 
+*/

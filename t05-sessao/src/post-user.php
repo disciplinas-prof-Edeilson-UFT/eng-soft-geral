@@ -5,13 +5,13 @@ require_once __DIR__ . '/../database.php';
 require_once __DIR__ . '/users.php';
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $name = trim($_POST['name']);
+    $username = trim($_POST['username']);
     $phone = trim($_POST['phone']);
     $email = trim($_POST['email']);
     $password = $_POST['password'];
     $password_confirm = $_POST['password-confirm'];
 
-    if (empty($name) || empty($phone) || empty($email) || empty($password) || empty($password_confirm)) {
+    if (empty($username) || empty($phone) || empty($email) || empty($password) || empty($password_confirm)) {
         $_SESSION['error'] = "Todos os campos são obrigatórios!";
         header("Location: /view/signup.php?error=todos-os-campos-obrigatorios");
         exit();
@@ -46,7 +46,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     $password_hash = password_hash($password, PASSWORD_ARGON2I);
 
-    if ($users->createUser($name, $email, $password_hash, $phone)) {
+    if ($users->createUser($username, $email, $password_hash, $phone)) {
         $_SESSION['success'] = "Usuário cadastrado com sucesso!";
         header("Location: /");
         exit();

@@ -1,29 +1,17 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <link rel="stylesheet" href="../public/css/perfil.css">
 </head>
+
 <body>
-    <aside class="side-bar">
-        <img src="../public/img/logo.svg" alt="logo" class="logo">
-        <div class="side-bar-links">
-            <a href="/">
-                <img src="../public/img/home.svg" class="icon">
-                Página principal
-            </a>
-            <a href="search">
-                <img src="../public/img/search.svg" class="icon">
-                Pesquisar
-            </a>
-            <a href="/view/profile.php">
-                <img src="../public/img/profile.svg" class="icon">
-                Perfil
-            </a>
-        </div>
-    </aside>
+    <!-- Barra Lateral -->
+    <?php include __DIR__ . '/side-bar.php'; ?>
+
     <main class="profile-container">
         <section class="info-section">
             <div class="photo-container">
@@ -46,4 +34,5 @@
         </section>
     </main>
 </body>
+
 </html>

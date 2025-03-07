@@ -27,12 +27,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     if ($user && password_verify($password, $user['password_hash'])) {
         $id = $_SESSION['user_id'] = $user['id'];
-        $_SESSION['user_name'] = $user['name'];
+        $_SESSION['user_name'] = $user['username'];
         $_SESSION['user_email'] = $user['email'];
         $_SESSION['LAST_ACTIVITY'] = time();
         $_SESSION['success'] = "Login realizado com sucesso!";
         
-        header("Location: /view/profile.php?id={$id}&success=login-realizado-com-sucesso");
+        header("Location: ../view/profile.php?id={$id}&success=login-realizado-com-sucesso");
         exit();
     } else {
         $_SESSION['error'] = "Credenciais inválidas!";

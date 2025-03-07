@@ -1,40 +1,5 @@
 @import url(global.css);
 
-.side-bar {
-    width: 25%;
-    display: flex;
-    flex-direction: column;
-    border-right: 2px solid rgb(235, 233, 233);
-}
-
-.side-bar a {
-    text-decoration: none;
-    color: black;
-    padding: 10px;
-    font-size: 16px;
-}
-
-.side-bar-links {
-    display: flex;
-    flex-direction: column;
-    padding-left: 5%;
-    gap: 10px;
-    margin-top: 20px;
-    width: 80%;
-}
-
-.logo {
-    width: 70%;
-    margin-top: 30px;
-}
-
-.side-bar-links a:hover {
-    background-color: #f2f2f2;
-    border-radius: 5px;
-    width: 100%;
-    text-decoration: none;
-}
-
 .profile-container{
     display: flex;
     flex-direction: column;
