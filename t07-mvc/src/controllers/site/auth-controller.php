@@ -30,7 +30,7 @@ class AuthController extends BaseController{
     }
     
     public function showLogin(){
-        $this->view('login');
+        $this->staticView('login');
     }
 
     public function login(){
@@ -49,7 +49,7 @@ class AuthController extends BaseController{
 
     public function showSignup(){
         
-        $this->view('signup');
+        $this->staticView('signup');
     }
 
     public function signup(){
@@ -66,9 +66,9 @@ class AuthController extends BaseController{
 
             header('Location: /auth/login?success=');
         }catch(\InvalidArgumentException $e){
-            return $this->view('signup', ['errors' => [$e->getMessage()]]);
+            return $this->staticView('signup', ['errors' => [$e->getMessage()]]);
         }catch(\Exception $e){
-            return $this->view('signup', ['errors' => ["Error ao processar cadastro, tente novamente mais tarde", $e->getMessage()]]);
+            return $this->staticView('signup', ['errors' => ["Error ao processar cadastro, tente novamente mais tarde", $e->getMessage()]]);
         }
         
 

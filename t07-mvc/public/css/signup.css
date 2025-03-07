@@ -50,6 +50,13 @@ body {
     width: 80%;
 }
 
+.form-control input:focus {
+    border-color: #4938FF;
+    box-shadow: 0 0 5px rgba(73, 56, 255, 0.5);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    background-color: rgba(73, 56, 255, 0.1);
+}
+
 .btn-wrapper {
     display: flex;
     align-items: center;
