@@ -1,6 +1,6 @@
 <?php
-//require_once __DIR__ . '/../dir-config.php';
-//require_once __DIR__ . '/../src/controllers/posts/get-all-posts.php';
+require_once __DIR__ . '/../dir-config.php';
+
 ?>
 
 <!DOCTYPE html>
@@ -32,13 +32,13 @@
                                 // Define a foto de perfil do usuário
                                 $profilePhoto = !empty($post['profile_pic_url'])
                                     ? BASE_URL . 'uploads/' . htmlspecialchars($post['profile_pic_url'])
-                                    : BASE_URL . 'public/img/profile.svg'; 
+                                    : BASE_URL . 'img/profile.svg'; 
                                 ?>
                                 <img src="<?= $profilePhoto; ?>" alt="Foto de Perfil" class="profile-picture">
                             </div>
 
                             <!-- Link para o Perfil do Usuário -->
-                            <a href="<?= BASE_URL ?>view/profile.php?id=<?= htmlspecialchars($post['user_id'] ?? '') ?>" class="username">
+                            <a href="/profile?id=<?= htmlspecialchars($post['user_id'] ?? '') ?>" class="username">
                                 <?= htmlspecialchars($post['username'] ?? '') ?>
                             </a>
                         </header>

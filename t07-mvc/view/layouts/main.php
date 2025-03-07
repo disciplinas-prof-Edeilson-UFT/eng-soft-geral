@@ -5,23 +5,23 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-    <link rel="stylesheet" href="../../public/css/main.css">
+    <link rel="stylesheet" href="/css/main.css">
 </head>
 
 <body>
     <aside class="side-bar">
-        <img src="../../public/img/logo.svg" alt="logo" class="logo">
+        <img src="/img/logo.svg" alt="logo" class="logo">
         <div class="side-bar-links">
             <a href="/">
-                <img src="/../../public/img/home.svg" class="icon">
+                <img src="/img/home.svg" class="icon">
                 Página principal
             </a>
             <button id="searchButton" onclick="toggleSearch()">
-                <img src="../../public/img/search.svg" class="icon">
+                <img src="/img/search.svg" class="icon">
                 Pesquisar
             </button>
             <a href="/view/profile.php">
-                <img src="../../public/img/profile.svg" class="icon">
+                <img src="/img/profile.svg" class="icon">
                 Perfil
             </a>
         </div>
@@ -38,7 +38,7 @@
         {{content}}
     </div>
 
-    <script src="../../public/js/search.js"></script>
+    <script src="/js/search.js"></script>
 </body>
 
 </html>

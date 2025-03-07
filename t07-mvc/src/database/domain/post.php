@@ -8,27 +8,26 @@ class Post{
     private $upload_date;
     private $description;
 
-    public function __construct($user_id, $photo_url, $description = null, $upload_date = null) {
+    public function __construct($user_id, $photo_url, $description = null) {
         $this->user_id = $user_id;
         $this->photo_url = $photo_url;
         $this->description = $description;
-        $this->upload_date = date('Y-m-d H:i:s', strtotime($upload_date));
     }
 
     public function getId(){
         return $this->id;
     }
 
-    public function getUserId(){
-        return $this->user_id;
+    public function setId($id) {
+        if ($id !== null && !is_numeric($id)) {
+            throw new \InvalidArgumentException("ID deve ser int");
+        }
+        $this->id = $id;
+        return $this;
     }
 
-    public function setUserId($user_id) {
-        if (empty($user_id)) {
-            throw new \InvalidArgumentException("User_id não pode estar vazio");
-        }
-        $this->user_id = $user_id;
-        return $this;
+    public function getUserId(){
+        return $this->user_id;
     }
 
     public function getPhotoUrl(){
@@ -47,6 +46,11 @@ class Post{
         return $this->upload_date;
     }
 
+    public function setUploadDate($upload_date) {
+        $this->upload_date = date('Y-m-d H:i:s', $upload_date);
+        return $this;
+    }
+
     public function getDescription(){
         return $this->description;
     }
@@ -59,7 +63,6 @@ class Post{
     public function toArray() {
         $data = [
             'user_id' => $this->user_id,
-            'photo_url' => $this->photo_url,
             'description' => $this->description,
         ];
         if (!empty($this->id)) {
@@ -70,6 +73,9 @@ class Post{
             $data['upload_date'] = $this->upload_date;
         }
 
+        if (!empty($this->photo_url)) {
+            $data['photo_url'] = $this->photo_url;
+        }
         return $data;
     }
 }

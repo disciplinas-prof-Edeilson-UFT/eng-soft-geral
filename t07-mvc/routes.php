@@ -31,6 +31,14 @@ class Routes{
                         '/login' => 'site\AuthController@login',
                         '/signup' => 'site\AuthController@signup'
                     ]
+                ],
+                'feed' => [
+                    'get' => [
+                        '/{user_id}' => 'site\FeedController@show'
+                    ],
+                    'post' => [
+                        '/{user_id}' => 'site\FeedController@store'
+                    ]
                 ]
             ]
         ];

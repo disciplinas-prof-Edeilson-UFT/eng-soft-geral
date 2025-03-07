@@ -20,7 +20,7 @@ class AuthService {
     }
 
     public function register($username, $email, $password, $confirm_password,$phone, $bio = null, $profile_pic_url = null){
-        $user = new User($username, $email, $password, $phone, $bio,$profile_pic_url);
+        $user = new User($username, $email, null, $phone, $bio,$profile_pic_url);
         
         $user->setUsername($username);
         $user->setEmail($email);
@@ -29,17 +29,31 @@ class AuthService {
         $user->setBio($bio);
         $user->setProfilePicUrl($profile_pic_url);
         
-        $this->userDAO->create('users', $user);
+        $result = $this->userDAO->create('users', $user->toArray());
+        if(!$result){
+            throw new \InvalidArgumentException("Erro ao criar usuário");
+        }
+
+        $createdUser =$this->userDAO->find('users', ['email' => $email], ['id']);
+
+        if(empty($createdUser)){
+            throw new \InvalidArgumentException("Erro ao recuperar usuário");
+        }
+
+        $user->setId($createdUser[0]->id);
     }
     
-    public function login($email, $password){
-        $user = $this->userDAO->find('users', ['email' => $email], ['email', 'password_hash']);
+    public function login($email, $password)
+    {
+        $user = $this->userDAO->find('users', ['email' => $email], ['email', 'password_hash', 'id']);
         
-
+        //var_dump($user);
+        
         if($user){
             $userObject = $user[0];
             if(password_verify($password, $userObject->password_hash)){
-                return $user;
+                unset($userObject->password_hash);
+                return $userObject;
             }
         }
 

@@ -37,14 +37,19 @@ class AuthController extends BaseController{
         $email = $this->input('email');
         $password = $this->input('password');
 
-        $user = $this->authService->login($email, $password);
+        $registeredUser = $this->authService->login($email, $password);
 
-        if($user){
-            $_SESSION['user'] = $user;
-            header('Location: /feed?success=Loggedin');
-        }else{
-            return $this->staticView('login', ['errors' => ['Email ou senha inválidos']]);
+        if($registeredUser){
+            $_SESSION['user'] = $registeredUser->id;
+
+            //echo 'id:' . $_SESSION['user'];
+
+            header('Location: /feed/'. $registeredUser->id . '?success=Loggedin');
+            exit;
         }
+        
+        header('Location: /auth/login?error=email ou senha incorretos');
+        exit;
     }
 
     public function showSignup(){

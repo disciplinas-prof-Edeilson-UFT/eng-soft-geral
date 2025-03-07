@@ -186,8 +186,9 @@
 /* ====================================MAIN====================================== */
 .main-content {
     display: flex;
-    margin-left: 250px;
+    margin-left: 135px;
     padding: 20px;
     flex-direction: column;
     align-items: center;
+    width: 100%;
 }

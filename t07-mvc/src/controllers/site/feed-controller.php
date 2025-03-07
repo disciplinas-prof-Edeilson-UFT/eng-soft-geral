@@ -7,6 +7,7 @@ use src\database\dao\IPostDAO;
 use src\database\domain\Post;
 use core\mvc\IModelRepository;
 use src\database\dao\PostDAO;
+use core\mvc\ModelRepository;
 
 require_once __DIR__ . '/../../database/dao/post-dao.php';
 require_once __DIR__ . '/../../database/domain/post.php';
@@ -21,16 +22,16 @@ class FeedController extends BaseController{
     public IModelRepository $IModelRepo;
 
     public function __construct() {
+        $this->IModelRepo = new ModelRepository();
         $this->post = new Post(null, null, null, null, null, null, null);
         $this->postDAO = new PostDAO($this->IModelRepo);
         $this->feedService = new FeedService($this->postDAO, $this->post);
     }
 
-    public function show($user_id){
-        $params = [
-            'posts' => $this->feedService->getUsersPostsFeed($user_id)
-        ];
-        $this->view('feed', $params);
+    public function show($user_id) {
+        $posts = $this->feedService->getUsersPostsFeed($user_id);
+        
+        $this->view('feed', ['posts' => $posts]);
     }
 
 }

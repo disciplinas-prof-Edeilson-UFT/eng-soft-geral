@@ -49,6 +49,4 @@ class postDAO implements IPostDAO{
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-
-
 }

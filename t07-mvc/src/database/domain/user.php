@@ -20,8 +20,17 @@ class User{
         $this->profile_pic_url = $profile_pic_url;
 
     }
+
     public function getId(){
         return $this->id;
+    }
+
+    public function setId($id) {
+        if ($id !== null && !is_numeric($id)) {
+            throw new \InvalidArgumentException("ID deve ser int");
+        }
+        $this->id = $id;
+        return $this;
     }
 
     public function getUsername(){
@@ -119,6 +128,7 @@ class User{
             'bio' => $this->bio,
             'profile_pic_url' => $this->profile_pic_url,
         ];
+        //só será adicionado no array depois de setado no authService@singup
         if ($this->id !== null) {
             $data['id'] = $this->id;
         }
