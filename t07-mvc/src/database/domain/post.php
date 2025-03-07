@@ -2,11 +2,11 @@
 namespace src\database\domain;
 
 class Post{
-    public $id;
-    public $user_id;
-    public $photo_url;
-    public $upload_date;
-    public $description;
+    private $id;
+    private $user_id;
+    private $photo_url;
+    private $upload_date;
+    private $description;
 
     public function __construct($user_id, $photo_url, $description = null, $upload_date = null) {
         $this->user_id = $user_id;

@@ -10,6 +10,15 @@
 
 <body>
     <div class="container">
+    <?php if(!empty($errors)): ?>
+            <div class="alert alert-danger">
+                <ul>
+                    <?php foreach($errors as $error): ?>
+                        <li><?= htmlspecialchars($error) ?></li>
+                    <?php endforeach; ?>
+                </ul>
+            </div>
+        <?php endif; ?>
         <!-- Seção esquerda com logo -->
         <div class="left">
             <img src="/img/logo.svg" alt="Logo"> 

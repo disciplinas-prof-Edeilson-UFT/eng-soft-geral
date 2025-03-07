@@ -3,23 +3,21 @@ namespace src\database\domain;
 use DateTime;
 
 class User{
-    public $id;
-    public $username;
-    public $email;
-    public $password_hash;
-    public $phone;
-    public $bio;
-    public $profile_pic_url;
-    public $confirm_password;
+    private $id;
+    private $username;
+    private $email;
+    private $password_hash;
+    private $phone;
+    private $bio;
+    private $profile_pic_url;
 
-    public function __construct($username, $email, $password_hash, $confirm_password, $phone, $bio = null, $profile_pic_url = null) {
+    public function __construct($username, $email, $password_hash, $phone, $bio = null, $profile_pic_url = null) {
         $this->username = $username;
         $this->email = $email;
         $this->password_hash = $password_hash;
         $this->phone = $phone;
         $this->bio = $bio;
         $this->profile_pic_url = $profile_pic_url;
-        $this->confirm_password = $confirm_password;
 
     }
     public function getId(){
@@ -75,6 +73,7 @@ class User{
         $this->password_hash = password_hash($password, PASSWORD_DEFAULT);
         return $this;
     }
+
 
     public function getPhone(){
         return $this->phone;

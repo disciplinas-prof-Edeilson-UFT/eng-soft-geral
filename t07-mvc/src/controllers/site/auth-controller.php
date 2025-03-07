@@ -28,7 +28,7 @@ class AuthController extends BaseController{
         $this->userDAO = new UserDAO($this->IModelRespot);
         $this->authService = new AuthService($this->userDAO, $this->user);
     }
-    
+
     public function showLogin(){
         $this->staticView('login');
     }
@@ -41,9 +41,9 @@ class AuthController extends BaseController{
 
         if($user){
             $_SESSION['user'] = $user;
-            header('Location: /auth/feed?success=Loggedin');
+            header('Location: /feed?success=Loggedin');
         }else{
-            header('Location: /auth/login?error=Invalid email or password');
+            return $this->staticView('login', ['errors' => ['Email ou senha inválidos']]);
         }
     }
 
