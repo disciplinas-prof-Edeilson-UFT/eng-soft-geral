@@ -50,15 +50,11 @@ require_once __DIR__ . "/../dir-config.php";
                 <input type="file" name="profile_pic_url" id="profile_pic_url" accept="image/*" />
             </div>
             <div class="btn-wrapper">
-                <button class="btn" name="edit">Confirmar</button>
+                <input type="submit" name="action" value="edit" class="btn" />
             </div>
             <div class="btn-wrapper">
-                <button class="btn btn-danger" name="delete" onclick="return confirm('Tem certeza que deseja excluir sua conta? Esta ação não pode ser desfeita.');">
-                    Deletar Usuário
-                </button>
-                <button class="btn btn-danger" name="logout" onclick="return confirm('Tem certeza que deseja sair?');">
-                    Sair
-                </button>
+                <input type="submit" name="action" value="delete" class="btn btn-danger" onclick="return confirm('Tem certeza que deseja excluir sua conta? Esta ação não pode ser desfeita.');" />
+                <input type="submit" name="action" value="logout" class="btn btn-danger" onclick="return confirm('Tem certeza que deseja sair?');" />
             </div>
         </form> 
     </div>

@@ -82,18 +82,27 @@ class ProfileService{
 
     public function updateProfilePhoto($id, $file)
     {
-        $allowTypes = array('jpeg', 'png');
-        $result = $this->uploadImageService->handleUpload($file, $this->table, $allowTypes);
-        
+        if (!isset($file) || !is_uploaded_file($file['tmp_name'])) {
+            throw new \InvalidArgumentException("Arquivo inválido ou upload falhou");
+        }
 
-        if (!$result) {
+        $allowTypes = array('jpeg', 'png');
+        $uploadDir = '/uploads/avatars/';
+        $result = $this->uploadImageService->handleUpload($file, $uploadDir, $allowTypes);
+        
+        if ( !$result['success']) {
             throw new \InvalidArgumentException("Erro ao fazer upload da foto de perfil");
         }
         
         $fileUrl = $result['file_name'];
         $this->user->setProfilePicUrl($fileUrl);
+        $updated = $this->postDAO->update('users', ['id' => $id], ['profile_pic_url' => $fileUrl]);
         
-        return $this->postDAO->update('users', ['id' => $id], ['profile_pic_url' => $fileUrl]);
+        if (!$updated) {
+            throw new \InvalidArgumentException("Erro ao atualizar foto de perfil no banco de dados");
+        }
+
+        return $fileUrl;
     }
 
     public function updateProfileData($user_id, $username, $phone, $email, $bio){

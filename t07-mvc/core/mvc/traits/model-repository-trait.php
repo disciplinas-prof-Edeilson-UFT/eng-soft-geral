@@ -17,7 +17,7 @@ trait ModelRepositoryTrait {
     }
     
     public function update($table, $conditions, $data = []): bool{
-        return $this->modelRepository->update($table, $conditions, $data = []);
+        return $this->modelRepository->update($table, $conditions, $data);
     }
 
     public function delete($table, $conditions): bool{

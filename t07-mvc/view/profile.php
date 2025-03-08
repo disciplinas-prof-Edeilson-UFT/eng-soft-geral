@@ -31,7 +31,7 @@ require_once __DIR__ . "/../dir-config.php";
         <section class="info-section">
             <div class="photo-container">
                 <?php if ($user->getProfilePicUrl()): ?>
-                    <img src="<?= htmlspecialchars($user->getProfilePicUrl()) ?>" alt="Foto de Perfil" class="profile-picture">
+                    <img src="/uploads/avatars/<?= htmlspecialchars($user->getProfilePicUrl()) ?>" alt="Foto de Perfil" class="profile-picture">
                 <?php else: ?>
                     <img src="/img/profile.svg" alt="Foto de Perfil" class="profile-picture">
                 <?php endif; ?>
@@ -53,7 +53,7 @@ require_once __DIR__ . "/../dir-config.php";
 
                 <!-- Formulário para seguir/deixar de seguir (apenas para outros usuários) -->
                 <?php if ((int)$user_id !== (int)$logged_in_user_id): ?>
-                    <form method="POST">
+                    <form method="POST" action="/profile/<?= $user_id ?>/follow">
                         <input type="hidden" name="action" value="<?= $isFollowing ? 'unfollow' : 'follow' ?>">
                         <button type="submit" class="btn-follow">
                             <?= $isFollowing ? 'Deixar de seguir' : 'Seguir' ?>
@@ -69,7 +69,7 @@ require_once __DIR__ . "/../dir-config.php";
                 <?php if ($userPosts): ?>
                     <?php
                     if (isset($userPosts[0]['photo_url'])) {
-                        $relativePath = "/uploads/feed/" . htmlspecialchars($userPosts[0]['photo_url']);
+                        $relativePath = "../uploads/feed/" . htmlspecialchars($userPosts[0]['photo_url']);
                         ?>
                         <img src="<?= $relativePath; ?>" alt="Imagem do Feed" class="feed-image">
                     <?php } ?>

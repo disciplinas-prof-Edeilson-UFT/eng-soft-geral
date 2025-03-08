@@ -75,7 +75,7 @@ class ProfileController extends BaseController{
     }
 
     public function follow($user_id) {
-        $logged_in_user_id = $_SESSION['user_id'] ?? 0;
+        $logged_in_user_id = $this->getSession('user_id', 0);
         $action = $this->input('action');
         
         if (!$logged_in_user_id) {
@@ -113,28 +113,45 @@ class ProfileController extends BaseController{
 
     public function update($user_id) {
         try {
-            $phone = $this->input('phone');
-            $username = $this->input('username');
-            $email = $this->input('email'); 
-            $bio = $this->input('bio');
-    
-            $this->profileService->updateProfileData($user_id, $username, $phone, $email, $bio);
-    
-            if (isset($_FILES['profile_pic_url']) && $_FILES['profile_pic_url']['error'] === UPLOAD_ERR_OK) {
-                $this->profileService->updateProfilePhoto($user_id, $_FILES['profile_pic_url']);
+            $logged_in_user_id = $this->getSession('user_id', 0);
+            if ((int)$user_id !== (int)$logged_in_user_id) {
+                $this->redirect('/profile/' . $user_id);
+                exit;
             }
 
-            if(isset($_POST['logout'])){
+            $action = $this->input('action');
+            if ($action === 'delete') {
                 $this->destroySession();
-                $this->redirect('/auth/login');
+                $this->redirect('/auth/login?success=Conta excluída com sucesso');
+                exit;
             }
-    
+            
+            if ($action === 'logout') {
+                $this->destroySession();
+                $this->redirect('/auth/login?success=Logout');
+                exit;
+            }
+
+            if ($action === 'edit') {
+                $phone = $this->input('phone');
+                $username = $this->input('username');
+                $email = $this->input('email'); 
+                $bio = $this->input('bio');
+
+                error_log("Atualizando usuário $user_id - username: '$username', email: '$email', phone: '$phone', bio: '$bio'");
+                $this->profileService->updateProfileData($user_id, $username, $phone, $email, $bio);
+            
+                if (isset($_FILES['profile_pic_url']) && $_FILES['profile_pic_url']['error'] === UPLOAD_ERR_OK) {
+                    $this->profileService->updateProfilePhoto($user_id, $_FILES['profile_pic_url']);
+                }
+            }
+
             $this->redirect('/profile/' . $user_id);
-    
+
         } catch (\InvalidArgumentException $e) {
             $this->redirect('/profile/' . $user_id . '/edit?error=' . urlencode($e->getMessage()));
         }catch(\Exception $e){
-            $this->redirect('/profile/' . $user_id . '/edit?error=' . urlencode("Erro interno do server"));
+            $this->redirect('/profile/' . $user_id . '/edit?error=' . urlencode($e->getMessage()));
 
         }
     }
