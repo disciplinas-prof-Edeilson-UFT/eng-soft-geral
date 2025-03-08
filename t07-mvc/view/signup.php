@@ -7,16 +7,17 @@
     <link rel="stylesheet" href="/css/signup.css">
 </head>
 <body>
+    <?php if(!empty($error)): ?>
+        <script>
+            alert("<?php echo htmlspecialchars($error); ?>");
+        </script>
+    <?php 
+    elseif(!empty($errors) && is_array($errors)): ?>
+        <script>
+            alert("<?php foreach($errors as $err){ echo htmlspecialchars($err) . '\n'; } ?>");
+        </script>
+    <?php endif; ?>
     <form method="POST" action="/auth/signup" class="form-group">
-        <?php if(!empty($errors)): ?>
-            <div class="alert alert-danger">
-                <ul>
-                    <?php foreach($errors as $error): ?>
-                        <li><?= htmlspecialchars($error) ?></li>
-                    <?php endforeach; ?>
-                </ul>
-            </div>
-        <?php endif; ?>
 
         <div class="icon">
             <img src="/img/logo.svg" alt="logo" class="logo">

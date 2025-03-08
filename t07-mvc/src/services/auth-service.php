@@ -29,7 +29,7 @@ class AuthService {
         $user->setBio($bio);
         $user->setProfilePicUrl($profile_pic_url);
         
-        $result = $this->userDAO->create('users', $user->toArray());
+        $result = $this->userDAO->create('users', $user);
         if(!$result){
             throw new \InvalidArgumentException("Erro ao criar usuário");
         }

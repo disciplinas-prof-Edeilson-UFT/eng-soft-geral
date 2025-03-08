@@ -40,20 +40,20 @@ class AuthController extends BaseController{
         $registeredUser = $this->authService->login($email, $password);
 
         if($registeredUser){
-            $_SESSION['user'] = $registeredUser->id;
+
+            $this->setSession('user_id', $registeredUser->id);
+            error_log('User ID set in session: ' . $_SESSION['user_id']);
 
             //echo 'id:' . $_SESSION['user'];
-
-            header('Location: /feed/'. $registeredUser->id . '?success=Loggedin');
+        
+            $this->redirect('/feed/'. $registeredUser->id . '?success=Loggedin');
             exit;
         }
-        
-        header('Location: /auth/login?error=email ou senha incorretos');
+        $this->redirect('/auth/login?error=email ou senha incorretos');
         exit;
     }
 
     public function showSignup(){
-        
         $this->staticView('signup');
     }
 
@@ -71,9 +71,11 @@ class AuthController extends BaseController{
 
             header('Location: /auth/login?success=');
         }catch(\InvalidArgumentException $e){
-            return $this->staticView('signup', ['errors' => [$e->getMessage()]]);
+            $this->staticView('signup', ['error' => $e->getMessage()]);
+            exit;
         }catch(\Exception $e){
-            return $this->staticView('signup', ['errors' => ["Error ao processar cadastro, tente novamente mais tarde", $e->getMessage()]]);
+            $this->staticView('signup', ['error' => 'Erro interno do server']);
+            exit;
         }
         
 

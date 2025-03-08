@@ -20,6 +20,4 @@ class userDAO implements IUserDAO{
         $this->modelRepository = $modelRepository;
     }
 
-    
-
 }

@@ -11,8 +11,8 @@ require_once __DIR__ . '/../../database.php';
 interface IModelRepository {
     public function create($table, $data): bool;
     public function find($table, $conditions, $data): array;
-    public function delete($table, $conditions, $data);
-    public function update();
+    public function delete($table, $conditions): bool;
+    public function update($table, $conditions, $data = []): bool;
 }
 
 class ModelRepository implements IModelRepository {
@@ -100,13 +100,69 @@ class ModelRepository implements IModelRepository {
         return $stmt->fetchAll(PDO::FETCH_OBJ);
     }
 
-    public function delete($table, $conditions, $data) {
+    //ex: Model::update('user', ['name' => 'abc'], ['name' => 'abc', 'email' => 'agc']) atualiza o nome e email para 'def' e 'ghi' respectivamente para todos os registros com nome 'abc'
+    public function update($table, $conditions, $data = []): bool {
         self::initDb();
 
+        $data = self::convertToArray($data);
+        $conditions = self::convertToArray($conditions);
+        
+        $sqlSetPlaceholders = []; 
+        foreach($data as $key => $value){
+            $sqlSetPlaceholders[] = "$key = :set_$key"; 
+        }
+        
+        $sqlWherePlaceholders = []; 
+        foreach (array_keys($conditions) as $key) {
+            $sqlWherePlaceholders[] = "$key = :where_$key"; 
+        }
 
+        $sql = "UPDATE $table";
+        
+        if (!empty($sqlSetPlaceholders)) {
+            $sql .= " SET " . implode(', ', $sqlSetPlaceholders);
+            
+            if (!empty($sqlWherePlaceholders)) {
+                $sql .= " WHERE " . implode(' AND ', $sqlWherePlaceholders);
+            }
+        }
 
+        $stmt = self::$pdo->prepare($sql);
+        
+        foreach ($data as $key => $value) {
+            $stmt->bindValue(":set_$key", $value);
+        }
+        foreach ($conditions as $key => $value) {
+            $stmt->bindValue(":where_$key", $value);
+        }
+        
+        return $stmt->execute(); 
     }
 
-  
-    public function update(){}
+    //ex: Model::delete('user', ['name' => 'abc']) deleta todos os registros com nome 'abc'
+    public function delete($table, $conditions): bool {
+        self::initDb();
+        
+        $conditions = self::convertToArray($conditions);
+        
+        if (empty($conditions)) {
+            throw new Exception('Condições não especificadas para delete');
+        }
+        
+        $sqlWherePlaceholders = []; 
+        foreach (array_keys($conditions) as $key) {
+            $sqlWherePlaceholders[] = "$key = :$key"; 
+        }
+        
+        $sql = "DELETE FROM $table WHERE " . implode(' AND ', $sqlWherePlaceholders);
+        
+        $stmt = self::$pdo->prepare($sql);
+        
+        foreach ($conditions as $key => $value) {
+            $stmt->bindValue(":$key", $value);
+        }
+        
+        return $stmt->execute();
+    }
+    
 }

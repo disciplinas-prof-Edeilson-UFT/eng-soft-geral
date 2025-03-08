@@ -22,7 +22,7 @@ async function handleSearch(event) {
     resultsContainer.innerHTML = 'Carregando...';
 
     try {
-        const response = await fetch(`../src/controllers/users/search-user.php?query=${encodeURIComponent(query)}`);
+        const response = await fetch(`/search?query=${encodeURIComponent(query)}`);
         const results = await response.text();
 
         resultsContainer.innerHTML = results;

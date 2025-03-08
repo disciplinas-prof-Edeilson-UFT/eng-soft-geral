@@ -2,16 +2,17 @@
 
 require_once __DIR__ . '/src/controllers/site/feed-controller.php';
 require_once __DIR__ . '/src/controllers/site/auth-controller.php';
+require_once __DIR__ . '/src/controllers/site/profile-controller.php';
+require_once __DIR__ . '/src/controllers/site/search-controller.php';
 
 class Routes{
     public static function getRouter(){
         return [
             'get' => [
-                '/' => 'site\HomeController@show',
-                '/teste/{id}/{user}' => 'site\TesteController@show'
+                '/search' => 'site\SearchController@search'
             ],
             'post' => [
-                '/teste' => 'site\TesteController@store'
+                
             ],
             'groups' => [
                 '/admin' => [
@@ -38,6 +39,17 @@ class Routes{
                     ],
                     'post' => [
                         '/{user_id}' => 'site\FeedController@store'
+                    ]
+                ],
+                'profile'=> [
+                    'get' => [
+                        '/{user_id}' => 'site\ProfileController@show',
+                        '/{user_id}/edit' => 'site\ProfileController@edit',
+                        '/{user_id}/follow' => 'site\ProfileController@follow',
+                        '/{user_id}/unfollow' => 'site\ProfileController@unfollow'
+                    ],
+                    'post' => [
+                        '/{user_id}/edit' => 'site\ProfileController@update'
                     ]
                 ]
             ]

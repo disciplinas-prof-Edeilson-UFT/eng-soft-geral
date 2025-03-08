@@ -29,9 +29,33 @@ class FeedController extends BaseController{
     }
 
     public function show($user_id) {
-        $posts = $this->feedService->getUsersPostsFeed($user_id);
+        $posts = [];
+        try {
+            $posts = $this->feedService->getAllPostsFeed($user_id);
+        } catch (\InvalidArgumentException $e) {
+            $this->view('feed', ['posts' => $posts, 'error' => $e->getMessage()]);
+            exit;
+        }
         
         $this->view('feed', ['posts' => $posts]);
+    }
+
+
+    public function store($user_id) {
+        session_start();
+        
+        if (isset($_FILES['file']) && $_FILES['file']['error'] == UPLOAD_ERR_OK) {
+            $file = $_FILES['file'];
+            try {
+                $this->feedService->createPost($user_id, $file, $description = null);
+            } catch (\InvalidArgumentException $e) {
+                $this->redirect('/feed/' . $user_id . '?error=' . $e->getMessage());
+                exit;
+            }
+            $this->redirect('/feed/' . $user_id . '?success=Post created');
+        } else {
+            $this->redirect('/feed/' . $user_id . '?error=Nenhum arquivo foi enviado.');
+        }
     }
 
 }

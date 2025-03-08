@@ -16,11 +16,12 @@ trait ModelRepositoryTrait {
         return $this->modelRepository->find($table, $conditions, $data);
     }
     
-    public function update(){
-        return $this->modelRepository->update();
+    public function update($table, $conditions, $data = []): bool{
+        return $this->modelRepository->update($table, $conditions, $data = []);
+    }
+
+    public function delete($table, $conditions): bool{
+        return $this->modelRepository->delete($table, $conditions);
     }
     
-    public function delete($table, $conditions, $data): bool {
-        return $this->modelRepository->delete($table, $conditions, $data);
-    }
 }

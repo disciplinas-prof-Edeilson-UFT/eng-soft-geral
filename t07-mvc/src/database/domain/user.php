@@ -10,6 +10,8 @@ class User{
     private $phone;
     private $bio;
     private $profile_pic_url;
+    private $count_followers;
+    private $count_following;
 
     public function __construct($username, $email, $password_hash, $phone, $bio = null, $profile_pic_url = null) {
         $this->username = $username;
@@ -116,6 +118,24 @@ class User{
 
     public function setProfilePicUrl($profile_pic_url) {
         $this->profile_pic_url = $profile_pic_url;
+        return $this;
+    }
+
+    public function getCountFollowers(){
+        return $this->count_followers;
+    }
+
+    public function setCountFollowers($count_followers) {
+        $this->count_followers = $count_followers;
+        return $this;
+    }
+
+    public function getCountFollowing(){
+        return $this->count_following;
+    }
+
+    public function setCountFollowing($count_following) {
+        $this->count_following = $count_following;
         return $this;
     }
 

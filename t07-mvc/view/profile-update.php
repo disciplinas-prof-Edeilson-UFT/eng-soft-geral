@@ -1,19 +1,5 @@
 <?php
 require_once __DIR__ . "/../dir-config.php";
-require_once __DIR__ . "../../src/dao/user-dao.php";
-
-$userDao = new UserDao();
-
-if (!isset($_GET["id"])) {
-    die("Parâmetro id não informado");
-}
-
-$id = $_GET["id"];
-$user = $userDao->getUserProfileById($id);
-
-if (!$user) {
-    die("Usuário não encontrado");
-}
 ?>
 
 <!DOCTYPE html>
@@ -23,31 +9,40 @@ if (!$user) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Atualizar Perfil</title>
-    <link rel="stylesheet" href="<?= BASE_URL ?>public/css/profile-update.css">
+    <link rel="stylesheet" href="/css/profile-update.css">
 </head>
 
 <body>
-    <?php include __DIR__ . '/components/side-bar.php'; ?>  
+    <?php if(!empty($error)): ?>
+        <script>
+            alert("<?php echo htmlspecialchars($error); ?>");
+        </script>
+    <?php 
+    elseif(!empty($errors) && is_array($errors)): ?>
+        <script>
+            alert("<?php foreach($errors as $err){ echo htmlspecialchars($err) . '\n'; } ?>");
+        </script>
+    <?php endif; ?>
 
     <div class="form-container">
         <h1>Atualize seu perfil</h1>
-        <form method="POST" action="<?= BASE_URL ?>src/controllers/users/update-user.php?id=<?= $id ?>" class="form-group" enctype="multipart/form-data">
+        <form method="POST" action="/profile/<?= $user_id ?>/edit" class="form-group" enctype="multipart/form-data">
             <div class="form-wrapper">
                 <div class="form-control">
                     <label for="username">Nome: </label>
-                    <input type="text" name="username" value="<?= htmlspecialchars($user['username']) ?>" id="username"/>
+                    <input type="text" name="username" value="<?= htmlspecialchars($user->getUsername()) ?>" id="username"/>
                 </div>
                 <div class="form-control">
                     <label for="phone">Telefone: </label>
-                    <input type="tel" name="phone" value="<?= htmlspecialchars($user['phone']) ?>" id="phone"/>
+                    <input type="tel" name="phone" value="<?= htmlspecialchars($user->getPhone()) ?>" id="phone"/>
                 </div>
                 <div class="form-control">
                     <label for="email">Email: </label>
-                    <input type="email" name="email" value="<?= htmlspecialchars($user['email']) ?>" id="email"/>
+                    <input type="email" name="email" value="<?= htmlspecialchars($user->getEmail()) ?>" id="email"/>
                 </div>
                 <div class="form-control">
                     <label for="bio">Bio: </label>
-                    <input type="text" name="bio" value="<?= htmlspecialchars($user['bio'] || "") ?>" id="bio" />
+                    <input type="text" name="bio" value="<?= htmlspecialchars($user->getBio() ?? '') ?>" id="bio" />
                 </div>
             </div>
             <div class="form-control">

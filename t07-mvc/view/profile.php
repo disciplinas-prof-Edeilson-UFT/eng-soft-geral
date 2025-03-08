@@ -1,6 +1,7 @@
-<?php
-//require_once __DIR__ . "/../dir-config.php";
-//require_once __DIR__ . '/../src/controllers/users/profile-user.php';
+<?php 
+require_once __DIR__ . "/../dir-config.php";
+//echo "userID = " . $user_id;
+//echo "logged in user ID = " . $logged_in_user_id;
 ?>
 
 <!DOCTYPE html>
@@ -10,32 +11,44 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Perfil</title>
-    <link rel="stylesheet" href="<?= BASE_URL ?>public/css/profile.css">
+    <link rel="stylesheet" href="/css/profile.css">
 </head>
 
 <body>
-    <?php include __DIR__ . '/components/side-bar.php'; ?>
+    <?php if(!empty($error)): ?>
+        <script>
+            alert("<?php echo htmlspecialchars($error); ?>");
+        </script>
+    <?php 
+    elseif(!empty($errors) && is_array($errors)): ?>
+        <script>
+            alert("<?php foreach($errors as $err){ echo htmlspecialchars($err) . '\n'; } ?>");
+        </script>
+    <?php endif; ?>
 
     <main class="profile-container">
         <!-- Seção de informações do usuário -->
         <section class="info-section">
             <div class="photo-container">
-                
-                <img src="<?= $profilePhoto; ?>" alt="Foto de Perfil" class="profile-picture">
+                <?php if ($user->getProfilePicUrl()): ?>
+                    <img src="<?= htmlspecialchars($user->getProfilePicUrl()) ?>" alt="Foto de Perfil" class="profile-picture">
+                <?php else: ?>
+                    <img src="/img/profile.svg" alt="Foto de Perfil" class="profile-picture">
+                <?php endif; ?>
 
                 <!-- Botão de edição de perfil (apenas para o próprio usuário) -->
                 <?php if ((int)$user_id === (int)$logged_in_user_id): ?>
                     <button class="btn-edit">
-                        <a href="<?= BASE_URL ?>view/profile-update.php?id=<?= $user_id; ?>">Editar Perfil</a>
+                        <a href="/profile/<?= $logged_in_user_id; ?>/edit">Editar Perfil</a>
                     </button>
                 <?php endif; ?>
             </div>
 
             <div class="user-info">
-                <h1 class="user-name"><?php echo $userName; ?></h1>
+            <h1 class="user-name"><?php echo htmlspecialchars($user->getUsername()) ?></h1>
                 <div class="stats-container">
-                    <span class="following"><?= $following; ?> seguindo</span>
-                    <span class="followers"><?= $followers; ?> seguidores</span>
+                    <span class="following"><?= htmlspecialchars($user->getCountFollowers()) ?> seguindo</span>
+                    <span class="followers"><?= htmlspecialchars($user->getCountFollowing()) ?> seguidores</span>
                 </div>
 
                 <!-- Formulário para seguir/deixar de seguir (apenas para outros usuários) -->
@@ -56,7 +69,7 @@
                 <?php if ($userPosts): ?>
                     <?php
                     if (isset($userPosts[0]['photo_url'])) {
-                        $relativePath = BASE_URL . "uploads/feed/" . htmlspecialchars($userPosts[0]['photo_url']);
+                        $relativePath = "/uploads/feed/" . htmlspecialchars($userPosts[0]['photo_url']);
                         ?>
                         <img src="<?= $relativePath; ?>" alt="Imagem do Feed" class="feed-image">
                     <?php } ?>
@@ -67,9 +80,9 @@
             <?php if (!$profilePhoto && $user_id == $_SESSION['user_id']): ?>
                 <div class="pai-do-upload-container">
                     <div class="upload-container">
-                        <form action="<?= BASE_URL ?>src/controllers/posts/upload-feed-photo.php" method="POST" enctype="multipart/form-data">
+                        <form action="/feed/<?= $user_id ?>" method="POST" enctype="multipart/form-data">
                             <label for="photo">
-                                <img src="<?= BASE_URL ?>public/img/add-photo.svg" class="icon"> <br>
+                                <img src="/img/add-photo.svg" class="icon"> <br>
                                 Adicionar foto
                             </label>
                             <input type="file" id="photo" name="photo" accept="image/*">
