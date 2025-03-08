@@ -69,7 +69,7 @@ require_once __DIR__ . "/../dir-config.php";
                 <?php if ($userPosts): ?>
                     <?php
                     if (isset($userPosts[0]['photo_url'])) {
-                        $relativePath = "../uploads/feed/" . htmlspecialchars($userPosts[0]['photo_url']);
+                        $relativePath = "/uploads/feed/" . htmlspecialchars($userPosts[0]['photo_url']);
                         ?>
                         <img src="<?= $relativePath; ?>" alt="Imagem do Feed" class="feed-image">
                     <?php } ?>
@@ -77,15 +77,30 @@ require_once __DIR__ . "/../dir-config.php";
             </div>
 
             <!-- Formulário de upload de foto (apenas para o próprio usuário e se não houver foto) -->
-            <?php if (!$profilePhoto && $user_id == $_SESSION['user_id']): ?>
+            <?php if (empty($userPosts) && $user_id == $_SESSION['user_id']): ?>
                 <div class="pai-do-upload-container">
                     <div class="upload-container">
-                        <form action="/feed/<?= $user_id ?>" method="POST" enctype="multipart/form-data">
+                        <form action="/feed/<?= $logged_in_user_id ?>/store" method="POST" enctype="multipart/form-data">
                             <label for="photo">
                                 <img src="/img/add-photo.svg" class="icon"> <br>
                                 Adicionar foto
                             </label>
-                            <input type="file" id="photo" name="photo" accept="image/*">
+                            <input type="file" id="photo" name="file" accept="image/*">
+                            <button type="submit" class="btn-upload">Enviar</button>
+                        </form>
+                    </div>
+                </div>
+            <?php endif; ?>
+
+            <!-- exibir botão de postagem caso o usuario ja tenha postado algo -->
+            <?php if (!empty($userPosts)): ?>
+                <div class="upload-more-photos">
+                    <div class="upload-container">
+                        <form action="/feed/<?= $logged_in_user_id ?>/store" method="POST" enctype="multipart/form-data">
+                            <label for="photo">
+                                Adicionar foto 
+                            </label>
+                            <input type="file" id="photo" name="file" accept="image/*">
                             <button type="submit" class="btn-upload">Enviar</button>
                         </form>
                     </div>

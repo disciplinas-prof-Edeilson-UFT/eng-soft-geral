@@ -25,17 +25,18 @@ class FeedService{
 
     public function getAllPostsFeed(): array{
         $posts = $this->postDAO->getAllPosts();
-        //echo var_dump($posts);
+        error_log(var_export($posts, true));
         return $posts;
     }
 
     public function createPost($user_id,  $file, $description = null)
     {
         $allowTypes = array( 'png', 'jpeg', 'gif');
-        $createdFileUrl = $this->uploadImageService->handleUpload($file, '/feed', $allowTypes);
+        $uploadDir = '/uploads/feed/';
+        $createdFileUrl = $this->uploadImageService->handleUpload($file, $uploadDir, $allowTypes);
 
-        if($createdFileUrl){
-            throw new \InvalidArgumentException("Erro ao criar post");
+        if (!$createdFileUrl['success']) {
+            throw new \InvalidArgumentException(isset($createdFileUrl['error']) ? $createdFileUrl['error'] : "Erro ao fazer upload do post");
         }
 
         $File_url = $createdFileUrl['file_name'];
@@ -49,6 +50,8 @@ class FeedService{
 
 
         $createdPost= $this->postDAO->find('posts', ['user_id' => $user_id, 'photo_url' => $File_url ], ['upload_date', 'id']);
+
+        //echo var_dump($createdPost);
 
         if(empty($createdPost)){
             throw new \InvalidArgumentException("Erro ao recuperar post");

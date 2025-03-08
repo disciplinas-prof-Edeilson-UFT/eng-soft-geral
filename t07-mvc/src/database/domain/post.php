@@ -47,7 +47,12 @@ class Post{
     }
 
     public function setUploadDate($upload_date) {
-        $this->upload_date = date('Y-m-d H:i:s', $upload_date);
+        if (is_numeric($upload_date)) {
+            $this->upload_date = date('Y-m-d H:i:s', $upload_date);
+        }
+        else if ($upload_date === null) {
+            $this->upload_date = date('Y-m-d H:i:s');
+        }
         return $this;
     }
 

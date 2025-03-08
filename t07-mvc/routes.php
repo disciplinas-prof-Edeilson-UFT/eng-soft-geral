@@ -38,7 +38,7 @@ class Routes{
                         '/{user_id}' => 'site\FeedController@show'
                     ],
                     'post' => [
-                        '/{user_id}' => 'site\FeedController@store'
+                        '/{user_id}/store' => 'site\FeedController@store'
                     ]
                 ],
                 'profile'=> [

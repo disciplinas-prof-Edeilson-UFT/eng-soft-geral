@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Página Principal</title>
-    <link rel="stylesheet" href="/css/home.css">
+    <link rel="stylesheet" href="/css/feed.css">
 </head>
 
 <body class="home-page">
@@ -35,15 +35,15 @@
                             <div class="avatar" aria-label="Foto do Usuário">
                                 <?php
                                 // Define a foto de perfil do usuário
-                                $profilePhoto = !empty($post['profile_pic_url'])
-                                    ? __DIR__ . 'uploads/' . htmlspecialchars($post['profile_pic_url'])
-                                    : __DIR__ . 'img/profile.svg'; 
+                                $profilePhoto = !empty($user->getProfilePicUrl())
+                                    ? '/uploads/avatars/' . htmlspecialchars($user->getProfilePicUrl())
+                                    : '/img/profile.svg'; 
                                 ?>
                                 <img src="<?= $profilePhoto; ?>" alt="Foto de Perfil" class="profile-picture">
                             </div>
 
                             <!-- Link para o Perfil do Usuário -->
-                            <a href="/profile?id=<?= htmlspecialchars($post['user_id'] ?? '') ?>" class="username">
+                            <a href="/profile/<?= htmlspecialchars($post['user_id'] ?? '') ?>" class="username">
                                 <?= htmlspecialchars($post['username'] ?? '') ?>
                             </a>
                         </header>
@@ -52,7 +52,7 @@
                         <div class="image-placeholder" aria-label="Imagem do Post">
                             <?php if (!empty($post['photo_url'])): ?>
                                 <!-- Exibe a imagem do post, se houver -->
-                                <img src="<?= __DIR__ . 'uploads/feed/' . htmlspecialchars($post['photo_url']) ?>" alt="Imagem do post">
+                                <img src="<?= '/uploads/feed/' . htmlspecialchars($post['photo_url']) ?>" alt="Imagem do post">
                             <?php endif; ?>
                         </div>
                     </article>
