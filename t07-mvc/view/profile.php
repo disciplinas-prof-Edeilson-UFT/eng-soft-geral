@@ -43,14 +43,15 @@ require_once __DIR__ . "/../dir-config.php";
                     </button>
                 <?php endif; ?>
             </div>
-
+                    
             <div class="user-info">
-            <h1 class="user-name"><?php echo htmlspecialchars($user->getUsername()) ?></h1>
+                <h1 class="user-name"><?php echo htmlspecialchars($user->getUsername()) ?></h1>
+                <p class="user-bio"><?php echo htmlspecialchars($user->getBio()) ?></p>
                 <div class="stats-container">
                     <span class="following"><?= htmlspecialchars($user->getCountFollowers()) ?> seguindo</span>
                     <span class="followers"><?= htmlspecialchars($user->getCountFollowing()) ?> seguidores</span>
                 </div>
-
+                    
                 <!-- Formulário para seguir/deixar de seguir (apenas para outros usuários) -->
                 <?php if ((int)$user_id !== (int)$logged_in_user_id): ?>
                     <form method="POST" action="/profile/<?= $user_id ?>/follow">
@@ -59,6 +60,23 @@ require_once __DIR__ . "/../dir-config.php";
                             <?= $isFollowing ? 'Deixar de seguir' : 'Seguir' ?>
                         </button>
                     </form>
+                <?php endif; ?>
+            </div>
+
+            <!-- exibir botão de postagem caso o usuario ja tenha postado algo -->
+            <div class="add-more-posts-button">
+                <?php if (!empty($userPosts)): ?>
+                    <div class="upload-more-photos">
+                        <div class="upload-container">
+                            <form action="/feed/<?= $logged_in_user_id ?>/store" method="POST" enctype="multipart/form-data">
+                                <label for="photo">
+                                    Adicionar foto 
+                                </label>
+                                <input type="file" id="photo" name="file" accept="image/*">
+                                <button type="submit" class="btn-upload">Enviar</button>
+                            </form>
+                        </div>
+                    </div>
                 <?php endif; ?>
             </div>
         </section>
@@ -92,20 +110,6 @@ require_once __DIR__ . "/../dir-config.php";
                 </div>
             <?php endif; ?>
 
-            <!-- exibir botão de postagem caso o usuario ja tenha postado algo -->
-            <?php if (!empty($userPosts)): ?>
-                <div class="upload-more-photos">
-                    <div class="upload-container">
-                        <form action="/feed/<?= $logged_in_user_id ?>/store" method="POST" enctype="multipart/form-data">
-                            <label for="photo">
-                                Adicionar foto 
-                            </label>
-                            <input type="file" id="photo" name="file" accept="image/*">
-                            <button type="submit" class="btn-upload">Enviar</button>
-                        </form>
-                    </div>
-                </div>
-            <?php endif; ?>
         </section>
     </main>
 </body>

@@ -25,7 +25,20 @@ class SearchController extends BaseController {
     }
     
     public function search() {
-        $this->searchService->searchUsers($this->query('query'));
-        
+        try {
+            $query = $this->input('query');
+            
+            
+            $results = $this->searchService->searchUsers($query);
+            
+            if (empty($results)) {
+                return $this->redirect('/feed');
+            }
+            
+            return $this->redirect("/profile/{$results[0]['id']}");
+            
+        } catch (\Exception $e) {
+            return $this->view('search', ['error' => $e->getMessage()]);
+        }
     }
 }

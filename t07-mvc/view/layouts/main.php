@@ -46,7 +46,11 @@ error_log('Logged in user ID: ' . $logged_in_user_id);
     <div class="main-content">
         {{content}}
     </div>
-
+    <script>
+        function redirectToProfile() {
+            window.location.href = "/profile/<?php echo $logged_in_user_id ?? ''; ?>";
+        }
+    </script>
     <script src="/js/search.js"></script>
 </body>
 
