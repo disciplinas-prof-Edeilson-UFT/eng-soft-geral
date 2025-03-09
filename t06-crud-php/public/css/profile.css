@@ -113,6 +113,7 @@
     display: flex;
     justify-content: center; /* Centraliza o conteúdo horizontalmente */
     width: 100%; /* Ocupa toda a largura disponível */
+    padding-right: 20%;
 }
 
 .upload-container {
@@ -183,4 +184,17 @@
 
 .btn-follow:hover {
     background-color: var(--secondary-color);
+}
+
+.upload-more-photos {
+    margin-top: 20px;
+    padding: 8px 24px;
+    color: var(--white);
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.3s ease;
+    padding-left: 250%;
+    padding-top: 81%;
 }

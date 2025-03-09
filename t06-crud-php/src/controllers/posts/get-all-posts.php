@@ -1,5 +1,4 @@
 <?php
-
 require __DIR__ . '/../../dao/posts-dao.php';
 
 if (!isset($_SESSION['user_id'])) {
@@ -10,6 +9,7 @@ if (!isset($_SESSION['user_id'])) {
 try {
     $postsDao = new PostsDao();
     $posts = $postsDao->getAllPosts();
+
 } catch (PDOException $e) {
     die("Erro ao buscar dados: " . $e->getMessage());
 }

@@ -56,6 +56,4 @@ $userProfileData = [
     'photos' => $userPosts,
 ];
 
-include __DIR__ . '/../../../view/profile.php';
-exit;
 ?>
