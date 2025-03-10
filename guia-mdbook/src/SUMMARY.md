@@ -56,4 +56,12 @@
 
   - [Conex - tópico 06](t06-6.2-crud-php.md)
 
+    - [Criação de posts no feed](./t06-6.2.2-crud-php.md)
+
+    - [Exibição dos posts de todos os usuários no feed](./t06-6.2.3-crud-php.md)
+
     - [Atualização de perfil do usuário](t06-6.2.1-crud-php.md)
+
+    - [Exibir perfil do usuário ](./t06-6.2.4-crud-php.md)
+
+    - [Exibir no perfil do usuário suas respectivas postagens](./t06-6.2.5-crud-php.md)
