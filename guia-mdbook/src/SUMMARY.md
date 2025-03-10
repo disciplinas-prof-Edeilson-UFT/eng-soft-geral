@@ -37,18 +37,26 @@
   - [O que é Docker?](./t04-4.3-php-gitflow.md)
 
     - [Exemplo Prático: Configurando ambiente Docker](./t04-4.3.1-php-gitflow.md)
+  
+  - [Conex - tópico 04](./t04-4.4-php-gitflow.md)
+    
+    - [Cadastro de usuários no sistema](./t04-4.4.1-php-gitflow.md)
 
-  - [Boas Práticas para Desenvolvimento PHP com GitFlow](./t04-4.4-php-gitflow.md)
+  - [Boas Práticas para Desenvolvimento PHP com GitFlow](./t04-4.5-php-gitflow.md)
 
-  - [Documentação](./t04-4.4-php-gitflow.md)
+  - [Documentação](./t04-4.6-php-gitflow.md)
 
-- [Sessão com PHP](./t05-5.0-session-php.md)
+- [Sessões de usuário no navegador](./t05-5.0-session-php.md)
 
-  - [Exemplo de Sessão de Login em PHP](t05-5.1-session-php.md)
+  - [Sessões em PHP](./t05-5.1-session-php.md)
 
-  - [Boas Práticas para Sessões em PHP](t05-5.2-session-php.md)
+  - [Conex - tópico 05](./t05-5.2-session-php.md)
 
-  - [Documentação](t05-5.3-session-php.md)
+    - [Login no sistema](./t05-5.2.1-session-php.md)
+
+  - [Boas Práticas para Sessões em PHP](./t05-5.3-session-php.md)
+
+  - [Documentação](./t05-5.4-session-php.md)
 
 - [CRUD com PHP](./t06-6.0-crud-php.md)
 
