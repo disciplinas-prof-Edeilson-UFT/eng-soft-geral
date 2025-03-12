@@ -1,0 +1,210 @@
+/* Importando CSS global */
+@import url(global.css);
+
+/* Variáveis de cores */
+:root {
+    --primary-color: #2a2a2a;
+    --secondary-color: #007bff;
+    --background-color: #ffffff;
+    --hover-background-color: #f2f2f2;
+    --avatar-background-color: #ccc;
+    --divider-color: rgb(235, 233, 233);
+    --box-shadow-color: rgba(73, 73, 73, 0.1);
+}
+
+/* Barra lateral esquerda */
+.side-bar {
+    width: 20%;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    border-right: 2px solid var(--divider-color);
+}
+
+.side-bar a {
+    text-decoration: none;
+    color: var(--primary-color);
+    padding: 10px;
+    font-size: 16px;
+}
+
+.side-bar-links {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 20px;
+    width: 80%;
+}
+
+.side-bar-links a:hover {
+    background-color: var(--hover-background-color);
+    border-radius: 10px;
+}
+
+/* Container principal */
+.container {
+    width: 100%;
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: center;
+}
+
+/* Área principal do conteúdo */
+main {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* Feed de posts */
+.feed {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    width: 50%;
+    margin-top: 3%;
+}
+
+.post {
+    background-color: var(--background-color);
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px var(--box-shadow-color);
+    width: 90%;
+    margin: 0 auto;
+}
+
+/* Informações do usuário no post */
+.user-info {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.avatar {
+    width: 40px;
+    height: 40px;
+    background-color: var(--avatar-background-color);
+    border-radius: 50%;
+    margin-right: 10px;
+}
+
+.username {
+    font-size: 12px;
+    font-weight: bold;
+    color: var(--primary-color);
+}
+
+/* Espaço reservado para imagem do post */
+.image-placeholder {
+    width: 100%;
+    height: 200px;
+    background-color: #e0e0e0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 8px;
+}
+
+/* Barra lateral direita */
+.sidebar {
+    gap: 20px;
+    display: flex;
+    flex-direction: column;
+    padding: 2%;
+}
+
+/* Perfil do usuário */
+.user-profile {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.user-profile .avatar {
+    width: 50px;
+    height: 50px;
+    background-color: var(--avatar-background-color);
+    border-radius: 50%;
+}
+
+.profile-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.profile-info .username {
+    font-size: 16px;
+    color: var(--primary-color);
+    margin-bottom: 5px;
+}
+
+.change-link {
+    font-size: 14px;
+    color: var(--secondary-color);
+    text-decoration: none;
+}
+
+.change-link:hover {
+    text-decoration: underline;
+}
+
+/* Sugestões de usuários */
+.suggestions h2 {
+    font-size: 14px;
+    font-weight: bold;
+    margin-bottom: 15px;
+}
+
+.suggestion-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.suggestion-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+    width: 100%;
+    gap: 5px;
+}
+
+.suggestion-item .avatar {
+    width: 40px;
+    height: 40px;
+    background-color: var(--avatar-background-color);
+    border-radius: 50%;
+    margin-right: 10px;
+}
+
+.follow-link {
+    margin-left: auto;
+    font-size: 14px;
+    color: var(--secondary-color);
+    text-decoration: none;
+}
+
+.follow-link:hover {
+    text-decoration: underline;
+}
+
+/* Responsividade para telas menores */
+@media (max-width: 768px) {
+    .side-bar {
+        display: none;
+    }
+
+    .container {
+        flex-direction: column;
+    }
+
+    .post {
+        width: 100%;
+    }
+
+    .sidebar {
+        margin-left: 0;
+    }
+}

@@ -1,0 +1,293 @@
+# Conex - tópico 04
+
+## Conexão do Servidor ao Banco de Dados (_exemplo do projeto_)
+
+**Arquivo `database.php`**
+
+```php
+<?php
+
+class Database
+{
+    private static $instance = null;
+    private $conn;
+
+    private function __construct()
+    {
+        $config = require __DIR__ . '/config.php';
+
+        if (!isset($config['database']['host'], $config['database']['port'], $config['database']['username'], $config['database']['password'], $config['database']['dbname'])) {
+            throw new Exception("Configuração do banco de dados incompleta");
+        }
+
+        $dsn = "mysql:host={$config['database']['host']};port={$config['database']['port']};dbname={$config['database']['dbname']};charset=utf8mb4";
+
+        try {
+            $this->conn = new PDO($dsn, $config['database']['username'], $config['database']['password'], [
+                PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+                PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC
+            ]);
+        } catch (PDOException $e) {
+            throw new Exception("Falha na conexão com o banco de dados: " . $e->getMessage());
+        }
+    }
+
+    public static function getInstance()
+    {
+        if (self::$instance === null) {
+            self::$instance = new self();
+        }
+        return self::$instance;
+    }
+
+    public function getConnection()
+    {
+        return $this->conn;
+    }
+}
+```
+
+_Código responsável por estabelecer a conexão com o banco de dados._
+
+### Observações
+
+---
+
+```php
+$config = require __DIR__ . '/config.php';
+```
+
+_Aqui, o código carrega um arquivo chamado config.php que contém as configurações do banco de dados._
+
+```php
+if (!isset($config['database']['host'], $config['database']['port'], $config['database']['username'], $config['database']['password'], $config['database']['dbname'])) {
+            throw new Exception("Configuração do banco de dados incompleta");
+        }
+```
+
+_Aqui, o código verifica se todas as chaves necessárias (host, port, username, password, dbname) existem no array $config['database']._
+
+```php
+ $dsn = "mysql:host={$config['database']['host']};port={$config['database']['port']};dbname={$config['database']['dbname']};charset=utf8mb4";
+```
+
+_O DSN é a string usada pelo PDO para conectar ao banco de dados._
+
+_Host (`host`), Porta (`port`), Nome do banco (`dbname`), Charset (`utf8mb4`)_
+
+```php
+try {
+    $this->conn = new PDO($dsn, $config['database']['username'], $config['database']['password'], [
+        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+        PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC
+    ]);
+} catch (PDOException $e) {
+    throw new Exception("Falha na conexão com o banco de dados: " . $e->getMessage());
+}
+```
+
+_Aqui, o código tenta criar uma conexão com o banco de dados usando a classe PDO._
+
+---
+
+**Arquivo `config.php`**
+
+```php
+<?php
+return [
+    'database' => [
+        'host' => 'localhost',
+        'port' => '3306',
+        'username' => 'root',
+        'password' => '',
+        'dbname' => 'conex'
+    ]
+];
+```
+
+## Teste e Validação
+
+1. Salve o arquivo `database.php` no diretório do seu servidor (htdocs no XAMPP).
+
+2. Acesse `http://localhost/database.php` no navegador.
+
+3. Caso a conexão seja bem-sucedida, a página ficará em branco.
+
+## Adionando um usuário a tabela users (_exemplo do projeto_)
+
+**Arquivo `signup.php`**
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link rel="stylesheet" href="../public/css/cadastro.css" />
+  </head>
+
+  <body>
+    <form class="form-group" method="POST" action="../src/post-user.php">
+      <div class="icon">
+        <img src="../public/img/logo.svg" alt="logo" class="logo" />
+      </div>
+      <div class="form-wrapper">
+        <div class="form-control">
+          <label for="name">Nome: </label>
+          <input type="text" name="name" id="name" required />
+        </div>
+        <div class="form-control">
+          <label for="phone">Telefone: </label>
+          <input type="tel" name="phone" id="phone" required />
+        </div>
+        <div class="form-control">
+          <label for="email">Email: </label>
+          <input type="email" name="email" id="email" required />
+        </div>
+        <div class="form-control">
+          <label for="password">Senha: </label>
+          <input type="password" name="password" id="password" required />
+        </div>
+        <div class="form-control">
+          <label for="password-confirm">Confirme a senha: </label>
+          <input
+            type="password"
+            name="password-confirm"
+            id="password-confirm"
+            required
+          />
+        </div>
+      </div>
+      <div class="btn-wrapper">
+        <button class="btn">continuar</button>
+        <span class="login-link"
+          >já possui conta?
+          <a href="/view/login.php" class="link">Faça Login</a></span
+        >
+      </div>
+    </form>
+  </body>
+</html>
+```
+
+_Aqui, estar o front do nosso formulário de cadastro do usuário, que permite que ele adicione seu nome, telefone, e-mail e senha._
+
+---
+
+**Arquivo `post-user.php`**
+
+```php
+<?php
+
+require_once __DIR__ . '/../database.php';
+require_once __DIR__ . '/users.php';
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $name = trim($_POST['name']);
+    $phone = trim($_POST['phone']);
+    $email = trim($_POST['email']);
+    $password = $_POST['password'];
+    $password_confirm = $_POST['password-confirm'];
+
+    if (empty($name) || empty($phone) || empty($email) || empty($password) || empty($password_confirm)) {
+        $_SESSION['error'] = "Todos os campos são obrigatórios!";
+        header("Location: /view/signup.php?error=todos-os-campos-obrigatorios");
+        exit();
+    }
+
+    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        $_SESSION['error'] = "Email inválido!";
+        header("Location: /view/signup.php?error=email-invalido");
+        exit();
+    }
+
+    if ($password !== $password_confirm) {
+        $_SESSION['error'] = "As senhas não coincidem!";
+        header("Location: /view/signup.php?error=confirmação-de-senha-diferente");
+        exit();
+    }
+
+    $database = Database::getInstance();
+    $users = new Users($database);
+
+    if ($users->checkEmailExists($email)) {
+        $_SESSION['error'] = "Este email já está registrado!";
+        header("Location: /view/signup.php?error=email-ja-registrado");
+        exit();
+    }
+
+    $password_hash = password_hash($password, PASSWORD_ARGON2I);
+
+    if ($users->createUser($name, $email, $password_hash, $phone)) {
+        $_SESSION['success'] = "Usuário cadastrado com sucesso!";
+        header("Location: /");
+        exit();
+    } else {
+        $_SESSION['error'] = "Erro ao cadastrar o usuário!";
+        header("Location: /view/signup.php?error=erro-ao-cadastrar-usuario");
+        exit();
+    }
+}
+```
+
+Aqui, o código processa o formulário de cadastro de usuários (`signup.php`) enviado via método POST. Ele valida os dados recebidos, verifica se o e-mail já está cadastrado, cria um novo usuário no banco de dados e redireciona o usuário com mensagens de sucesso ou erro.
+
+**O objetivo principal deste código é:**
+
+1. Processar o formulário de cadastro de usuários.
+
+2. Validar os dados fornecidos pelo usuário (campos obrigatórios, formato de e-mail, confirmação de senha).
+
+3. Verificar se o e-mail já está cadastrado no banco de dados.
+
+4. Criar um novo usuário no banco de dados com os dados fornecidos.
+
+5. Redirecionar o usuário com feedback adequado (sucesso ou erro).
+
+---
+
+**Arquivo `users.php`**
+
+```php
+<?php
+class Users
+{
+    private $db;
+
+    public function __construct(Database $db)
+    {
+        $this->db = $db->getConnection();
+    }
+
+    public function createUser($username, $email, $password, $phone)
+    {
+        $sql = "INSERT INTO users (username, email, password_hash, phone) VALUES (:username, :email, :password_hash, :phone)";
+        $stmt = $this->db->prepare($sql);
+        return $stmt->execute([
+            ':username' => $username,
+            ':email' => $email,
+            ':password_hash' => $password,
+            ':phone' => $phone
+        ]);
+    }
+
+    public function checkEmailExists($email)
+    {
+        $sql = "SELECT id FROM users WHERE email = :email";
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute([':email' => $email]);
+        return $stmt->fetch() ? true : false;
+    }
+}
+```
+
+_Aqui, o código define uma classe chamada Users que tem como objetivo gerenciar operações relacionadas a usuários no banco de dados, especificamente a criação de novos usuários e a verificação se um e-mail já está cadastrado._
+
+## Conclusão
+
+Este tópico abordou de maneira prática e detalhada a configuração de um ambiente de desenvolvimento local, utilizando `XAMPP` e `MySQL`, para a criação, conexão e cadastro de um usuário em um banco de dados. Através dos passos apresentados, é possível observar como configurar um servidor `Apache`, iniciar o `MySQL` e criar um banco de dados com tabelas específicas, como a tabela de `users`, para armazenar dados de usuários.
+
+O exemplo também demonstrou como configurar a conexão ao banco de dados utilizando `PDO` no `PHP`, garantindo que a comunicação entre o servidor e o banco seja segura e eficiente. Além disso, o código abordou o processo de cadastro de um novo usuário, incluindo validações de entrada, como a verificação de e-mail e confirmação de senha, bem como a utilização de hashing para armazenamento seguro da senha no banco de dados.
+
+Esse processo integra diferentes componentes, como o frontend (`formulário HTML`), o backend (`código PHP para processamento`), e o banco de dados (`MySQL`), criando uma base sólida para o desenvolvimento de sistemas que envolvem autenticação de usuários.

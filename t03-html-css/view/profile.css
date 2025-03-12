@@ -1,0 +1,88 @@
+@import url(global.css);
+
+.profile-container{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+}
+
+.info-section {
+    display: flex;
+    align-items: center;
+    padding-bottom: 2%;
+    border-bottom: 2px solid rgb(235, 233, 233);
+}
+
+.stats-container {
+    display: flex;
+    gap: 20px;
+    margin-top: 10px;
+}
+
+.following, .followers {
+    font-size: 14px;
+    color: gray;
+}
+
+.profile-data-container {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+}
+
+.user-info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-left: 50px;
+}
+
+.profile-photo {
+    width: 100px;
+    height: 100px;
+}
+
+.user-name {
+    margin: 0;
+}
+
+.stats-container {
+    display: flex;
+    gap: 6rem;
+}
+
+.photo-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    margin-top: 60px;
+}
+
+.profile-photo {
+    width: 100px;
+    height: 100px;
+}
+
+.btn-edit {
+    background-color: #EBEBEB;
+    color: gray;
+    border-radius: 4px;
+    padding: 0.2rem 3rem;
+    border: none;
+    cursor: pointer;
+}
+
+.feed-section{
+    padding: 10%;
+}
+
+.add-post {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 13px;
+}
