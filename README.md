@@ -1,8 +1,7 @@
-# Universidade Federal do Tocantins, Câmpus Palmas
-
-## Curso: Bacharelado em Ciência da Computação
-## Disciplina: Engenharia de Software
-## Prof. Dr. Edeilson Milhomem da Silva
+### Universidade Federal do Tocantins, Câmpus Palmas 
+### Curso: Bacharelado em Ciência da Computação
+### Disciplina: Engenharia de Software
+### Prof. Dr. Edeilson Milhomem da Silva
 
 ---
 
@@ -49,6 +48,6 @@ O objetivo deste repositório é oferecer um guia integrado ao aprendizado da di
 
 ---
 
-#### Material elaborado por Lauro Oliveira Mota, Mara Emanuella Carvalho Martins e Edeilson Milhomem da Silva, 2025
+### Material elaborado por Lauro Oliveira Mota, Mara Emanuella Carvalho Martins e Edeilson Milhomem da Silva, 2025
 
 Bons estudos!
