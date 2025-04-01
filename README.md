@@ -3,6 +3,8 @@
 ## Disciplina: Engenharia de Software
 ## Prof. Dr. Edeilson Milhomem da Silva
 
+---
+
 # Guia Básico de Conteúdos para a Disciplina de Engenharia de Software
 
 Bem-vindo ao repositório do **Guia Básico de Conteúdos para a Disciplina de Engenharia de Software**. Este repositório foi criado para ser um guia prático e teórico, abordando alguns conceitos da disciplina através de um projeto de software evolutivo.
@@ -44,7 +46,9 @@ O objetivo deste repositório é oferecer um guia integrado ao aprendizado da di
 - 2025-1: Mara Emanuella Carvalho Martins
 - 2025-1: Lauro Oliveira Mota
 
-##### Material elaborado por Lauro Oliveira Mota, Mara Emanuella Carvalho Martins e Edeilson Milhomem da Silva, 2025
+---
+
+#### Material elaborado por Lauro Oliveira Mota, Mara Emanuella Carvalho Martins e Edeilson Milhomem da Silva, 2025
 
 ---
 
