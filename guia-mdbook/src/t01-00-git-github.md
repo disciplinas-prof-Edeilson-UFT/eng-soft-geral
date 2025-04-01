@@ -1,6 +1,6 @@
+# Guia Básico de Conteúdos para a Disciplina de Engenharia de Software
 
-
-<h1> 1.Utilizando Git e Github </h1>
+# 1.Utilizando Git e Github 
 
 <h2> Neste arquivo teremos uma série de exemplos de execução de comandos básicos do git, bem como a recomendação de vídeos demonstrando de forma prática o que eles fazem. </h2>
 
