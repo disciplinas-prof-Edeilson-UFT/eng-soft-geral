@@ -1,6 +1,8 @@
 # Summary
 
-- [Utilizando Git e GitHub](./t01-00-git-github.md)
+- [Utilizando Git e GitHub](./t01-1.0-git-github.md)
+
+  - [Principais comandos Git](./t01-1.1-git-github.md)
 
 - [Code Review e Pull Request](./t02-2.0-code-review.md)
 
