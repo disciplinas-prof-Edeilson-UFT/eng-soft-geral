@@ -5,24 +5,26 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tela de Login</title>
-    <link rel="stylesheet" href="/css/login.css">
+    <link rel="stylesheet" href="../public/css/login.css">
 </head>
 
 <body>
-    <?php if(!empty($error)): ?>
+    <?php if (!empty($error)): ?>
         <script>
             alert("<?php echo htmlspecialchars($error); ?>");
         </script>
-    <?php 
-    elseif(!empty($errors) && is_array($errors)): ?>
+    <?php
+    elseif (!empty($errors) && is_array($errors)): ?>
         <script>
-            alert("<?php foreach($errors as $err){ echo htmlspecialchars($err) . '\n'; } ?>");
+            alert("<?php foreach ($errors as $err) {
+                        echo htmlspecialchars($err) . '\n';
+                    } ?>");
         </script>
     <?php endif; ?>
     <div class="container">
         <!-- Seção esquerda com logo -->
         <div class="left">
-            <img src="/img/logo.svg" alt="Logo"> 
+            <img src="../public/img/logo.svg" alt="Logo">
         </div>
         <!-- Seção direita com formulário -->
         <div class="right">

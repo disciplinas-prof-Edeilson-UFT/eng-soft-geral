@@ -12,7 +12,7 @@
     <div class="container">
         <!-- Seção esquerda com logo -->
         <div class="left">
-            <img src="../public/img/logo.svg" alt="Logo"> 
+            <img src="../public/img/logo.svg" alt="Logo">
         </div>
         <!-- Seção direita com formulário -->
         <div class="right">

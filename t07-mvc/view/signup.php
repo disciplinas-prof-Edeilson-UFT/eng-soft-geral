@@ -1,26 +1,30 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-    <link rel="stylesheet" href="/css/signup.css">
+    <link rel="stylesheet" href="../public/css/signup.css">
 </head>
+
 <body>
-    <?php if(!empty($error)): ?>
+    <?php if (!empty($error)): ?>
         <script>
             alert("<?php echo htmlspecialchars($error); ?>");
         </script>
-    <?php 
-    elseif(!empty($errors) && is_array($errors)): ?>
+    <?php
+    elseif (!empty($errors) && is_array($errors)): ?>
         <script>
-            alert("<?php foreach($errors as $err){ echo htmlspecialchars($err) . '\n'; } ?>");
+            alert("<?php foreach ($errors as $err) {
+                        echo htmlspecialchars($err) . '\n';
+                    } ?>");
         </script>
     <?php endif; ?>
     <form method="POST" action="/auth/signup" class="form-group">
 
         <div class="icon">
-            <img src="/img/logo.svg" alt="logo" class="logo">
+            <img src="../public/img/logo.svg" alt="logo" class="logo">
         </div>
         <div class="form-wrapper">
             <div class="form-control">
@@ -45,10 +49,11 @@
             </div>
         </div>
         <div class="btn-wrapper">
-            <button class="btn">continuar</button> 
+            <button class="btn">continuar</button>
             <span class="login-link">já possui conta? <a href="/auth/login" class="link">Faça Login</a></span>
         </div>
-        
-    </form>    
+
+    </form>
 </body>
+
 </html>
