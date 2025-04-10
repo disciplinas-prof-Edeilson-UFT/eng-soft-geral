@@ -1,5 +1,5 @@
 <?php
-$baseUrl = "http://localhost/eng-soft-geral/t07-composer/";
+
 require_once __DIR__ . "../../../dir-config.php";
 ?>
 <!DOCTYPE html>
@@ -16,7 +16,7 @@ require_once __DIR__ . "../../../dir-config.php";
     <aside class="side-bar">
         <img src="<?= BASE_URL ?>public/img/logo.svg" alt="logo" class="logo">
         <div class="side-bar-links">
-            <a href="<?= $baseUrl ?>">
+            <a href="<?= BASE_URL ?>">
                 <img src="<?= BASE_URL ?>public/img/home.svg" class="icon">
                 Página principal
             </a>

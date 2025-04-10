@@ -33,6 +33,7 @@ require_once __DIR__ . '/../src/controllers/users/profile-user.php';
 
             <div class="user-info">
                 <h1 class="user-name"><?php echo $userName; ?></h1>
+                <p class="user-bio"><?php echo $userProfileData['bio']; ?></p>
                 <div class="stats-container">
                     <span class="following"><?= $following; ?> seguindo</span>
                     <span class="followers"><?= $followers; ?> seguidores</span>
