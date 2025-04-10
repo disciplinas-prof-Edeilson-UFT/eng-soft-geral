@@ -99,4 +99,14 @@ class UserDao
         $stmt = $this->db->prepare($query);
         return $stmt->execute([':followers_count' => $followers_count, ':userId' => $userId]);
     }
+
+    public function updateUserFollowingCount($userId, $count)
+    {
+        $stmt = $this->db->prepare("UPDATE users SET count_following = :count WHERE id = :userId");
+        $stmt->execute([
+            ':count' => $count,
+            ':userId' => $userId
+        ]);
+        return $stmt->rowCount() > 0;
+    }
 }
