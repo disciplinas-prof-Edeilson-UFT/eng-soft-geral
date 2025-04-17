@@ -24,14 +24,14 @@ require_once __DIR__ . "../../../dir-config.php";
                 <img src="<?= BASE_URL ?>public/img/search.svg" class="icon">
                 Pesquisar
             </button>
-            <a href="<?= $baseUrl ?>view/profile.php" onclick="redirectToProfile()">
+            <a href="<?= BASE_URL ?>view/profile.php" onclick="redirectToProfile()">
                 <img src="<?= BASE_URL ?>public/img/profile.svg" class="icon">
                 Perfil
             </a>
         </div>
     </aside>
     <div id="searchBox" class="search-box">
-        <form action="../src/controllers/pesquisa.php" method="GET" onsubmit="handleSearch(event)">
+        <form action="<?= BASE_URL ?>src/controllers/users/search-user.php" method="GET" onsubmit="handleSearch(event)">
             <input id="searchInput" type="text" name="query" placeholder="Pesquisar" required>
             <button type="submit">Ir</button>
         </form>
@@ -41,8 +41,9 @@ require_once __DIR__ . "../../../dir-config.php";
         function redirectToProfile() {
             window.location.href = "<?= BASE_URL ?>view/profile.php?id=<?php echo isset($_SESSION['user_id']) ? $_SESSION['user_id'] : ''; ?>";
         }
+
     </script>
-    <script src="<?= BASE_URL ?>/public/js/search.js"></script>
+    <script src="<?= BASE_URL ?>public/js/search.js"></script>
 </body>
 
 </html>
