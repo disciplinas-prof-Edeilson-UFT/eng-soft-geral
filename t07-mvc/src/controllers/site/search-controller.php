@@ -16,11 +16,11 @@ require_once __DIR__ . '/../../services/search-service.php';
 class SearchController extends BaseController {
     public $searchService;
     public IUserDAO $userDAO;
-    public IModelRepository $IModelRespot;
+    public IModelRepository $IModelRepository;
 
     public function __construct() {
-        $this->IModelRespot = new ModelRepository();
-        $this->userDAO = new UserDAO($this->IModelRespot);
+        $this->IModelRepository = new ModelRepository();
+        $this->userDAO = new UserDAO($this->IModelRepository );
         $this->searchService = new SearchService($this->userDAO);
     }
     

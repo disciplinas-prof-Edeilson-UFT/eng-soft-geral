@@ -31,7 +31,7 @@ require_once __DIR__ . "../../../dir-config.php";
         </div>
     </aside>
     <div id="searchBox" class="search-box">
-        <form action="<?= BASE_URL ?>src/controllers/users/search-user.php" method="GET" onsubmit="handleSearch(event)">
+        <form action="<?= BASE_URL ?>search" method="GET" onsubmit="handleSearch(event)">
             <input id="searchInput" type="text" name="query" placeholder="Pesquisar" required>
             <button type="submit">Ir</button>
         </form>
@@ -39,9 +39,9 @@ require_once __DIR__ . "../../../dir-config.php";
     </div>
     <script>
         function redirectToProfile() {
-            window.location.href = "<?= BASE_URL ?>view/profile.php?id=<?php echo isset($_SESSION['user_id']) ? $_SESSION['user_id'] : ''; ?>";
+            window.location.href = "<?= BASE_URL ?>profile?id=<?= $_SESSION['user_id'] ?? '' ?>";
         }
-
+        const baseUrl = '<?= BASE_URL ?>';
     </script>
     <script src="<?= BASE_URL ?>public/js/search.js"></script>
 </body>

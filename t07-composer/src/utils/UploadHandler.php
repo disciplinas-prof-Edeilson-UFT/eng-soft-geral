@@ -1,4 +1,6 @@
 <?php
+namespace Conex\T07Composer\utils;
+
 class UploadHandler
 {
 

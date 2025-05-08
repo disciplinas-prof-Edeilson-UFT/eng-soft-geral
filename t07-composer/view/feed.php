@@ -1,6 +1,5 @@
 <?php
 require_once __DIR__ . "/../dir-config.php";
-require_once __DIR__ . '/../src/controllers/posts/get-all-posts.php';
 ?>
 
 <!DOCTYPE html>

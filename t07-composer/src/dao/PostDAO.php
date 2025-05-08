@@ -1,6 +1,12 @@
 <?php 
-require_once __DIR__ . '/../../database.php';
-class PostsDao {
+//require_once __DIR__ . '/../../database.php';
+
+namespace Conex\T07Composer\dao;
+
+use PDO;
+use Conex\T07Composer\database;
+
+class PostDAO {
 
     private $db;
 

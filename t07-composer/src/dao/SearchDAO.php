@@ -1,7 +1,12 @@
 <?php
-require_once __DIR__ . '/../../database.php';
+//require_once __DIR__ . '/../../database.php';
 
-class SearchDao
+namespace Conex\T07Composer\dao;
+
+use PDO;
+use Conex\T07Composer\database;
+
+class SearchDAO
 {
     private $db;
 

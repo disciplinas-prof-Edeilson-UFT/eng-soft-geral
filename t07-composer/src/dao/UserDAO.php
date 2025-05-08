@@ -1,8 +1,10 @@
 <?php
 
-require_once __DIR__ . '/../../database.php';
+namespace Conex\T07Composer\dao;
 
-class UserDao
+use Conex\T07Composer\database;
+
+class UserDAO
 {
     private $db;
 

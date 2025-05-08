@@ -1,20 +1,4 @@
-<?php
-require_once __DIR__ . "/../dir-config.php";
-require_once __DIR__ . "../../src/dao/user-dao.php";
-
-$userDao = new UserDao();
-
-if (!isset($_GET["id"])) {
-    die("Parâmetro id não informado");
-}
-
-$id = $_GET["id"];
-$user = $userDao->getUserProfileById($id);
-
-if (!$user) {
-    die("Usuário não encontrado");
-}
-?>
+<?php require_once __DIR__ . "/../dir-config.php"; ?>
 
 <!DOCTYPE html>
 <html lang="pt-BR">
@@ -31,7 +15,7 @@ if (!$user) {
 
     <div class="form-container">
         <h1>Atualize seu perfil</h1>
-        <form method="POST" action="<?= BASE_URL ?>src/controllers/users/update-user.php?id=<?= $id ?>" class="form-group" enctype="multipart/form-data">
+        <form method="POST" action="<?= BASE_URL ?>profile/update?id=<?= $userProfileData['user_id'] ?>" class="form-group" enctype="multipart/form-data">
             <div class="form-wrapper">
                 <div class="form-control">
                     <label for="username">Nome: </label>
@@ -57,15 +41,19 @@ if (!$user) {
             <div class="btn-wrapper">
                 <button class="btn" name="edit">Confirmar</button>
             </div>
-            <div class="btn-wrapper">
+        </form>
+        <div class="btn-wrapper">
+            <form method="POST" action="<?= BASE_URL ?>profile/delete?id=<?= $userProfileData['user_id'] ?>" style="display: inline;">
                 <button class="btn btn-danger" name="delete" onclick="return confirm('Tem certeza que deseja excluir sua conta? Esta ação não pode ser desfeita.');">
                     Deletar Usuário
                 </button>
+            </form>
+            <form method="POST" action="<?= BASE_URL ?>logout" style="display: inline;">
                 <button class="btn btn-danger" name="logout" onclick="return confirm('Tem certeza que deseja sair?');">
                     Sair
                 </button>
-            </div>
-        </form> 
+            </form>
+        </div>
     </div>
 </body>
 

@@ -16,7 +16,7 @@
         </div>
         <!-- Seção direita com formulário -->
         <div class="right">
-            <form method="POST" action="../src/controllers/users/login-user.php">
+            <form method="POST" action="<?= BASE_URL ?>login">
                 <div class="form-control">
                     <label for="email">Email</label>
                     <input type="email" id="email" name="email" required>
@@ -27,7 +27,7 @@
                 </div>
                 <button type="submit" class="btn">Fazer Login</button>
                 <div class="login-link">
-                    Não tem uma conta? <a href="signup.php">Cadastre-se</a>
+                    Não tem uma conta? <a href="signup">Cadastre-se</a>
                 </div>
             </form>
         </div>
