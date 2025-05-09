@@ -11,10 +11,9 @@ class FollowHandler
     private FollowDAO $followDAO;
     private UserDAO $userDAO;
 
-    public function __construct()
-    {
-        $this->followDAO = new FollowDAO();
-        $this->userDAO = new UserDAO();
+    public function __construct(FollowDAO $followDAO, UserDAO $userDAO) {
+        $this->followDAO = $followDAO;
+        $this->userDAO = $userDAO;
     }
 
     public function handleFollow($userId, $loggedInUserId, $isFollowing, $action)
@@ -32,7 +31,7 @@ class FollowHandler
                     $loggedInUser['count_following']++;
                 } catch (\Exception $e) {
                     error_log("Error following user: " . $e->getMessage());
-                    header("Location: " . BASE_URL . "view/profile.php?id=$userId");
+                    header("Location: " . BASE_URL . "profile?id=$userId");
                     exit();
                 }
             }
@@ -44,7 +43,7 @@ class FollowHandler
                     $loggedInUser['count_following']--;
                 } catch (\Exception $e) {
                     error_log("Error unfollowing user: " . $e->getMessage());
-                    header("Location: " . BASE_URL . "view/profile.php?id=$userId");
+                    header("Location: " . BASE_URL . "profile?id=$userId");
                     exit();
                 }
             }
@@ -74,7 +73,7 @@ class FollowHandler
             }
         }
 
-        header("Location: " . BASE_URL . "view/profile.php?id=$userId");
+        header("Location: " . BASE_URL . "profile?id=$userId");
         exit();
     }
 }

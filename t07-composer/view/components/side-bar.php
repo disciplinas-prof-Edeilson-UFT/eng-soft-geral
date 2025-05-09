@@ -24,7 +24,7 @@ require_once __DIR__ . "../../../dir-config.php";
                 <img src="<?= BASE_URL ?>public/img/search.svg" class="icon">
                 Pesquisar
             </button>
-            <a href="<?= BASE_URL ?>view/profile.php" onclick="redirectToProfile()">
+            <a href="<?= BASE_URL ?>profile?id=<?= $_SESSION['user_id'] ?? '' ?>" onclick="redirectToProfile()">
                 <img src="<?= BASE_URL ?>public/img/profile.svg" class="icon">
                 Perfil
             </a>

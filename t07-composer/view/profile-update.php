@@ -15,7 +15,7 @@
 
     <div class="form-container">
         <h1>Atualize seu perfil</h1>
-        <form method="POST" action="<?= BASE_URL ?>profile/update?id=<?= $userProfileData['user_id'] ?>" class="form-group" enctype="multipart/form-data">
+        <form method="POST" action="<?= BASE_URL ?>profile/update/save?id=<?= $userProfileData['user_id'] ?>" class="form-group" enctype="multipart/form-data">
             <div class="form-wrapper">
                 <div class="form-control">
                     <label for="username">Nome: </label>
@@ -31,15 +31,15 @@
                 </div>
                 <div class="form-control">
                     <label for="bio">Bio: </label>
-                    <input type="text" name="bio" value="<?= htmlspecialchars($user['bio'] || "") ?>" id="bio" />
+                    <input type="text" name="bio" value="<?= htmlspecialchars($user['bio'] ?? "") ?>" id="bio" />
                 </div>
             </div>
             <div class="form-control">
                 <label for="profile_pic">Foto de Perfil: </label>
                 <input type="file" name="profile_pic_url" id="profile_pic_url" accept="image/*" />
             </div>
-            <div class="btn-wrapper">
-                <button class="btn" name="edit">Confirmar</button>
+            <div class="btn-edit">
+                <button class="btn" type="submit" name="edit">Confirmar</button>
             </div>
         </form>
         <div class="btn-wrapper">

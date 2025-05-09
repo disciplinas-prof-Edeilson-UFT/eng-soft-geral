@@ -9,7 +9,7 @@
 </head>
 
 <body>
-    <form method="POST" action="../src/controllers/users/post-user.php" class="form-group">
+    <form method="POST" action="<?= BASE_URL ?>signup" class="form-group">
         <div class="icon">
             <img src="../public/img/logo.svg" alt="logo" class="logo">
         </div>
@@ -37,7 +37,7 @@
         </div>
         <div class="btn-wrapper">
             <button class="btn">continuar</button>
-            <span class="login-link">já possui conta? <a href="../view/login.php" class="link">Faça Login</a></span>
+            <span class="login-link">já possui conta? <a href="<?= BASE_URL ?>login" class="link">Faça Login</a></span>
         </div>
 
     </form>

@@ -1,6 +1,5 @@
 <?php
 require_once __DIR__ . "/../dir-config.php";
-require_once __DIR__ . '/../src/controllers/users/profile-user.php';
 ?>
 
 <!DOCTYPE html>
@@ -26,7 +25,7 @@ require_once __DIR__ . '/../src/controllers/users/profile-user.php';
                 <!-- Botão de edição de perfil (apenas para o próprio usuário) -->
                 <?php if ((int)$user_id === (int)$logged_in_user_id): ?>
                     <button class="btn-edit">
-                        <a href="<?= BASE_URL ?>view/profile-update.php?id=<?= $user_id; ?>">Editar Perfil</a>
+                        <a href="<?= BASE_URL ?>profile/update?id=<?= $user_id; ?>">Editar Perfil</a>
                     </button>
                 <?php endif; ?>
             </div>
@@ -41,7 +40,7 @@ require_once __DIR__ . '/../src/controllers/users/profile-user.php';
 
                 <!-- Formulário para seguir/deixar de seguir (apenas para outros usuários) -->
                 <?php if ((int)$user_id !== (int)$logged_in_user_id): ?>
-                    <form method="POST">
+                    <form method="POST" action="<?= BASE_URL ?>profile/follow?id=<?= $user_id ?>">
                         <input type="hidden" name="action" value="<?= $isFollowing ? 'unfollow' : 'follow' ?>">
                         <button type="submit" class="btn-follow">
                             <?= $isFollowing ? 'Deixar de seguir' : 'Seguir' ?>
@@ -68,7 +67,7 @@ require_once __DIR__ . '/../src/controllers/users/profile-user.php';
             <?php if (empty($userPosts) && $user_id == $_SESSION['user_id']): ?>
                 <div class="pai-do-upload-container">
                     <div class="upload-container">
-                        <form action="<?= BASE_URL ?>src/controllers/posts/upload-feed-photo.php" method="POST" enctype="multipart/form-data">
+                        <form action="<?= BASE_URL ?>post/upload" method="POST" enctype="multipart/form-data">
                             <label for="photo">
                                 <img src="<?= BASE_URL ?>public/img/add-photo.svg" class="icon"> <br>
                                 Adicionar foto

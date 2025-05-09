@@ -12,11 +12,11 @@ class AuthController {
         $this->userDAO = new UserDAO($database);
     }
 
-    public function showRegisterForm() {
+    public function showSignupForm() {
         require_once __DIR__ . '/../../../view/signup.php';
     }
 
-    public function register(array $data) {
+    public function signup(array $data) {
         $name = trim($data['name']);
         $phone = trim($data['phone']);
         $email = trim($data['email']);

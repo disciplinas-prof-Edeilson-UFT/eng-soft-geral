@@ -61,6 +61,16 @@ class ProfileController {
             'photos' => $userPosts,
         ];
 
+        $userName = $userProfileData['username'];
+        $user_id = $userProfileData['user_id'];
+        $logged_in_user_id = $userProfileData['logged_in_user_id'];
+        $isFollowing = $userProfileData['is_Following'];
+        $followers = $userProfileData['followers'];
+        $following = $userProfileData['following'];
+        $profilePhoto = $profilePhoto;
+
+        $editProfileUrl = BASE_URL . "profile/update?id=" . $userId;
+
         require_once __DIR__ . '/../../../view/profile.php';
     }
 
@@ -145,13 +155,17 @@ class ProfileController {
     
             try {
                 $this->userDAO->updateUser($name, $email, $bio, $phone, $userId);
-                $_SESSION['user_name'] = $name;
-                header("Location: " . BASE_URL . "profile?id=$userId");
+                $_SESSION['success'] = "Perfil atualizado com sucesso!";
+                header("Location: " . BASE_URL . "profile?id=" . $userId);
                 exit;
             } catch (\Exception $e) {
-                echo 'Erro: ' . $e->getMessage();
+                $_SESSION['error'] = "Erro ao atualizar perfil: " . $e->getMessage();
+                header("Location: " . BASE_URL . "profile/edit?id=" . $userId);
+                exit;
             }
         }
+        header("Location: " . BASE_URL . "profile/edit?id=" . $userId);
+        exit;
     }
 
     public function delete($userId) {

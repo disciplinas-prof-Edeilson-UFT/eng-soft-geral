@@ -38,7 +38,7 @@ use Conex\T07Composer\middlewares\AuthMiddleware;
 
 
 $request_uri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
-$route = trim($request_uri, '/') ?: 'home';
+$route = trim($request_uri, '/') ?: 'feed';
 
 $authMiddleware = new AuthMiddleware();
 
@@ -63,12 +63,12 @@ switch ($route) {
         $controller = new AuthController();
         $controller->logout();
         break;
-    case 'register':
+    case 'signup':
         $controller = new AuthController();
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $controller->register($_POST);
+            $controller->signup($_POST);
         } else {
-            $controller->showRegisterForm();
+            $controller->showSignupForm();
         }
         break;
     case 'profile':
@@ -115,6 +115,12 @@ switch ($route) {
     case 'search':
         $controller = new SearchController();
         $controller->search();
+        break;
+    case 'post/upload':
+        $authMiddleware->handle(function () {
+            $controller = new FeedController();
+            $controller->uploadPost();
+        });
         break;
     default:
         http_response_code(404);

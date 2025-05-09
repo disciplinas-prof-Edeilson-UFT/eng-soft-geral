@@ -40,7 +40,7 @@ require_once __DIR__ . "/../dir-config.php";
                             </div>
 
                             <!-- Link para o Perfil do Usuário -->
-                            <a href="<?= BASE_URL ?>view/profile.php?id=<?= htmlspecialchars($post['user_id'] ?? '') ?>" class="username">
+                            <a href="<?= BASE_URL ?>profile?id=<?= htmlspecialchars($post['user_id'] ?? '') ?>" class="username">
                                 <?= htmlspecialchars($post['username'] ?? '') ?>
                             </a>
                         </header>
