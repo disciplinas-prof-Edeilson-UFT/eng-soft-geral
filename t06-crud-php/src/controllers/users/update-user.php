@@ -13,6 +13,7 @@ if (!isset($_GET["id"])) {
 }
 
 $id = $_GET["id"];
+
 $user = $userDao->getUserProfileById($id);
 
 if (!$user) {
@@ -64,5 +65,3 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit;
     }
 }
-
-include __DIR__ . "/../../../view/profile-update.php";

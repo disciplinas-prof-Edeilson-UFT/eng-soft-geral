@@ -48,6 +48,23 @@ require_once __DIR__ . '/../src/controllers/users/profile-user.php';
                     </form>
                 <?php endif; ?>
             </div>
+
+            <!-- exibir botão de postagem caso o usuario ja tenha postado algo -->
+            <div class="add-more-posts-button">
+                <?php if ((int)$user_id === (int)$logged_in_user_id && !empty($userPosts)): ?>
+                    <div class="upload-more-photos">
+                        <div class="upload-container">
+                            <form action="<?= BASE_URL ?>src/controllers/posts/upload-feed-photo.php" method="POST" enctype="multipart/form-data">
+                                <label for="photo-top">
+                                    Adicionar foto 
+                                </label>
+                                <input type="file" id="photo-top" name="photo" accept="image/*">
+                                <button type="submit" class="btn-upload">Enviar</button>
+                            </form>
+                        </div>
+                    </div>
+                <?php endif; ?>
+            </div>
         </section>
 
         <!-- Seção da foto do feed -->
@@ -64,7 +81,7 @@ require_once __DIR__ . '/../src/controllers/users/profile-user.php';
             </div>
 
             <!-- Formulário de upload de foto (apenas para o próprio usuário e se não houver foto) -->
-            <?php if (!$profilePhoto && $user_id == $_SESSION['user_id']): ?>
+            <?php if (empty($userPosts) && (int)$user_id === (int)$logged_in_user_id): ?>
                 <div class="pai-do-upload-container">
                     <div class="upload-container">
                         <form action="<?= BASE_URL ?>src/controllers/posts/upload-feed-photo.php" method="POST" enctype="multipart/form-data">

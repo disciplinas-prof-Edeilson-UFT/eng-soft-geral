@@ -1,21 +1,8 @@
 <?php
 require_once __DIR__ . "/../dir-config.php";
-require_once __DIR__ . "../../src/dao/user-dao.php";
-
-$userDao = new UserDao();
-
-if (!isset($_GET["id"])) {
-    die("Parâmetro id não informado");
-}
-
-$id = $_GET["id"];
-$user = $userDao->getUserProfileById($id);
-
-if (!$user) {
-    die("Usuário não encontrado");
-}
+require_once __DIR__ . "/../src/controllers/users/update-user.php";
+//echo $id;
 ?>
-
 <!DOCTYPE html>
 <html lang="pt-BR">
 

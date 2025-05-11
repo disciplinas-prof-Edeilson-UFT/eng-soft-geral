@@ -8,12 +8,12 @@ class Users
         $this->db = $db->getConnection();
     }
 
-    public function createUser($name, $email, $password, $phone)
+    public function createUser($username, $email, $password, $phone)
     {
-        $sql = "INSERT INTO users (name, email, password_hash, phone) VALUES (:name, :email, :password, :phone)";
+        $sql = "INSERT INTO users (username, email, password_hash, phone) VALUES (:username, :email, :password, :phone)";
         $stmt = $this->db->prepare($sql);
         return $stmt->execute([
-            ':name' => $name,
+            ':username' => $username,
             ':email' => $email,
             ':password' => $password,
             ':phone' => $phone

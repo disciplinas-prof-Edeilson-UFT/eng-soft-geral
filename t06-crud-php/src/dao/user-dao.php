@@ -76,14 +76,7 @@ class UserDao
 
         return true;
     }
-
-    public function updateProfileImage($id, $profile_pic_url): bool {
-        $query = "UPDATE users SET profile_pic_url = :profile_pic_url WHERE id = :id";
-        $stmt = $this->db->prepare($query);
-        $stmt->execute([":profile_pic_url" =>$profile_pic_url,":id" => $id ]);
-        return true;
-    }
-
+    
 
     public function updateProfilePic($profilePicUrl, $id): bool {
         $query = "UPDATE users SET profile_pic_url = :profile_pic_url WHERE id = :id";
