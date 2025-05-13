@@ -1,0 +1,394 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>guia basico</title>
+        <meta name="robots" content="noindex">
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="highlight.css">
+        <link rel="stylesheet" href="tomorrow-night.css">
+        <link rel="stylesheet" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="toc.js"></script>
+    </head>
+    <body>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">guia basico</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="1utilizando-git-e-github"><a class="header" href="#1utilizando-git-e-github"> 1.Utilizando Git e Github </a></h1>
+<h2 id="neste-arquivo-teremos-uma-série-de-exemplos-de-execução-de-comandos-básicos-do-git-bem-como-a-recomendação-de-vídeos-demonstrando-de-forma-prática-o-que-eles-fazem"><a class="header" href="#neste-arquivo-teremos-uma-série-de-exemplos-de-execução-de-comandos-básicos-do-git-bem-como-a-recomendação-de-vídeos-demonstrando-de-forma-prática-o-que-eles-fazem"> Neste arquivo teremos uma série de exemplos de execução de comandos básicos do git, bem como a recomendação de vídeos demonstrando de forma prática o que eles fazem. </a></h2>
+<h3 id="introdução-ao-o-que-é-o-git"><a class="header" href="#introdução-ao-o-que-é-o-git"> Introdução ao o que é o git </a></h3>
+<p> <a href = "https://www.youtube.com/watch?v=beMnH51P-T4&list=PLmMxPWmzYRGcTabffOwHBORBjtKa2wCXS"> O que é uma ferramenta de controle de versão? </a> </p>
+<p> <a href = "https://www.youtube.com/watch?v=s_Jp_ohfBQw&list=PLmMxPWmzYRGcTabffOwHBORBjtKa2wCXS&index=2"> O que é e como funciona o git. </a> </p>
+<h3 id="configurações-iniciais-do-git"><a class="header" href="#configurações-iniciais-do-git"> Configurações iniciais do git </a></h3>
+<p> Ao instalar o git no seu computador, abra o <strong> git bash </strong> e execute os seguintes comandos, um por vez: </p>
+<pre><code>  git config --global user.name = "Seu Nome"
+  git config --global user.email = "Seu Email"
+</code></pre>
+<p> Com isso toodas as vezes que você for trabalhar num projeto compartilhado será possível identificar que você fe algo, seja para te perguntar como aquele trecho de código funciona ou para te reportar um bug no que você fez. </p>
+<h3 id="comandos-básicos-do-git"><a class="header" href="#comandos-básicos-do-git"> Comandos básicos do git </a></h3>
+<h5 id="git-add"><a class="header" href="#git-add"> git add </a></h5>
+<p> Se você viu os vídeos acima sabe como e git funciona. Usando o git add você move os arquivos para a <strong> área de preparo </strong>, onde os arquivos serão preparados para serem salvos. Com o comando abaixo você pode fazer isso: </p>
+<pre><code>  git add .
+</code></pre>
+<h3 id="git-commit"><a class="header" href="#git-commit"> git commit </a></h3>
+<p> Ao criar um commit você salva aquela versão do arquivo. Isso faz com que haja um ponto de restauração ali que poderá ser usado para retornar àquele ponto do código. </p>
+<pre><code>  git commit -m "fix: erro de requisição consertado"
+</code></pre>
+<p> Acima temos um exemplo de commit. A tag <strong> -m </strong> é passada para que não seja necessário editar o texto no bloco de notas ou editor que você tiver. O préfixo fix indica que o commit se trata de uma correção no código. Há uma <strong> padronização </strong> de como devem ser feitos os commits. </p>
+<p> os mais usados são: </p>
+<ul>  
+  <li> fix para correções </li>
+  <li> feat para novas funcionalidades </li>
+  <li> refact para refatorações </li>
+  <li> revet para reversões de commits</li>
+  <li> docs para documentação </li>
+</ul>
+<h3 id="git-log"><a class="header" href="#git-log"> git log </a></h3>
+<p> Quando criamos um commit um <strong> hash </strong>, sequência de caracteres que vai ser o identificador do commit é gerado e ligado a ele. Se executarmos o comando abaixo veremos isso: </p>
+<pre><code>  git log
+</code></pre>
+<p> Com isso vemos todos os commits realizados, sendo que na primeira linha temos o hash do commit, e abaixo quem o fez e o que foi feito (para sair do git log execute um ctrl+z). Isso é importante para vermos os autores de cada commit e também para podermos utilizar o hash do git para executar um git reset para reverter um commit.</p>
+<p> A flag --oneline pode ser passada após o git log. As informações serão reduzidas aos primeiros caracteres do hash do commit com o título dele. </p>
+<h3 id="git-reset"><a class="header" href="#git-reset"> git reset </a></h3>
+<p> Caso você eventualmente erre um commit e queira voltar atrás commo se nada tivesse acontecido de errado, você poderá usar um git reset para isso. Isso serve tanto para quando você está num projeto local quanto caso você erre um git push ou git merge, enviando algo para onde não deveria. Para isso execute um git log, identifique para qual commit você deseja voltar, copie o hash do commit e execute: </p>
+<pre><code>git reset --hard hashDoCommit
+</code></pre>
+<p> Assim tudo o que foi feito após o commit escolhido para ser o ponto mais atual será perdido, e o commit escolhido será visto como o último a ser feito. </p>
+<h3 id="git-diff"><a class="header" href="#git-diff"> git diff </a></h3>
+<p> Caso ao trabalhar numa <strong> branch </strong> você decida que quer saber o que mudou do estado atual para o último commit use um: </p>
+<pre><code>  git diff
+</code></pre>
+<p> Um detalhamento será exibido mostrando linhas adicionadas ou apagadas dos arquivos alterados, arquivos novos ou removidos. Oara verificar a diferença entre dois commits basta utilizar um git log, copiar o hash dos dois commits e usar um: </p>
+<pre><code>  git diff hashDoPrimeiroCommit hashDoSegundoCommit
+</code></pre>
+<p> Para facilitar a visualização da diferença entre commits é interessante usar a flag <strong> --oneline </strong> no git log para que não haja muita informação na tela. </p>
+<h3 id="git-branch"><a class="header" href="#git-branch"> git branch </a></h3>
+<p> Quando vocês deseja fazer alterações num código mas não quer que um possível erro causado por elas se espalhe pelo software há um meio de fazer isso. Ao criar um branch você pode como que clonar todo o projeto para uma linha isolada, e assim você aplica as alterações nela, e se tudo ocorrer bem você une ela à linhagem que a deu origem.</p>
+<p> Num projeto git por padrão você trabalhará numa branch chamada <strong> master </strong>. Esta é a <strong> branch de produção </strong>, ou seja, a branch que contém o software no estado que os usuários veem. Todas as vezes que um software atualiza, essa é a branch de atualização. </p>
+<p> Os programadores criam uma branch que se origina na master, chamada <strong> develop </strong>, e essa é a branch que os desenvolvedores terão acesso. Quando a develop está com mudanças significativas e estáveis, ela é unida à master, para que os usuários tenham acesso à mudança. </p>
+<p> Os nomes utilizados nas branches  seguem um padrão, e são eles: </p>
+<ul>  
+  <li> master (branch de produção) </li>
+  <li> develop (branch de desenvolvimento) que se origina na master </li>
+  <li> feature (branch de uma nova funcionalidade) que se origina na develop </li>
+  <li> bugfix (branch de correção de bugs) que se origina na develop </li>
+  <li> hotfix (branch de correção de bugs urgentes) que se origina na master </li>
+</ul>
+<p> Para verificar em qual branch você está no momento basta usar um: </p>
+<pre><code>  git branch
+</code></pre>
+<p> Caso queira criar uma nova branch, você deve, em primeiro lugar, ir para a branch que deve ser copiada. Por exemplo, sempre que eu quiser criar uma branch de feature nova, antes eu devo me mover para a develop, então poderei criar a branch. Com o comando abaixo você pode criar uma nova branch.</p>
+<pre><code>  git branch nomeDaBranchQueVoceQuerCriar
+</code></pre>
+<p> Com o temmpo será necessário <strong> deletar branches </strong>. Para isso você deve sair dela e executar o comando abaixo: </p>
+<pre><code>    git branch -d nomeDaBranchQueVaiSerDeletada
+</code></pre>
+<p> Caso você queira deletar mais de uma ao mesmo tempo, poderá colocar vários nomes de branches após o -d, todos separados por espaço. Nunca delete a master ou a develop, elas  existirão durante todo o projeot de forma permanente. </p>
+<h3 id="git-checkout"><a class="header" href="#git-checkout"> git checkout </a></h3>
+<p> Para trocar a branch em que você está você pode usar um: </p>
+<pre><code>  git  checkout nomeDaBranchQueVoceQuerIr
+</code></pre>
+<p> Caso você queira <strong> criar uma nova branch e ir imediatamente para ela </strong> o comando abaixo faz isso: </p>
+<pre><code>  git checkout -b nomeDaBranchQueVaiSerCriada
+</code></pre>
+<p> Se você não quiser usar o comando acima, poderá fazer da forma mais longa, usando o git branch e depois o git checkout. </p>
+<h3 id="git-merge"><a class="header" href="#git-merge"> git merge </a></h3>
+<p> Após criar uma branch, se deslocar para dentro dela e validar que todas as modificações feitas tiveram o efeito esperado é necessário unir ela à sua branch de origem. Por exemplo, a branch de feature se origina na develop, logo, após você concluir todas as alterações na sua branch, mova-se para a branch de origem (neste caso a develop) e execute o comando abaixo: </p>
+<pre><code>  git merge nomeDaBranch
+</code></pre>
+<p> Assim, para unir a branch de feature à branch develop eu primeiro uso um gitt checkout develop, git merge branchDeFeature e depois um git branch -d branchDeFeature, pois após o merge as alterações da branchDeFeature foram mescladas com a branch develop, pois não há mais a necessidade da branchDeFeture continuar no projeto, então a deletamos.  </p>
+<h2 id="trabalhando-de-forma-remota"><a class="header" href="#trabalhando-de-forma-remota"> Trabalhando de forma remota </a></h2>
+<p> Até agora vimos que o git tem várias funcionalidades, porém <strong> tudo ainda é local </strong>. Quando você relizar um git commit isso ainda é visível apenas para você.  Quando se trabalha em equipes é necessário que todos tenham acesso à mesma versão do código. Por isso a plataforma git hub possui integração com o git, para que você possa armazenar seu proojeto lá, assim, as alterações que você  faz ficarão disponíveis para outras pessoas. </p>
+<p> Para isso crie uma conta no git hub, e então crie uma pasta nova, dando-a o mesmo nome do seu projeto. <strong> Um link ficará em evidência em sua tela </strong>, copie-o e verifique se ele é o da opção de http.</p>
+<p> <strong> Ele serve para que você conecte seu projeto local à esta pasta remota </strong>. Assim numa equipe todos terão um ponto de acesso em comum, já que o projeto estará na nuvem. Para que vocÇe conecte seu projeto local à sua pasta remota basta executar o comando abaixo:</p>
+<pre><code>  git remote add origin linkQueVoceCopiou
+</code></pre>
+<p> Origin é o nome da conexão padrãpo do git, mas você poderá criar as suas com outros nomes. Assim você poderá usar os comandos a seguir para <strong> sincronizar o seu projeto local com o que está na nuvem </strong>. </p>
+<h3 id="git-push"><a class="header" href="#git-push"> git push </a></h3>
+<p> Os commits que você realiza são locais, e caso uma outra pessoa deseje ter acesso a <strong> eles seus commits devem ser enviados para o git hub </strong> (ou outra plataforma que permita o mesmo). Para enviar seus commits para a nuvem você deve executar o git push. Quando você tem várias conexões no mesmo projeto você deverá indicar els no comando, mas se houver apenas uma e ela  for a origin o git push irá usar ela sem a necessidade de indicá-la. </p>
+<p> Se você estiver <strong> realizando um git push numa branch que existe apenas localmente </strong>mas não no git hub, <strong> o git irá te sugerir um comando que contem um set upstream </strong>. Basta copiar e colar ele, e quando você o executar <strong> ele irá enviar seus commits criando a branch </strong>. O comando é simples: </p>
+<pre><code>  git push
+</code></pre>
+<h3 id="git-pull"><a class="header" href="#git-pull"> git pull </a></h3>
+<p> O git push envia seus commits para o git hub, mas ainda é necessário que você possa <strong> obter também as alterações que as outras pessoas enviaram </strong>. Para isso anvegue para a branch que você deseja receber as alterações e execute um git pull: </p>
+<pre><code>  git pull
+</code></pre>
+<p> <strong> Nunca realize um git push antes de um git pull </strong>, principalmente se o git push for forçado, pois você poderá sobrescrever as alterações das outras pessoas naquela branch. Quando se trabalha com compessoas no mesmo projeto é importante realizar um git pull logo ao iniciar suas tarefas para garantir que você está trabalhando na versão mais atual do projeto. </p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="code-review-e-pull-request"><a class="header" href="#code-review-e-pull-request">Code Review e Pull Request</a></h1>
+<h2 id="o-que-é-um-pull-request"><a class="header" href="#o-que-é-um-pull-request">O que é um Pull Request?</a></h2>
+<p>Um Pull Request (PR) é uma funcionalidade oferecida por plataformas de versionamento de código, como GitHub, GitLab e Bitbucket, que permite aos desenvolvedores informar aos outros membros da equipe que suas alterações no código estão aguardando revisão. Se as alterações que constam no PR forem aceitas ocorrerá o processo de merge para a branch requisitada, como a main, develop ou outra branch relevante.</p>
+<p>O PR é mais do que uma simples solicitação de merge ele é um espaço colaborativo onde os desenvolvedores podem discutir, propor melhorias e garantir que o código atenda aos padrões e requisitos do projeto.</p>
+<h2 id="para-que-serve-um-pull-request"><a class="header" href="#para-que-serve-um-pull-request">Para que serve um Pull Request?</a></h2>
+<p>Os PRs servem para facilitar a revisão de código e a integridade da code base. Eles oferecem um espaço para discussão sobre as mudanças propostas, permitindo que outros desenvolvedores revisem o código, façam comentários, sugiram melhorias e identifiquem possíveis problemas antes que seja feito o merge para uma determinada branch. Isso ajuda a garantir a qualidade do código, manter a consistência do projeto e a prevenir bugs em produção.</p>
+<h2 id="processo-de-code-review"><a class="header" href="#processo-de-code-review">Processo de Code Review</a></h2>
+<ol>
+<li><strong>Criação do PR</strong>: O desenvolvedor cria um Pull Request após concluir uma funcionalidade ou correção de bug.</li>
+<li><strong>Revisão</strong>: Outros membros da equipe revisam o código, fazem comentários e sugerem mudanças.</li>
+<li><strong>Aprovação</strong>: Se o código estiver satisfatório, os revisores aprovam o PR.</li>
+<li><strong>Merge</strong>: O código é "mesclado" à branch requisitado no PR.</li>
+</ol>
+<h2 id="conclusão"><a class="header" href="#conclusão">Conclusão</a></h2>
+<p>Os Pull Requests são uma ferramenta essencial no desenvolvimento colaborativo de software, pois promovem a qualidade, segurança e consistência do código. Além disso, facilitam o processo de revisão e a comunicação entre os membros da equipe, para garantir o sucesso do projeto.</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="criando-um-pull-request-no-github"><a class="header" href="#criando-um-pull-request-no-github">Criando um Pull Request no GitHub</a></h1>
+<h2 id="passos-a-seguir"><a class="header" href="#passos-a-seguir">Passos a seguir</a></h2>
+<p>Caso você tenha concluído as alterações necessárias em uma branch separada, siga os passos abaixo para criar seu Pull Request:</p>
+<h3 id="1-push-das-alterações"><a class="header" href="#1-push-das-alterações">1. Push das alterações:</a></h3>
+<pre><code class="language-console"># Adicione todas as alterações à staging area:  
+$ git add .
+
+# Faça o commit com uma mensagem clara e assinada
+$ git commit -S -m "&lt;texto-do-commit&gt;"
+
+#Faça o push do branch
+$ git push origin &lt;nome-da-branch&gt;
+</code></pre>
+<h3 id="2-crie-o-pr-no-repositório-remoto"><a class="header" href="#2-crie-o-pr-no-repositório-remoto">2. Crie o PR no repositório remoto:</a></h3>
+<p><img src="imgs/repo.png" alt="repo" />
+<em>Acesse a página do seu repositório no GitHub e Selecione a opção "Pull requests" ou apenas clique em "compare &amp; pull request caso a branch que acabou de fazer push seja a mesma que deseja incluir no PR"</em></p>
+<p><img src="imgs/novo-pr.png" alt="novo-pr" /></p>
+<p><img src="imgs/branchs.png" alt="branchs" />
+<em>Escolha as branchs de origem e destino (geralmente o destino é main ou develop) e revise as alterações</em></p>
+<p><img src="imgs/create-pr.png" alt="gerando-pr" />
+<em>Adicione um título e uma descrição das alterações feitas para facilitar o code review</em></p>
+<p><img src="imgs/confirm-create.png" alt="confirmando-pr" />
+<em>Verifique se as branch de origem e destinop estão "able to merge", se sim confirme em "create pull request" se não volte à sua IDE e resolva o(s) conflito(s) de merge</em></p>
+<h3 id="3-revisão-do-pr"><a class="header" href="#3-revisão-do-pr">3. Revisão do PR</a></h3>
+<p><img src="imgs/comment-pr.png" alt="comentando-pr" />
+<em>Após verificar as alterações feitas em cada commit do PR adicione seus comentários</em></p>
+<p><img src="imgs/confirm-merge.png" alt="confirme-merge" />
+<em>Caso tenha passado no Code Review e esteja "Able to merge" confime o merge</em></p>
+<h2 id="boas-práticas"><a class="header" href="#boas-práticas">Boas práticas</a></h2>
+<ul>
+<li><strong>Mensagens de Commit Descritivas</strong>:<br />
+Use mensagens de commit claras e detalhadas para explicar o motivo das alterações.
+ex.:</li>
+</ul>
+<pre><code class="language-console">$ git commit -S -m "feat: endpoint para login de usuário"
+$ git commit -S -m "chore: adição do container docker a partir da imagem do postgres:latest"
+$ git commit -S -m "fix: corrige validação de email no formulário de cadastro "
+</code></pre>
+<ul>
+<li>
+<p><strong>Testes Automatizados</strong>:<br />
+Inclua testes automatizados em uma pipeline de CI (Continous Integration), para evitar bugs em produção. Para isso existem ferramentas como GitHub actions, jenkins e entre outras.</p>
+</li>
+<li>
+<p><strong>Feedback Construtivo</strong>:<br />
+Seja claro e direto nos feedbacks, destaque o que pode melhorar e o que foi bem feito.</p>
+</li>
+<li>
+<p><strong>Relacionar PRs a issues</strong>:
+Caso o PR seja a resolução de uma issue, destaque que há esta relação no titulo do PR, ex.: Resolves #123</p>
+</li>
+</ul>
+<h2 id="dicas-para-evitar-conflito-de-merge"><a class="header" href="#dicas-para-evitar-conflito-de-merge">Dicas para evitar conflito de merge</a></h2>
+<ul>
+<li>Antes de criar um PR, certifique-se de que sua branch está atualizada com a branch de destino</li>
+</ul>
+<pre><code class="language-console">$ git pull origin &lt;branch-de-destino&gt;
+</code></pre>
+<ul>
+<li>Se houver conflitos de merge, resolva-os em sua máquina antes de enviar o PR. Use ferramentas como git mergetool para facilitar o processo.</li>
+</ul>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="material-base-do-guia"><a class="header" href="#material-base-do-guia">Material Base do Guia</a></h1>
+<h2 id="fontes"><a class="header" href="#fontes">Fontes:</a></h2>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+
+            </nav>
+
+        </div>
+
+        <!-- Livereload script (if served using the cli tool) -->
+        <script>
+            const wsProtocol = location.protocol === 'https:' ? 'wss:' : 'ws:';
+            const wsAddress = wsProtocol + "//" + location.host + "/" + "__livereload";
+            const socket = new WebSocket(wsAddress);
+            socket.onmessage = function (event) {
+                if (event.data === "reload") {
+                    socket.close();
+                    location.reload();
+                }
+            };
+
+            window.onbeforeunload = function() {
+                socket.close();
+            }
+        </script>
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+        <script>
+        window.addEventListener('load', function() {
+            window.setTimeout(window.print, 100);
+        });
+        </script>
+
+    </div>
+    </body>
+</html>
