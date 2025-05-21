@@ -15,7 +15,7 @@ return [
         'host' => 'localhost',
         'username' => 'admin',
         'password' => 'root',
-        'dbname' => 'postgres',
+        'dbname' => 'conex',
         'port' => 5432
     ]
 ];

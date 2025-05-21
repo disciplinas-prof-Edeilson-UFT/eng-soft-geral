@@ -78,17 +78,17 @@ class Router {
 
     //despacha a rota para o controller correto 
     public function dispatch(){
-        $router = $this->staticIndividualRoute();
-        if ($router) {
+        $route = $this->staticIndividualRoute();
+        if ($route) {
            //echo "Rota estática encontrada: " . $router . "<br>";
-            Controller::execute($router);
+            Controller::execute($route);
             return;
         }
 
-        $router = $this->dynamicIndividualRoute();
-        if ($router) {
+        $route = $this->dynamicIndividualRoute();
+        if ($route) {
             //echo "Rota dinamica encontrada: " . $router . "<br>";
-            Controller::execute($router);
+            Controller::execute($route);
             return;
         }
 
@@ -97,3 +97,5 @@ class Router {
     }
 
 }
+
+

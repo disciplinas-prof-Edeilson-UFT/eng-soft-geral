@@ -36,14 +36,13 @@ class FeedController extends BaseController{
         $this->profileService = new ProfileService($this->postDAO, $this->post, $this->user);
     }
 
-    public function show($user_id) {
+    public function show() {
         $posts = [];
         try {
             $posts = $this->feedService->getAllPostsFeed();
-            $user = $this->profileService->getProfileData($user_id);
-            $this->view('feed', ['posts' => $posts, 'user_id' => $user_id, 'user' => $user]);
+            $this->view('feed', ['posts' => $posts]);
         } catch (\InvalidArgumentException $e) {
-            $this->view('feed', ['posts' => $posts, 'error' => $e->getMessage(), 'user_id' => $user_id]);
+            $this->view('feed', ['posts' => $posts, 'error' => $e->getMessage()]);
             exit;
         }
     }

@@ -1,0 +1,3344 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title></title>
+        <meta name="robots" content="noindex">
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="highlight.css">
+        <link rel="stylesheet" href="tomorrow-night.css">
+        <link rel="stylesheet" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="toc.js"></script>
+    </head>
+    <body>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title"></h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="introdução"><a class="header" href="#introdução">Introdução</a></h1>
+<p>Seja bem-vindo(a) a este guia prático e teórico de Engenharia de Software!<br />
+Aqui você encontrará:</p>
+<ol>
+<li>Um <strong>mdBook</strong> organizado em capítulos curtos, com explicações claras sobre Git/GitHub, Code Review, GitFlow, PHP, CRUD, sessões e muito mais.</li>
+<li>Um <strong>projeto evolutivo</strong> em PHP/HTML/CSS que mostra, passo a passo, como aplicar cada conceito em um sistema web completo,</li>
+</ol>
+<p>À medida que avança, você alternará entre teoria e prática, visualizando imediatamente o resultado no navegador:</p>
+<p><img src="" alt="Tela de Login" /><br />
+Figura 1. Tela de Login do sistema</p>
+<p><img src="" alt="Feed de Posts" /><br />
+Figura 2. Feed de Posts dos usuários</p>
+<p><img src="" alt="Perfil de Usuário" /><br />
+Figura 3. Página de Perfil com opções de edição e follow</p>
+<h2 id="para-quem-é-este-guia"><a class="header" href="#para-quem-é-este-guia">Para quem é este guia?</a></h2>
+<p>Este guia é voltado para estudantes que desejam aprimorar suas habilidades em Engenharia de Software, Git/GitHub, Code Review, GitFlow e PHP. Ele é especialmente útil para aqueles que estão iniciando sua jornada na programação e desejam aprender de forma prática e aplicada. Se você nunca programou nada antes, este guia também é para você.</p>
+<blockquote>
+<p>Dica: clone este repositório, acesse <code>guia-mdbook/</code> e execute</p>
+<pre><code class="language-bash">mdbook serve --open
+</code></pre>
+<p>para navegar no guia localmente.</p>
+</blockquote>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="prefácio"><a class="header" href="#prefácio">Prefácio</a></h1>
+<p>Este material nasceu da experiência de quem já tropeçou em conflitos de Git, dúvidas em Code Review e desafios para manter um padrão de arquitetura. Nosso objetivo foi construir um “companheiro de estudos” que:</p>
+<ul>
+<li>Integra conceito e código em um mesmo fluxo.</li>
+<li>Permite que você acompanhe cada etapa do desenvolvimento do sistema, desde a configuração inicial até features completas.</li>
+</ul>
+<p>Agradecemos a todos que contribuíram com feedback e sugestões. Esperamos que este guia seja inspirador na jornada de desenvolvimento do seu projeto, e que ele o ajude a evoluir como profissional e a construir softwares cada vez melhores.</p>
+<hr />
+<p>Material elaborado por Lauro Oliveira Mota, Mara Emanuella Carvalho Martins e Edeilson Milhomem da Silva, 2025</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="guia-básico-de-conteúdos-para-a-disciplina-de-engenharia-de-software"><a class="header" href="#guia-básico-de-conteúdos-para-a-disciplina-de-engenharia-de-software">Guia Básico de Conteúdos para a Disciplina de Engenharia de Software</a></h1>
+<h1 id="capítulo-1--utilizando-git-e-github"><a class="header" href="#capítulo-1--utilizando-git-e-github">Capítulo 1 – Utilizando Git e GitHub</a></h1>
+<p>Você já se perguntou como equipes espalhadas pelo mundo conseguem colaborar em um mesmo projeto de software sem perder o controle das mudanças? É aí que entram o Git e o GitHub. Neste capítulo, iremos abordar esses dois conceitos, que não são a mesma coisa e entender por que eles são essenciais e como funcionam na prática. Sem entrar ainda nos comandos, vamos descobrir o contexto e o propósito de cada etapa.</p>
+<h2 id="100-introdução-ao-git-e-github"><a class="header" href="#100-introdução-ao-git-e-github">1.0.0. Introdução ao Git e GitHub</a></h2>
+<p>Imagine o Git como um livro de registros que anota cada detalhe do seu código: quem fez a mudança, quando e por quê. Ele é um sistema de controle de versões distribuído, ou seja, cada desenvolvedor tem sua própria cópia completa do repositório e pode trabalhar offline sem perder histórico ou dados. Isso significa que, mesmo que você esteja longe da internet, pode fazer alterações e depois sincronizar tudo quando voltar.</p>
+<p>Já o GitHub é a estante na nuvem onde você guarda esse livro. Nele, você compartilha seu repositório, revisa código em conjunto com a equipe e gerencia o projeto de forma colaborativa.</p>
+<h2 id="101-conceitos-básicos"><a class="header" href="#101-conceitos-básicos">1.0.1. Conceitos Básicos</a></h2>
+<ol>
+<li>
+<p>Configurações iniciais:</p>
+<p>Ao instalar o Git, o primeiro passo é informar seu nome e e-mail. Assim, todas as alterações ficam corretamente atribuídas a você.</p>
+</li>
+<li>
+<p>Commits:</p>
+<p>Pense em um commit como um “checkpoint” no seu projeto. Cada commit salva o estado atual do código junto com uma mensagem descritiva. Se algo não sair como o esperado, é só voltar a um checkpoint anterior.</p>
+</li>
+<li>
+<p>Branches:</p>
+<p>Branches são ramificações do seu projeto. Você cria uma branch para desenvolver uma nova funcionalidade sem interferir na versão principal. Quando tudo estiver pronto, faz o merge de volta.</p>
+</li>
+<li>
+<p>Trabalho remoto:</p>
+<p>Com o GitHub, você envia (push) seu código para um repositório remoto, garantindo que toda a equipe trabalhe na mesma versão. Assim, colaboração e sincronização ficam muito mais fáceis.</p>
+</li>
+<li>
+<p>Pull Requests:</p>
+<p>Quando você termina uma funcionalidade, abre um Pull Request (PR) para que outros revisem seu código antes de integrá-lo ao projeto principal.</p>
+</li>
+<li>
+<p>Code Review:</p>
+<p>O Code Review é o processo de revisar o código de outra pessoa antes de integrá-lo ao projeto.</p>
+</li>
+<li>
+<p>Merge:</p>
+<p>Após a aprovação do PR, o código é mesclado (merged) à branch principal. Isso garante que todas as alterações revisadas e aprovadas sejam integradas ao projeto.</p>
+</li>
+<li>
+<p>Fork:</p>
+<p>Um fork é uma cópia independente de um repositório. É útil para contribuir com projetos open-source, permitindo que você faça alterações sem afetar o repositório original.</p>
+</li>
+<li>
+<p>Issues:</p>
+<p>As issues são usadas para rastrear bugs, melhorias ou novas funcionalidades. Elas ajudam a organizar o trabalho e a comunicação entre os membros da equipe.</p>
+</li>
+<li>
+<p>Tags:</p>
+<p>As tags são marcadores que você pode adicionar a commits específicos. Elas são úteis para identificar versões importantes do seu projeto, como lançamentos ou marcos significativos. São usadas para versionamento semântico, ou seja, para gerar releases.</p>
+</li>
+<li>
+<p>Stash:</p>
+<p>O stash é um recurso que permite salvar temporariamente alterações não commitadas. É útil quando você precisa mudar de branch rapidamente sem perder seu trabalho atual.</p>
+</li>
+<li>
+<p>Rebase:</p>
+<p>O rebase é uma técnica que permite integrar alterações de uma branch em outra, reescrevendo o histórico de commits. Isso resulta em um histórico mais linear e limpo, facilitando a compreensão do projeto.</p>
+</li>
+<li>
+<p>Clone:</p>
+<p>O clone é o processo de criar uma cópia local de um repositório remoto. Isso permite que você trabalhe offline e faça alterações antes de enviar suas contribuições de volta ao repositório original.</p>
+</li>
+<li>
+<p>Pull:</p>
+<p>O pull é o comando usado para baixar e integrar alterações de um repositório remoto para o seu repositório local. É essencial manter seu código atualizado com as últimas mudanças feitas por outros desenvolvedores.</p>
+</li>
+<li>
+<p>Push:</p>
+<p>O push é o comando usado para enviar suas alterações locais para um repositório remoto. Isso garante que suas contribuições sejam compartilhadas com a equipe e fiquem disponíveis para revisão e integração.</p>
+</li>
+</ol>
+<h2 id="102-conclusão"><a class="header" href="#102-conclusão">1.0.2. Conclusão</a></h2>
+<p>São muitos nomes e conceitos novos, não é mesmo? Mas não se preocupe! Vamos explorar cada um deles em detalhes nos próximos capítulos. O importante agora é entender que o Git e o GitHub são ferramentas poderosas que facilitam a colaboração e o controle de versões no desenvolvimento de software. Com eles, você estará pronto para enfrentar qualquer desafio em equipe!</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="capítulo-1--utilizando-git-e-github-1"><a class="header" href="#capítulo-1--utilizando-git-e-github-1">Capítulo 1 – Utilizando Git e GitHub</a></h1>
+<h2 id="11-principais-comandos-git-na-prática"><a class="header" href="#11-principais-comandos-git-na-prática">1.1 Principais comandos Git na prática</a></h2>
+<p>Agora que você entendeu os conceitos básicos lá na seção 1.0, vamos colocar a mão na massa e ver como usar cada comando no dia a dia.</p>
+<h2 id="110-configurações-iniciais"><a class="header" href="#110-configurações-iniciais">1.1.0. Configurações iniciais</a></h2>
+<p>Antes de tudo, o Git precisa saber quem é você. Abra o terminal (Git Bash no Windows) e configure seu nome e e-mail:</p>
+<pre><code class="language-bash">git config --global user.name "Seu Nome"
+git config --global user.email "seu.email@dominio.com"
+</code></pre>
+<p>Isso garante que todo commit seja identificado corretamente no histórico.</p>
+<h2 id="111-preparando-e-salvando-mudanças"><a class="header" href="#111-preparando-e-salvando-mudanças">1.1.1. Preparando e salvando mudanças</a></h2>
+<ol>
+<li>
+<p><strong>Staging (área de preparo)</strong></p>
+<ul>
+<li>
+<p>Com <code>git add</code> você diz ao Git quais arquivos devem entrar no próximo commit:</p>
+<pre><code class="language-bash">git add arquivo.txt        # adiciona um arquivo específico
+git add .                  # adiciona tudo que foi modificado
+</code></pre>
+</li>
+</ul>
+</li>
+<li>
+<p><strong>Commit (checkpoint)</strong></p>
+<ul>
+<li>
+<p>Cada commit é um ponto de restauração. Use uma mensagem clara:</p>
+<pre><code class="language-bash">git commit -m "feat(login): adicionado formulario de login"
+</code></pre>
+</li>
+<li>
+<p>Dica de boas práticas:</p>
+<ul>
+<li><code>feat(feature):</code> para novas funcionalidades</li>
+<li><code>fix(fixed):</code> para correções</li>
+<li><code>chore(chore):</code> para documentação</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p><strong>Verificando o histórico</strong></p>
+<ul>
+<li>
+<p>Veja os commits que você já fez:</p>
+<pre><code class="language-bash">git log          # histórico completo
+git log --oneline  # cada commit em uma linha
+</code></pre>
+</li>
+</ul>
+</li>
+</ol>
+<h2 id="112-branches-e-fusões"><a class="header" href="#112-branches-e-fusões">1.1.2. Branches e fusões</a></h2>
+<ol>
+<li>
+<p><strong>Criar/alternar branches</strong></p>
+<pre><code class="language-bash">git checkout -b nome-da-branch    # cria e vai para a nova branch
+git checkout main                 # volta para a branch principal
+</code></pre>
+</li>
+<li>
+<p><strong>Lista de branches</strong></p>
+<pre><code class="language-bash">git branch    # mostra todas as branches locais
+</code></pre>
+</li>
+<li>
+<p><strong>Merge (união de branches)</strong></p>
+<ul>
+<li>Suponha que sua branch de recurso seja <code>feature-x</code> e você queira trazê-la para <code>main</code>:
+<pre><code class="language-bash">git checkout main
+git merge feature-x
+</code></pre>
+</li>
+</ul>
+</li>
+<li>
+<p><strong>Excluir branch</strong></p>
+<pre><code class="language-bash">git branch -d feature-x
+</code></pre>
+</li>
+</ol>
+<h2 id="113-trabalhando-com-repositório-remoto"><a class="header" href="#113-trabalhando-com-repositório-remoto">1.1.3. Trabalhando com repositório remoto</a></h2>
+<ol>
+<li>
+<p><strong>Clonar um projeto</strong></p>
+<pre><code class="language-bash">git clone https://github.com/usuario/repositorio.git
+</code></pre>
+</li>
+<li>
+<p><strong>Conectar remote (se não veio no clone)</strong></p>
+<pre><code class="language-bash">git remote add origin https://github.com/usuario/repositorio.git
+</code></pre>
+</li>
+<li>
+<p><strong>Enviar alterações</strong></p>
+<pre><code class="language-bash">git push -u origin main   # envia sua branch e define upstream
+git push                  # nas próximas vezes só git push
+</code></pre>
+</li>
+<li>
+<p><strong>Atualizar seu repositório local</strong></p>
+<pre><code class="language-bash">git pull   # baixa e integra mudanças do servidor
+</code></pre>
+</li>
+</ol>
+<blockquote>
+<p><strong>🚨 Sempre faça um <code>git pull</code> antes de um <code>git push</code> para evitar conflitos</strong></p>
+</blockquote>
+<h2 id="114-dicas-avançadas-em-caso-de-problemas"><a class="header" href="#114-dicas-avançadas-em-caso-de-problemas">1.1.4. Dicas avançadas em caso de problemas</a></h2>
+<ul>
+<li>
+<p><strong>git revert</strong>: desfazer um commit específico</p>
+<pre><code class="language-bash">git revert &lt;hash-do-commit&gt;
+</code></pre>
+</li>
+<li>
+<p><strong>git cherry-pick</strong>: aplicar um commit específico em outra branch</p>
+<pre><code class="language-bash">git cherry-pick &lt;hash-do-commit&gt;
+</code></pre>
+</li>
+<li>
+<p><strong>git rebase</strong>: reescrever o histórico de commits (cuidado!)</p>
+<pre><code class="language-bash">git rebase main
+</code></pre>
+</li>
+<li>
+<p><strong>git merge --abort</strong>: cancelar um merge em andamento</p>
+<pre><code class="language-bash">git merge --abort
+</code></pre>
+</li>
+<li>
+<p><strong>git reset --hard</strong>: voltar a um commit anterior (cuidado!)</p>
+<pre><code class="language-bash">git reset --hard &lt;hash-do-commit&gt;
+</code></pre>
+</li>
+<li>
+<p><strong>git stash</strong>: guarde mudanças temporariamente, para não ter que fazer commit delas</p>
+<pre><code class="language-bash">git stash save "minha alteração em andamento"
+git stash pop    # recupera a alteração
+</code></pre>
+</li>
+</ul>
+<h2 id="115-conclusão"><a class="header" href="#115-conclusão">1.1.5. Conclusão</a></h2>
+<p>Com este resumo prático, você tem o passo a passo para controlar versões, trabalhar em equipe e manter seu projeto organizado, além de conseguir evitar problemas de git comuns. No próximo capítulo, vamos explorar somente sobre os conceitos de Pull Request e Code Review que citamos na seção anterior.</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="capítulo-1--utilizando-git-e-github-2"><a class="header" href="#capítulo-1--utilizando-git-e-github-2">Capítulo 1 – Utilizando Git e GitHub</a></h1>
+<h2 id="referências-do-capítulo"><a class="header" href="#referências-do-capítulo">Referências do capítulo:</a></h2>
+<ul>
+<li>
+<p><a href="https://docs.github.com/pt/get-started/quickstart">GitHub Docs: Getting started with Git</a></p>
+</li>
+<li>
+<p><a href="https://docs.github.com/pt/get-started/using-github/github-flow">GitHub Docs: GitHub Flow</a></p>
+</li>
+</ul>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="capítulo-2--code-review-e-pull-request-no-github"><a class="header" href="#capítulo-2--code-review-e-pull-request-no-github">Capítulo 2 – Code Review e Pull Request no GitHub</a></h1>
+<p>Você já teve medo de subir seu código para o repositório da sua equipe e quebrar tudo? Ou de fazer uma alteração e não saber se ela está correta? Não se preocupe, isso é normal no início! A revisão de código (Code Review) e os Pull Requests (PRs) são ferramentas que vão te ajudar a evitar esses medos e garantem que seu código esteja sempre em boas mãos.</p>
+<p>Na Engenharia de Software, a colaboração entre desenvolvedores é essencial para garantir qualidade e evolução contínua dos projetos em ambientes corporativos e comunidades open-source.</p>
+<p>Imagine que cada PR é um convite para discutir: você envia seu código, colegas comentam, sugerem ajustes e, quando tudo está aprovado, a gente faz o merge. Esse fluxo simples evita bugs, alinha estilos e cria um histórico rico para consultas futuras.</p>
+<p>Ao final deste capítulo, você vai se sentir confiante para revisar e submeter seu código de forma colaborativa, pois exploraremos em detalhes o que é um Code Review, como realizá-lo de forma eficaz no GitHub, o conceito de Pull Request, o passo a passo para criar um PR e as principais ferramentas que auxiliam nesse processo.</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="capítulo-2--code-review-e-pull-request-no-github-1"><a class="header" href="#capítulo-2--code-review-e-pull-request-no-github-1">Capítulo 2 – Code Review e Pull Request no GitHub</a></h1>
+<h2 id="21-afinal-o-que-é-pull-request"><a class="header" href="#21-afinal-o-que-é-pull-request">2.1. Afinal, o que é Pull Request?</a></h2>
+<p>O Pull Request (PR) é um recurso amplamente utilizado em plataformas de controle de versão, como GitHub e GitLab, permitindo que desenvolvedores solicitem a integração de suas alterações ao repositório principal. Ele facilita a colaboração e o gerenciamento de mudanças no código, permitindo que diferentes membros da equipe revisem, comentem e aprovem as alterações antes que elas sejam mescladas ao projeto principal.</p>
+<h2 id="210-como-funciona-um-pull-request"><a class="header" href="#210-como-funciona-um-pull-request">2.1.0. Como funciona um Pull Request?</a></h2>
+<p>Vamos por partes:</p>
+<ol>
+<li>
+<p>Criação da branch:</p>
+<p>Primeiramente o desenvolvedor cria uma branch nova para desenvolver a funcionalidade. Assim, seu trabalho fica isolado e não afetará o código da branch principal.</p>
+</li>
+<li>
+<p>Abertura de Pull Request:</p>
+<p>Após concluir as alterações, o desenvolvedor cria um Pull Request (PR) no repositório remoto, no nosso caso o GitHub. Este PR notifica à equipe sobre as mudanças feitas e solicita uma revisão antes que as alterações sejam integradas à branch de destino, geralmente um branch mais estável, como "main" ou "develop".</p>
+</li>
+</ol>
+<p>Na próxima seção, vamos ver como submeter um Pull Request no GitHub.</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="capítulo-2--code-review-e-pull-request-no-github-2"><a class="header" href="#capítulo-2--code-review-e-pull-request-no-github-2">Capítulo 2 – Code Review e Pull Request no GitHub</a></h1>
+<h2 id="22-criando-um-pull-request-no-github"><a class="header" href="#22-criando-um-pull-request-no-github">2.2. Criando um Pull Request no GitHub</a></h2>
+<h2 id="220-passos-a-seguir"><a class="header" href="#220-passos-a-seguir">2.2.0. Passos a seguir</a></h2>
+<p>Caso você tenha concluído as alterações necessárias em uma branch separada, siga os passos abaixo para criar seu Pull Request:</p>
+<h3 id="1-push-das-alterações"><a class="header" href="#1-push-das-alterações">1. Push das alterações:</a></h3>
+<p>No seu terminal, certifique-se de que tudo está salvo e testado, e depois:</p>
+<pre><code class="language-bash"># 1. Adicione tudo à área de stage
+$ git add .
+
+# 2. Faça o commit com mensagem clara e assinada
+$ git commit -S -m "descreva sucintamente o que mudou"
+
+# 3. Envie sua branch ao GitHub
+$ git push origin &lt;nome-da-sua-branch&gt;
+</code></pre>
+<h3 id="2-crie-o-pr-no-repositório-remoto"><a class="header" href="#2-crie-o-pr-no-repositório-remoto">2. Crie o PR no repositório remoto:</a></h3>
+<p><img src="imgs/repo.png" alt="repo" />
+<em>Acesse a página do seu repositório no GitHub e Selecione a opção "Pull requests" ou apenas clique em "compare &amp; pull request caso a branch que acabou de fazer push seja a mesma que deseja incluir no PR"</em></p>
+<p><img src="imgs/novo-pr.png" alt="novo-pr" /></p>
+<p><img src="imgs/branchs.png" alt="branchs" />
+<em>Escolha as branchs de origem e destino (geralmente o destino é main ou develop) e revise as alterações</em></p>
+<p><img src="imgs/create-pr.png" alt="gerando-pr" />
+<em>Adicione um título e uma descrição das alterações feitas para facilitar o code review</em></p>
+<p><img src="imgs/confirm-create.png" alt="confirmando-pr" />
+<em>Verifique se as branch de origem e destinop estão "able to merge", se sim confirme em "create pull request" se não volte à sua IDE e resolva o(s) conflito(s) de merge</em></p>
+<h3 id="3-revisão-do-pr"><a class="header" href="#3-revisão-do-pr">3. Revisão do PR</a></h3>
+<p><img src="imgs/comment-pr.png" alt="comentando-pr" />
+<em>Após verificar as alterações feitas em cada commit do PR adicione seus comentários</em></p>
+<p><img src="imgs/confirm-merge.png" alt="confirme-merge" />
+<em>Caso tenha passado no Code Review e esteja "Able to merge" confime o merge</em></p>
+<h2 id="221-boas-práticas"><a class="header" href="#221-boas-práticas">2.2.1. Boas práticas</a></h2>
+<ul>
+<li>
+<p>Testes Automatizados:</p>
+<p>Inclua testes automatizados em uma pipeline de CI (Continous Integration), para evitar bugs em produção. Para isso existem ferramentas como GitHub actions, jenkins e entre outras.</p>
+</li>
+<li>
+<p>Feedback Construtivo:</p>
+<p>Seja claro e direto nos feedbacks, destaque o que pode melhorar e o que foi bem feito.</p>
+</li>
+<li>
+<p>Relacionar PRs a issues:</p>
+<p>Caso o PR seja a resolução de uma issue, destaque que há esta relação no titulo do PR, ex.: Resolves #123</p>
+</li>
+</ul>
+<h2 id="222-dicas-para-evitar-conflitos-de-merge"><a class="header" href="#222-dicas-para-evitar-conflitos-de-merge">2.2.2. Dicas para evitar conflitos de merge</a></h2>
+<ul>
+<li>Antes de criar um PR, certifique-se de que sua branch está atualizada com a branch de destino</li>
+</ul>
+<pre><code class="language-bash">$ git pull origin &lt;branch-de-destino&gt;
+</code></pre>
+<ul>
+<li>Se houver conflitos de merge, resolva-os em sua máquina antes de enviar o PR. Use ferramentas como git mergetool para facilitar o processo.</li>
+</ul>
+<h2 id="223-conclusão"><a class="header" href="#223-conclusão">2.2.3. Conclusão</a></h2>
+<p>Com esses passos você mantém o fluxo de colaboração limpo, organizado e todo mundo sai ganhando. Bom PR!</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="capítulo-2--code-review-e-pull-request-no-github-3"><a class="header" href="#capítulo-2--code-review-e-pull-request-no-github-3">Capítulo 2 – Code Review e Pull Request no GitHub</a></h1>
+<h2 id="23-code-review"><a class="header" href="#23-code-review">2.3. Code Review</a></h2>
+<p>Como falado anteriormente, a revisão de código (Code Review) é uma prática essencial no desenvolvimento de software, onde um programador revisa o código escrito por outro antes de sua incorporação ao projeto. O objetivo desse processo é garantir que o código esteja bem estruturado, livre de erros e alinhado com as boas práticas da equipe.</p>
+<h2 id="230-por-que-a-revisão-de-código-é-importante"><a class="header" href="#230-por-que-a-revisão-de-código-é-importante">2.3.0. Por que a revisão de código é importante?</a></h2>
+<ul>
+<li><strong>Identifica problemas:</strong> Permite encontrar falhas e corrigir bugs antes que o código seja implantado.</li>
+<li><strong>Melhora a qualidade:</strong> Mantém o código organizado e em conformidade com os padrões da equipe.</li>
+<li><strong>Facilita a troca de conhecimento:</strong> Desenvolvedores compartilham experiências e aprimoram suas habilidades.</li>
+<li><strong>Garante padronização:</strong> Seguir um estilo consistente facilita a manutenção do sistema.</li>
+<li><strong>Promove aprimoramento contínuo:</strong> O feedback recebido contribui para o crescimento dos programadores.</li>
+</ul>
+<h2 id="231-como-nossa-equipe-pode-revisar-o-código"><a class="header" href="#231-como-nossa-equipe-pode-revisar-o-código">2.3.1. Como nossa equipe pode revisar o código?</a></h2>
+<p>Não existe um único jeito “certo”, cada time adota o que funciona melhor. Veja algumas abordagens:</p>
+<ul>
+<li>
+<p><strong>Parceria entre colegas</strong><br />
+Dois desenvolvedores revisam o código mutuamente. Um escreve, o outro sugere melhorias na sequência.</p>
+</li>
+<li>
+<p><strong>Revisão rápida e informal</strong><br />
+Uma olhada rápida, sem checklist rígido. Ideal para mudanças menores.</p>
+</li>
+<li>
+<p><strong>Revisão estruturada</strong><br />
+Segue um passo a passo bem definido: checklist, testes, documentação do feedback. Perfeita para entregas críticas.</p>
+</li>
+</ul>
+<p>É importante combinar com o time quando usar cada método.</p>
+<h2 id="232-conclusão"><a class="header" href="#232-conclusão">2.3.2. Conclusão</a></h2>
+<p>A revisão de código é essencial para o desenvolvimento de software estável, ela melhora a qualidade do código, promove a troca de conhecimento e garante que o projeto siga as melhores práticas. Neste guia, vamos explorar usando somente o GitHub, mas os conceitos são aplicáveis a qualquer ferramenta de controle de versão.</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="capítulo-2--code-review-e-pull-request-no-github-4"><a class="header" href="#capítulo-2--code-review-e-pull-request-no-github-4">Capítulo 2 – Code Review e Pull Request no GitHub</a></h1>
+<h2 id="24-como-realizar-um-code-review-eficaz-no-github"><a class="header" href="#24-como-realizar-um-code-review-eficaz-no-github">2.4. Como realizar um Code Review eficaz no GitHub</a></h2>
+<p>Revisar um Pull Request (PR) pode parecer complicado, mas enxergue isso como uma conversa entre desenvolvedores. Aqui vão dicas para tornar esse bate-papo mais fluido e produtivo.</p>
+<h3 id="1-antes-de-começar-entenda-o-contexto"><a class="header" href="#1-antes-de-começar-entenda-o-contexto">1. Antes de Começar, Entenda o Contexto</a></h3>
+<p>Antes de revisar um PR:</p>
+<ul>
+<li>Leia a descrição do PR com calma. Veja links para issues, requisitos ou documentação.</li>
+<li>Navegue pelo repositório para entender o impacto das alterações.</li>
+</ul>
+<p>Assim você evita surpresas e ganha confiança no que vai revisar.</p>
+<h3 id="2-aproveite-as-ferramentas-do-github"><a class="header" href="#2-aproveite-as-ferramentas-do-github">2. Aproveite as Ferramentas do GitHub</a></h3>
+<p>O GitHub oferece recursos que facilitam a sua vida:</p>
+<ul>
+<li>Comparação de branches, que mostra as diferenças entre o código atual e o novo.</li>
+<li>Visualização de commits, que te ajuda a entender a evolução do código ajuda a captar o raciocínio do autor.</li>
+<li>Histórico de commits, facilita a compreensão das alterações feitas.</li>
+</ul>
+<h3 id="3-o-que-observar-durante-a-revisão"><a class="header" href="#3-o-que-observar-durante-a-revisão">3. O Que Observar Durante a Revisão</a></h3>
+<p>Enquanto percorre as mudanças, pergunte-se:</p>
+<ol>
+<li>A funcionalidade aborda o problema proposto?</li>
+<li>A funcionalidade foi desenvolvida seguindo as regras de negócio definida?</li>
+<li>Estamos seguindo os padrões de estilo do time?</li>
+<li>Há testes cobrindo a nova lógica e todos passam?</li>
+<li>Algum ponto impacta performance ou segurança?</li>
+</ol>
+<h3 id="4-dê-um-feedback-construtivo"><a class="header" href="#4-dê-um-feedback-construtivo">4. Dê um Feedback Construtivo</a></h3>
+<ul>
+<li>Seja claro e direto: Em vez de "isto está errado", explique e sugira soluções.</li>
+<li>Evite críticas pessoais: O foco é no código, não no autor.</li>
+<li>Reconheça boas soluções: Valorizar boas práticas motiva a equipe.</li>
+</ul>
+<h3 id="5-trabalhe-em-equipe"><a class="header" href="#5-trabalhe-em-equipe">5. Trabalhe em Equipe</a></h3>
+<ul>
+<li>Marque outros desenvolvedores com <code>@usuário</code> quando precisar de uma segunda opinião.</li>
+<li>Seja flexível, pois não existe uma única maneira correta de escrever código.</li>
+</ul>
+<h3 id="6-só-aprove-quando-tudo-estiver-correto"><a class="header" href="#6-só-aprove-quando-tudo-estiver-correto">6. Só Aprove Quando Tudo Estiver Correto</a></h3>
+<p>Antes de clicar em <strong>Merge pull request</strong>:</p>
+<ul>
+<li>Garanta que todos os pontos levantados foram resolvidos.</li>
+<li>Verifique se testes, documentação e dependências estão atualizados.</li>
+<li>Se ainda faltar algo, peça ajustes específicos em vez de reprovar tudo.</li>
+</ul>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="capítulo-2--code-review-e-pull-request-no-github-5"><a class="header" href="#capítulo-2--code-review-e-pull-request-no-github-5">Capítulo 2 – Code Review e Pull Request no GitHub</a></h1>
+<h2 id="referências-do-capítulo-1"><a class="header" href="#referências-do-capítulo-1">Referências do Capítulo:</a></h2>
+<ul>
+<li>
+<p><a href="https://www.knowsolution.com.br/code-review-importancia-fazer-revisao/">Code Review</a></p>
+</li>
+<li>
+<p><a href="https://docs.github.com/pt/pull-requests">Pull Requests</a></p>
+</li>
+</ul>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="capítulo-3---aplicando-o-gitflow-no-git-e-github-com-html-e-css"><a class="header" href="#capítulo-3---aplicando-o-gitflow-no-git-e-github-com-html-e-css">Capítulo 3 - Aplicando o GitFlow no Git e GitHub com html e css</a></h1>
+<p>Neste capítulo, vamos criar um site usando HTML e CSS, que será uma versão estática de uma rede social chamada "Conex". Ao longo dos capítulos deste guia,transformaremos essa rede social estática em uma aplicação funcional, seguindo as boas práticas de desenvolvimento web com php, js, html e css. Mas afinal, o que são HTML e CSS?</p>
+<h2 id="300-html---hyper-text-markup-language"><a class="header" href="#300-html---hyper-text-markup-language">3.0.0 HTML - Hyper Text Markup Language</a></h2>
+<p>HTML é como o "esqueleto" de qualquer página web. Ele define a estrutura e o conteúdo de um site, permitindo a criação de elementos como parágrafos, links, imagens, listas e muito mais. A criação destes elementos é feita apartir de tags (marcações de hiper-texto) que são interpretados pelo browser.</p>
+<p>Quando você digita uma URL (https://www.conex.com) no navegador (cliente), ele inicia uma comunicação com o servidor onde este site está hospedado. Essa comunicação é feita usando o protocolo HTTP (HyperText Transfer Protocol) ou sua versão com criptografia SSL (HTTPS).</p>
+<p>Requisição (Request): O navegador envia uma requisição HTTP (verbo GET) ao servidor, solicitando o recurso, neste caso, uma página HTML.</p>
+<p>Resposta (Response): O servidor processa a requisição e envia uma resposta HTTP de volta ao browser. Essa resposta contém o código HTML da página, além de outros recursos como CSS, JavaScript, imgs, etc.</p>
+<blockquote>
+<p><strong>🚨 No t07-mvc abordaremos de maneira prática a arquitetura request/response na comunicação entre clientes e servidores</strong></p>
+</blockquote>
+<h2 id="301-css---cascading-style-sheets"><a class="header" href="#301-css---cascading-style-sheets">3.0.1 CSS - Cascading Style Sheets</a></h2>
+<p>CSS é responsável pela apresentação e estilo dos elementos HTML. Ele permite definir cores, fontes, tamanhos, layouts e outros aspectos visuais, garantindo que o site tenha uma aparência agradável ao usuário final.</p>
+<p>O CSS funciona através de seletores e propriedades. Um seletor é usado para selecionar os elementos HTML que você deseja estilizar, e as propriedades definem como esses elementos devem ser estilizados.</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="31-o-que-é-o-gitflow"><a class="header" href="#31-o-que-é-o-gitflow">3.1 O que é o <a href="https://gist.github.com/paulo-raoni/1a8f52138f67fd40379f454ee61aa4ce">GitFlow</a>?</a></h1>
+<p>O <strong>GitFlow</strong> é uma estratégia de ramificação (<em>branching</em>) para gerenciar o desenvolvimento de projetos de software utilizando o <strong>Git</strong>. Criado por <strong>Vincent Driessen</strong>, o GitFlow organiza o processo de desenvolvimento em diferentes tipos de branches, o que facilita a colaboração entre equipes e o controle de versões. Ele define um conjunto de regras que especifica quando e como criar novas branches para diferentes tarefas, como desenvolvimento de novas funcionalidades, correções de bugs e lançamentos de versões.</p>
+<h2 id="310-estrutura-do-gitflow"><a class="header" href="#310-estrutura-do-gitflow">3.1.0 Estrutura do GitFlow</a></h2>
+<p>A estrutura do GitFlow é composta principalmente por cinco tipos de branches:</p>
+<h3 id="1-master-ou-main"><a class="header" href="#1-master-ou-main">1. <strong>master (ou main)</strong></a></h3>
+<p>Contém o código estável e pronto para ser lançado em produção. Cada commit neste branch representa uma versão estável do projeto.</p>
+<h3 id="2-develop"><a class="header" href="#2-develop">2. <strong>develop</strong></a></h3>
+<p>Serve como o branch principal de desenvolvimento, onde as novas funcionalidades são integradas antes de serem liberadas para produção. O código no <code>develop</code> pode não ser 100% estável, mas deve estar funcional para testes.</p>
+<h3 id="3-feature"><a class="header" href="#3-feature">3. <strong>feature</strong></a></h3>
+<p>Criado a partir do <code>develop</code> para o desenvolvimento de novas funcionalidades. Cada funcionalidade tem seu próprio branch <code>feature</code>, o que facilita o trabalho isolado e sem impacto no código principal.</p>
+<h3 id="4-release"><a class="header" href="#4-release">4. <strong>release</strong></a></h3>
+<p>Utilizado para preparar o código para uma nova versão estável. O branch <code>release</code> é criado a partir do <code>develop</code> e é onde os últimos ajustes, testes e correções de bugs são feitos antes do lançamento.</p>
+<h3 id="5-hotfix"><a class="header" href="#5-hotfix">5. <strong>hotfix</strong></a></h3>
+<p>Criado a partir da <code>main</code> quando é necessário corrigir um problema crítico em produção. Depois de corrigido, o <code>hotfix</code> é mesclado tanto na <code>main</code> quanto no <code>develop</code> para garantir que a correção seja aplicada a ambas as versões.</p>
+<h2 id="311-benefícios-do-gitflow"><a class="header" href="#311-benefícios-do-gitflow">3.1.1 Benefícios do GitFlow</a></h2>
+<p>A aplicação do GitFlow ajuda equipes a gerenciar o ciclo de vida do desenvolvimento de forma mais estruturada, evitando problemas de integração e facilitando o controle de versões.</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="como-implementar-o-gitflow-no-git-e-github-somente-para-windows"><a class="header" href="#como-implementar-o-gitflow-no-git-e-github-somente-para-windows">Como Implementar o <a href="https://gist.github.com/paulo-raoni/1a8f52138f67fd40379f454ee61aa4ce">GitFlow</a> no Git e GitHub (Somente para Windows)</a></h1>
+<p>Para implementar o GitFlow no Windows, você precisa seguir alguns passos específicos, desde a instalação do GitFlow até a configuração e uso em seu repositório Git. A seguir, explicamos como realizar isso:</p>
+<h3 id="1-instalando-o-git-no-windows"><a class="header" href="#1-instalando-o-git-no-windows">1. Instalando o Git no Windows</a></h3>
+<p>Caso ainda não tenha o Git instalado, o primeiro passo é baixar e instalar o Git para Windows. Acesse o <a href="https://git-scm.com/downloads/win">site oficial</a> do Git e baixe a versão mais recente. Durante a instalação, é importante selecionar a opção para adicionar o Git ao PATH, para que você possa usá-lo diretamente no terminal do Windows.</p>
+<h3 id="2-instalando-o-gitflow-no-windows"><a class="header" href="#2-instalando-o-gitflow-no-windows">2. Instalando o GitFlow no Windows</a></h3>
+<p>O GitFlow não é instalado automaticamente com o Git para Windows. Para instalar o GitFlow no Windows, siga os passos abaixo:</p>
+<ol>
+<li>
+<p><strong>Baixe o GitFlow para Windows:</strong> A maneira mais simples de instalar o GitFlow no Windows é utilizando o Git Bash, que já vem com o Git para Windows.</p>
+</li>
+<li>
+<p><strong>Baixar e instalar o GitFlow:</strong> No Git Bash, execute o comando para instalar o GitFlow:</p>
+</li>
+</ol>
+<ul>
+<li>Abra o Git Bash no seu computador.</li>
+<li>Execute o seguinte comando para baixar e instalar o GitFlow:</li>
+</ul>
+<pre><code>git clone https://github.com/nvie/gitflow.git
+cd gitflow
+make install
+</code></pre>
+<h3 id="3-inicializando-o-gitflow"><a class="header" href="#3-inicializando-o-gitflow">3. Inicializando o GitFlow</a></h3>
+<p>Após a instalação do GitFlow, você precisa inicializar o GitFlow em seu repositório Git. Para isso:</p>
+<ol>
+<li>No Git Bash, navegue até a pasta do seu projeto, onde o repositório Git está localizado. Se você ainda não inicializou o repositório, execute:</li>
+</ol>
+<pre><code>git init
+</code></pre>
+<ol start="2">
+<li>Agora, inicialize o GitFlow com o comando:</li>
+</ol>
+<pre><code>git flow init
+</code></pre>
+<p>Você será solicitado a configurar os nomes dos branches. As opções padrão são:</p>
+<ul>
+<li>Branch principal: <code>master</code> (ou <code>main</code>)</li>
+<li>Branch de desenvolvimento: <code>develop</code></li>
+</ul>
+<p>Pressione Enter para aceitar as configurações padrão ou insira seus próprios nomes de branches, se desejar.</p>
+<h3 id="4-criando-branches-de-funcionalidades-feature"><a class="header" href="#4-criando-branches-de-funcionalidades-feature">4. Criando Branches de Funcionalidades (<code>feature</code>)</a></h3>
+<p>Após a configuração inicial, você pode começar a criar branches de funcionalidades (feature). Para iniciar o desenvolvimento de uma nova funcionalidade, use o seguinte comando:</p>
+<pre><code>git flow feature start nome-da-feature
+</code></pre>
+<p>Isso criará um novo branch feature/nome-da-feature baseado no develop. Quando a funcionalidade estiver concluída, finalize o branch com:</p>
+<pre><code>git flow feature finish nome-da-feature
+</code></pre>
+<p>Isso mesclará o branch de funcionalidade de volta ao develop e excluirá o branch feature.</p>
+<h3 id="5-criando-branches-de-lançamento-release"><a class="header" href="#5-criando-branches-de-lançamento-release">5. Criando Branches de Lançamento (<code>release</code>)</a></h3>
+<p>Quando as funcionalidades estiverem prontas para serem lançadas, crie um branch release a partir do develop com:</p>
+<pre><code>git flow release start v1.0.0
+</code></pre>
+<p>Esse comando criará um branch release/v1.0.0. Após realizar os ajustes finais, finalize o release com:</p>
+<pre><code>git flow release finish v1.0.0
+</code></pre>
+<p>Isso mesclará o <code>release</code> tanto na <code>main</code> quanto no <code>develop</code>, criando uma nova versão estável na <code>main</code> e excluindo o branch <code>release</code>.</p>
+<h3 id="6-criando-branches-de-correção-hotfix"><a class="header" href="#6-criando-branches-de-correção-hotfix">6. Criando Branches de Correção (<code>hotfix</code>)</a></h3>
+<p>Se houver um bug crítico em produção, você pode criar um branch <code>hotfix</code> a partir da <code>main</code>:</p>
+<pre><code>git flow hotfix start v1.0.1
+</code></pre>
+<p>Após corrigir o problema, finalize o hotfix com:</p>
+<pre><code>git flow hotfix finish v1.0.1
+</code></pre>
+<p>Isso mesclará o <code>hotfix</code> de volta na <code>main</code> e no <code>develop</code>, garantindo que a correção seja aplicada a ambas as versões.</p>
+<h3 id="7-subindo-as-alterações-para-o-github"><a class="header" href="#7-subindo-as-alterações-para-o-github">7. Subindo as Alterações para o GitHub</a></h3>
+<p>Sempre que você criar ou finalizar um branch de funcionalidade, release ou hotfix, é importante enviar suas alterações para o repositório remoto no GitHub. Para isso, use os seguintes comandos:</p>
+<ol>
+<li>Para o branch <code>main</code> e <code>develop</code>:</li>
+</ol>
+<pre><code>git push origin main
+git push origin develop
+</code></pre>
+<ol start="2">
+<li>Para branches <code>feature</code>, <code>releas</code> ou <code>hotfix</code>, use:</li>
+</ol>
+<pre><code>git push origin feature/nome-da-feature
+git push origin release/v1.0.0
+git push origin hotfix/v1.0.1
+</code></pre>
+<h3 id="8-gerenciando-pull-requests-no-github"><a class="header" href="#8-gerenciando-pull-requests-no-github">8. Gerenciando Pull Requests no GitHub</a></h3>
+<p>Ao trabalhar com o GitFlow, é uma boa prática criar Pull Requests (PRs) no GitHub para integrar as mudanças dos branches <code>feature</code>, <code>release</code> e <code>hotfix</code> ao <code>develop</code> ou <code>main</code>. Isso ajuda a revisar o código e garantir que as alterações sejam bem integradas.</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="aplicando-o-gitflow-em-um-projeto-com-html-e-css"><a class="header" href="#aplicando-o-gitflow-em-um-projeto-com-html-e-css">Aplicando o <a href="https://gist.github.com/paulo-raoni/1a8f52138f67fd40379f454ee61aa4ce">GitFlow</a> em um projeto com HTML e CSS</a></h1>
+<p>Aplicar o GitFlow em um projeto com HTML e CSS segue a mesma lógica que em outros projetos de desenvolvimento.</p>
+<h2 id="passos-para-aplicar-o-gitflow"><a class="header" href="#passos-para-aplicar-o-gitflow">Passos para Aplicar o GitFlow:</a></h2>
+<h3 id="1-inicialize-o-repositório-git"><a class="header" href="#1-inicialize-o-repositório-git">1. Inicialize o Repositório Git</a></h3>
+<pre><code>git init
+</code></pre>
+<h3 id="2-crie-e-defina-a-branch-develop"><a class="header" href="#2-crie-e-defina-a-branch-develop">2. Crie e Defina a Branch <code>develop</code></a></h3>
+<pre><code>git checkout -b develop
+git push -u origin develop
+</code></pre>
+<h3 id="3-criação-de-features"><a class="header" href="#3-criação-de-features">3. Criação de Features</a></h3>
+<p>Para cada nova funcionalidade (exemplo: um novo componente HTML/CSS), crie uma branch baseada em <code>develop</code>:</p>
+<pre><code>git checkout -b feature/nova-funcionalidades
+</code></pre>
+<h3 id="4-desenvolvendo-a-feature-exemplo"><a class="header" href="#4-desenvolvendo-a-feature-exemplo">4. Desenvolvendo a feature (<em>exemplo</em>)</a></h3>
+<ul>
+<li>
+<p>Estrutura do projeto</p>
+<p><img src="imgs/Estrutura%20dos%20arquivo%20t03-html-css.png" alt="repo" /></p>
+<p>Na pasta <code>img</code> estão armazenadas todas as imagens utilizadas nesta etapa. Na pasta <code>view</code>, há duas subpastas: uma para os arquivos <code>CSS</code> e outra para os arquivos <code>HTML</code> (<em>que estão no formato PHP devido a uma propriedade específica que estamos utilizando</em>).</p>
+</li>
+<li>
+<p>Exemplo de código HTML (<em>arquivo <code>home.php</code></em>)</p>
+</li>
+</ul>
+<pre><code class="language-html">&lt;!DOCTYPE html&gt;
+&lt;html lang="pt-br"&gt;
+  &lt;head&gt;
+    &lt;meta charset="UTF-8" /&gt;
+    &lt;meta name="viewport" content="width=device-width, initial-scale=1.0" /&gt;
+    &lt;title&gt;Página Principal&lt;/title&gt;
+    &lt;link rel="stylesheet" href="../css/home.css" /&gt;
+  &lt;/head&gt;
+
+  &lt;body&gt;
+    &lt;!-- Barra Lateral --&gt;
+    &lt;?php include __DIR__ . '/side-bar.php'; ?&gt;
+
+    &lt;!-- Conteúdo Principal --&gt;
+    &lt;main class="container"&gt;
+      &lt;!-- Seção de Posts --&gt;
+      &lt;section class="feed"&gt;
+        &lt;article class="post"&gt;
+          &lt;header class="user-info"&gt;
+            &lt;div class="avatar" aria-label="Foto do Usuário"&gt;&lt;/div&gt;
+            &lt;span class="username"&gt;Usuário1233&lt;/span&gt;
+          &lt;/header&gt;
+          &lt;div class="image-placeholder" aria-label="Imagem do Post"&gt;&lt;/div&gt;
+        &lt;/article&gt;
+        &lt;hr class="divider" /&gt;
+        &lt;article class="post"&gt;
+          &lt;header class="user-info"&gt;
+            &lt;div class="avatar" aria-label="Foto do Usuário"&gt;&lt;/div&gt;
+            &lt;span class="username"&gt;Usuário1233&lt;/span&gt;
+          &lt;/header&gt;
+          &lt;div class="image-placeholder" aria-label="Imagem do Post"&gt;&lt;/div&gt;
+        &lt;/article&gt;
+      &lt;/section&gt;
+    &lt;/main&gt;
+  &lt;/body&gt;
+&lt;/html&gt;
+</code></pre>
+<ul>
+<li>Como o CSS está separado do HTML em um arquivo externo, é necessário importá-lo na página inicial. Para isso, utilizamos a seguinte tag dentro do <code>&lt;head&gt;</code>:</li>
+</ul>
+<pre><code class="language-html">&lt;link rel="stylesheet" href="caminho-do-arquivo-css" /&gt;
+</code></pre>
+<ul>
+<li>Observe que dentro do body tem:</li>
+</ul>
+<pre><code class="language-php">&lt;?php include __DIR__ . '/side-bar.php'; ?&gt;
+</code></pre>
+<p>Esta linha utiliza include DIR para importar outro arquivo HTML, que, neste caso, é o <code>side-bar.php</code>. Como o projeto possui várias páginas que compartilham a mesma funcionalidade, a importação evita a duplicação de código. Assim, essa funcionalidade é carregada apenas nas páginas que precisam dela, como <code>home.php</code> e <code>profile.php</code>.</p>
+<ul>
+<li>Arquivo <code>side-bar.php</code>:</li>
+</ul>
+<pre><code class="language-html">&lt;!DOCTYPE html&gt;
+&lt;html lang="en"&gt;
+  &lt;head&gt;
+    &lt;meta charset="UTF-8" /&gt;
+    &lt;meta name="viewport" content="width=device-width, initial-scale=1.0" /&gt;
+    &lt;title&gt;Document&lt;/title&gt;
+    &lt;link rel="stylesheet" href="../css/side-bar.css" /&gt;
+  &lt;/head&gt;
+
+  &lt;body&gt;
+    &lt;!-- Barra Lateral --&gt;
+    &lt;aside class="side-bar"&gt;
+      &lt;img src="../../img/logo.svg" alt="Logo da empresa" class="logo" /&gt;
+      &lt;nav class="side-bar-links"&gt;
+        &lt;a href="./home.php"&gt;
+          &lt;img
+            src="../../img/home.svg"
+            class="icon"
+            alt="Ícone Página Principal"
+          /&gt;
+          Página principal
+        &lt;/a&gt;
+        &lt;a href=""&gt;
+          &lt;img src="../../img/search.svg" class="icon" alt="Ícone Pesquisar" /&gt;
+          Pesquisar
+        &lt;/a&gt;
+        &lt;a href="./profile.php"&gt;
+          &lt;img src="../../img/profile.svg" class="icon" alt="Ícone Perfil" /&gt;
+          Perfil
+        &lt;/a&gt;
+      &lt;/nav&gt;
+    &lt;/aside&gt;
+  &lt;/body&gt;
+&lt;/html&gt;
+</code></pre>
+<h3 id="5-após-desenvolver-sua-feature-faça-commits-e-quando-finalizar-envie-para-o-repositório-remoto"><a class="header" href="#5-após-desenvolver-sua-feature-faça-commits-e-quando-finalizar-envie-para-o-repositório-remoto">5. Após desenvolver sua feature, faça commits e, quando finalizar, envie para o repositório remoto:</a></h3>
+<pre><code>git add .
+git commit -m "Novas funcionalidades"
+git push origin feature/nova-funcionalidades
+</code></pre>
+<ul>
+<li>Abra um Pull Request (PR) para mesclar a feature na branch develop.</li>
+</ul>
+<h3 id="6-criação-de-releases-versões-do-projeto"><a class="header" href="#6-criação-de-releases-versões-do-projeto">6. Criação de Releases (Versões do Projeto)</a></h3>
+<ul>
+<li>Quando for preparar uma versão para produção, crie uma branch release baseada na develop:</li>
+</ul>
+<pre><code>git checkout -b release/1.0
+</code></pre>
+<ul>
+<li>Corrija pequenos ajustes e, quando estiver pronto, mescle no main e na develop:</li>
+</ul>
+<pre><code>git checkout main
+git merge release/1.0
+git checkout develop
+git merge release/1.0
+</code></pre>
+<h3 id="7-correção-de-bugs-hotfixes"><a class="header" href="#7-correção-de-bugs-hotfixes">7. Correção de Bugs (Hotfixes)</a></h3>
+<ul>
+<li>Caso um erro crítico seja encontrado na main, crie uma branch hotfix baseada nela:</li>
+</ul>
+<pre><code>git checkout -b hotfix/corrige-erro
+</code></pre>
+<ul>
+<li>Após corrigir, mescle na main e na develop:</li>
+</ul>
+<pre><code>git checkout main
+git merge hotfix/corrige-erro
+git checkout develop
+git merge hotfix/corrige-erro
+</code></pre>
+<ul>
+<li>Exclua a branch hotfix:</li>
+</ul>
+<pre><code>git branch -d hotfix/corrige-erro
+</code></pre>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="boas-práticas-para-gitflow-com-html-e-css"><a class="header" href="#boas-práticas-para-gitflow-com-html-e-css">Boas Práticas para GitFlow com HTML e CSS</a></h1>
+<h3 id="1-nomeação-de-branches"><a class="header" href="#1-nomeação-de-branches">1. Nomeação de Branches</a></h3>
+<p>Uma nomenclatura padronizada e clara para as branches facilita a organização do código e a identificação de funcionalidade.</p>
+<p><strong>Boas Práticas:</strong></p>
+<ul>
+<li>
+<p>Utilize um padrão consistente: <code>feature/nome-da-funcionalidade</code>, <code>bugfix/nome-da-correção</code>.</p>
+</li>
+<li>
+<p>Evite nomes genéricos como <code>feature/alteracao</code> ou <code>hotfix/ajuste</code>.</p>
+</li>
+<li>
+<p>Use <code>kebab-case</code> ou <code>snake_case</code> para evitar espaços (exemplo: <code>feature/responsive-navbar</code> ou <code>hotfix/footer_bug</code>).</p>
+</li>
+</ul>
+<p><strong>Exemplo de criação de branch:</strong></p>
+<pre><code> git checkout -b feature/menu-responsivo
+</code></pre>
+<h3 id="2-commits-claros-e-objetivos"><a class="header" href="#2-commits-claros-e-objetivos">2. Commits Claros e Objetivos</a></h3>
+<p>Escrever mensagens de commit bem estruturadas facilita a compreensão das alterações feitas no projeto.</p>
+<p><strong>Boas Práticas:</strong></p>
+<ul>
+<li>
+<p>Seja descritivo e direto: uma boa mensagem de commit resume a mudança de forma clara.</p>
+</li>
+<li>
+<p>Utilize o tempo verbal correto: mensagens no imperativo são recomendadas (<code>Adiciona</code>, <code>Corrige</code>, <code>Remove</code>).</p>
+</li>
+<li>
+<p>Prefira commits pequenos e frequentes ao invés de um grande commit com muitas alterações.</p>
+</li>
+</ul>
+<p><em>Exemplos de mensagens de commit boas:</em></p>
+<ul>
+<li>
+<p><code>Adiciona estilo responsivo ao menu</code></p>
+</li>
+<li>
+<p><code>Corrige bug no layout do footer em telas menores</code></p>
+</li>
+</ul>
+<h3 id="3-uso-de-pull-requests-para-revisão"><a class="header" href="#3-uso-de-pull-requests-para-revisão">3. Uso de Pull Requests para Revisão</a></h3>
+<p>Os Pull Requests (PRs) no GitHub permitem que alterações sejam revisadas antes de serem incorporadas à branch principal.</p>
+<p><strong>Boas Práticas:</strong></p>
+<ul>
+<li>
+<p>Sempre crie um PR ao finalizar uma feature, release ou hotfix.</p>
+</li>
+<li>
+<p>Utilize uma descrição detalhada no PR para explicar as mudanças.</p>
+</li>
+<li>
+<p>Marque membros da equipe para revisão antes de aprovar a fusão.</p>
+</li>
+</ul>
+<p><em>Exemplo de PR bem documentado:</em></p>
+<p><strong>Título:</strong> "Adiciona layout responsivo ao menu de navegação"Descrição:</p>
+<ul>
+<li>
+<p>Adiciona media queries para tornar o menu responsivo.</p>
+</li>
+<li>
+<p>Corrige alinhamento do logo e espaçamento dos itens.</p>
+</li>
+<li>
+<p>Testado em dispositivos móveis e desktop.</p>
+</li>
+</ul>
+<h3 id="4-separação-de-código-html-css-e-js"><a class="header" href="#4-separação-de-código-html-css-e-js">4. Separação de Código HTML, CSS e JS</a></h3>
+<p>Uma estrutura organizada do projeto facilita a manutenção e reutilização do código.</p>
+<p><strong>Boas Práticas:</strong></p>
+<ul>
+<li>
+<p>Utilize pastas organizadas (<code>/css</code>, <code>/js</code>, <code>/img</code>).</p>
+</li>
+<li>
+<p>Não misture CSS inline no HTML, prefira arquivos externos.</p>
+</li>
+<li>
+<p>Use uma estrutura modular (exemplo: <code>style.css</code> para estilos gerais e <code>navbar.css</code> para estilos específicos do menu).</p>
+</li>
+</ul>
+<p><em>Exemplo de estrutura recomendada:</em></p>
+<pre><code>/projeto
+│── index.html
+│── /css
+│   │── style.css
+│   │── navbar.css
+│── /js
+│   │── script.js
+│── /img
+│   │── logo.png
+</code></pre>
+<h3 id="5-testes-antes-de-fazer-merge"><a class="header" href="#5-testes-antes-de-fazer-merge">5. Testes Antes de Fazer Merge</a></h3>
+<p>Antes de mesclar uma branch ao develop ou main, é fundamental testar o código para evitar bugs.</p>
+<p><strong>Boas Práticas:</strong></p>
+<ul>
+<li>
+<p>Testar localmente antes de enviar um PR.</p>
+</li>
+<li>
+<p>Verificar compatibilidade em diferentes navegadores.</p>
+</li>
+<li>
+<p>Certificar-se de que o CSS não está quebrando o layout.</p>
+</li>
+</ul>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="documentação"><a class="header" href="#documentação">Documentação</a></h1>
+<p>Para aprofundar os conhecimentos sobre GitFlow, Git e boas práticas no desenvolvimento de projetos com HTML e CSS, é recomendável consultar materiais adicionais.</p>
+<h3 id="documentação-oficial-do-git"><a class="header" href="#documentação-oficial-do-git">Documentação Oficial do Git</a></h3>
+<ul>
+<li><a href="https://git-scm.com/doc">Git - Documentação Oficial</a></li>
+</ul>
+<h3 id="documentação-do-gitflow"><a class="header" href="#documentação-do-gitflow">Documentação do GitFlow</a></h3>
+<ul>
+<li><a href="https://gist.github.com/paulo-raoni/1a8f52138f67fd40379f454ee61aa4ce">GitFlow</a></li>
+</ul>
+<h3 id="documentação-do-github"><a class="header" href="#documentação-do-github">Documentação do GitHub</a></h3>
+<ul>
+<li><a href="https://docs.github.com/pt">GitHub</a></li>
+</ul>
+<h3 id="boas-práticas-em-desenvolvimento-com-html-e-css"><a class="header" href="#boas-práticas-em-desenvolvimento-com-html-e-css">Boas Práticas em Desenvolvimento com HTML e CSS</a></h3>
+<ul>
+<li><a href="https://www.w3schools.com/html/html5_semantic_elements.asp">HTML e CSS</a></li>
+<li><a href="https://web.dev/?hl=pt-br">Google Web Fundamentals</a></li>
+</ul>
+<p>Boas práticas recomendadas pelo Google para desenvolvimento web moderno e otimização de desempenho.</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="introdução-ao-php-básico-aplicando-gitflow-no-github"><a class="header" href="#introdução-ao-php-básico-aplicando-gitflow-no-github">Introdução ao PHP Básico aplicando GitFlow no GitHub</a></h1>
+<h2 id="o-que-é-php"><a class="header" href="#o-que-é-php">O que é PHP?</a></h2>
+<p>O PHP (Hypertext Preprocessor) é uma linguagem de programação de código aberto voltada para o desenvolvimento web. Criado originalmente por Rasmus Lerdorf em 1994, o PHP permite a criação de páginas dinâmicas e interativas, sendo amplamente utilizado em conjunto com HTML e bancos de dados como MySQL.</p>
+<h3 id="características-do-php"><a class="header" href="#características-do-php">Características do PHP</a></h3>
+<ul>
+<li>
+<p>Execução no Servidor: O PHP é processado no servidor, gerando uma página HTML que é enviada ao navegador. Isso significa que o código PHP não aparece no navegador do usuário, apenas o HTML gerado por ele.</p>
+</li>
+<li>
+<p>Integração com HTML: PHP pode ser embutido diretamente no HTML. Isso permite criar páginas dinâmicas com facilidade. Exemplo: Em um sistema de comentários, você pode usar PHP para exibir os comentários armazenados em um banco de dados.</p>
+</li>
+<li>
+<p>Suporte a Vários Bancos de Dados: Compatível com MySQL, PostgreSQL, SQLite, entre outros.</p>
+</li>
+<li>
+<p>Ampla Comunidade: PHP tem uma comunidade enorme que oferece suporte, bibliotecas e frameworks, tornando o desenvolvimento muito mais ágil.
+Exemplo: A biblioteca Composer facilita a instalação de pacotes externos, e frameworks como Laravel ajudam a construir aplicações mais rápidas e seguras.</p>
+</li>
+</ul>
+<h3 id="sintaxe-básica-do-php"><a class="header" href="#sintaxe-básica-do-php">Sintaxe Básica do PHP</a></h3>
+<p>O PHP pode ser inserido dentro do código HTML utilizando as tags:</p>
+<pre><code>&lt;?php ... ?&gt;.
+</code></pre>
+<p><strong>Exemplo de um script básico:</strong></p>
+<pre><code class="language-html">&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+  &lt;head&gt;
+    &lt;title&gt;Exemplo PHP&lt;/title&gt;
+  &lt;/head&gt;
+  &lt;body&gt;
+    &lt;h1&gt;&lt;?php echo "Hello, World!"; ?&gt;&lt;/h1&gt;
+  &lt;/body&gt;
+&lt;/html&gt;
+</code></pre>
+<p><em>Nesse exemplo, o PHP processa o comando <code>echo</code> e insere "Hello, World!" na página HTML.</em></p>
+<p><strong>Exemplos de Comandos Básicos no PHP</strong></p>
+<ul>
+<li>Variáveis e Tipos de Dados:</li>
+</ul>
+<pre><code class="language-php">&lt;?php
+$nome = "João";  // string
+$idade = 30;      // inteiro
+$altura = 1.75;   // float
+$ativo = true;    // booleano
+?&gt;
+</code></pre>
+<ul>
+<li>Estruturas Condicionais:</li>
+</ul>
+<pre><code class="language-php">&lt;?php
+$idade = 20;
+if ($idade &gt;= 18) {
+    echo "Você é maior de idade.";
+} else {
+    echo "Você é menor de idade.";
+}
+?&gt;
+</code></pre>
+<ul>
+<li>Laços de Repetição:</li>
+</ul>
+<pre><code class="language-php">&lt;?php
+for ($i = 0; $i &lt; 5; $i++) {
+    echo "Número: $i &lt;br&gt;";
+}
+
+
+$i = 0;
+while ($i &lt; 5) {
+    echo "Número: $i &lt;br&gt;";
+    $i++;
+}
+
+
+$nomes = ["João", "Maria", "José"];
+foreach ($nomes as $nome) {
+    echo "Nome: $nome &lt;br&gt;";
+}
+
+$user = ["id" =&gt; 1, "name" =&gt; "name", "password" =&gt; "123456"]
+foreach ($user as $key =&gt; $value){
+  echo "dados do usuário:" . $value;
+}
+?&gt;
+
+</code></pre>
+<h3 id="vantagens-do-php"><a class="header" href="#vantagens-do-php">Vantagens do PHP</a></h3>
+<ul>
+<li>
+<p>Fácil aprendizado e uso</p>
+</li>
+<li>
+<p>Extensa documentação</p>
+</li>
+<li>
+<p>Alto desempenho para aplicações web</p>
+</li>
+<li>
+<p>Compatibilidade com diversas plataformas</p>
+</li>
+</ul>
+<p>O PHP continua sendo uma das linguagens mais populares para desenvolvimento web, oferecendo uma combinação de flexibilidade, facilidade de uso e integração com outras tecnologias.</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="como-instalar-o-php-no-windows"><a class="header" href="#como-instalar-o-php-no-windows">Como instalar o PHP no Windows</a></h1>
+<h2 id="baixar-o-php"><a class="header" href="#baixar-o-php">Baixar o PHP</a></h2>
+<ol>
+<li>
+<p>Acesse o site oficial do PHP: https://windows.php.net/download.</p>
+</li>
+<li>
+<p>Baixe a versão Thread Safe compatível com seu sistema (x64 para 64 bits ou x86 para 32 bits).</p>
+</li>
+<li>
+<p>Baixe o arquivo ZIP e extraia-o para um diretório, como <code>C:\php</code>.</p>
+</li>
+</ol>
+<h2 id="configurar-as-variáveis-de-ambiente"><a class="header" href="#configurar-as-variáveis-de-ambiente">Configurar as Variáveis de Ambiente</a></h2>
+<ol>
+<li>
+<p>Vá em variáveis do sistema, localize a variável <code>Path</code> e clique em Editar.</p>
+</li>
+<li>
+<p>Clique em Novo e adicione o caminho da pasta do PHP.</p>
+</li>
+<li>
+<p>Clique em OK para salvar.</p>
+</li>
+</ol>
+<h2 id="configurar-o-phpini"><a class="header" href="#configurar-o-phpini">Configurar o <code>php.ini</code></a></h2>
+<ol>
+<li>
+<p>Vá até a pasta do PHP.</p>
+</li>
+<li>
+<p>Copie o arquivo <code>php.ini-development</code> e renomeie para <code>php.ini</code>.</p>
+</li>
+<li>
+<p>Abra o arquivo <code>php.ini</code> com o Bloco de Notas e descomente (remova o <code>;</code> antes de) algumas extensões essenciais:</p>
+</li>
+</ol>
+<pre><code>extension=mysqli
+extension=pdo_mysql
+extension=mbstring
+extension=curl
+extension=openssl
+</code></pre>
+<ol start="4">
+<li>Salve o arquivo.</li>
+</ol>
+<h2 id="testar-a-instalação"><a class="header" href="#testar-a-instalação">Testar a Instalação</a></h2>
+<ol>
+<li>Abra o Prompt de Comando (CMD) e digite:</li>
+</ol>
+<pre><code>php -v
+</code></pre>
+<ol start="2">
+<li>Se o PHP estiver instalado corretamente, você verá a versão exibida.</li>
+</ol>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="o-que-é-xampp"><a class="header" href="#o-que-é-xampp">O que é XAMPP?</a></h1>
+<p>O XAMPP é um ambiente de desenvolvimento integrado e multiplataforma, projetado para facilitar a criação, teste e implantação de aplicações web em um servidor local. Ele é amplamente utilizado por desenvolvedores, analistas de sistemas e profissionais de TI para simular um ambiente de produção em suas máquinas locais, permitindo o desenvolvimento e a validação de projetos web antes de sua publicação em servidores remotos.</p>
+<h2 id="aplicações-do-xampp"><a class="header" href="#aplicações-do-xampp">Aplicações do XAMPP</a></h2>
+<p>O XAMPP é utilizado para:</p>
+<ul>
+<li>
+<p><strong>Desenvolvimento de aplicações web:</strong> Permite criar e testar sites dinâmicos, sistemas de gerenciamento de conteúdo (CMS), e-commerce e outras aplicações baseadas em PHP, MySQL e Apache.</p>
+</li>
+<li>
+<p><strong>Testes locais:</strong> Simula um ambiente de servidor web completo, permitindo a execução de scripts, testes de banco de dados e validação de funcionalidades sem a necessidade de um servidor externo.</p>
+</li>
+<li>
+<p><strong>Prototipagem rápida:</strong> Facilita a criação de protótipos funcionais de aplicações web, reduzindo o tempo de desenvolvimento.</p>
+</li>
+<li>
+<p><strong>Aprendizado e treinamento:</strong> É uma ferramenta essencial para estudantes e profissionais que estão aprendendo desenvolvimento web, administração de servidores ou gerenciamento de bancos de dados.</p>
+</li>
+<li>
+<p><strong>Ambiente de staging:</strong> Permite a configuração de um ambiente de homologação local para testes finais antes da implantação em produção.</p>
+</li>
+</ul>
+<h2 id="vantagens-do-xampp"><a class="header" href="#vantagens-do-xampp">Vantagens do XAMPP</a></h2>
+<ul>
+<li>
+<p><strong>Portabilidade:</strong> É multiplataforma e pode ser executado em diferentes sistemas operacionais.</p>
+</li>
+<li>
+<p><strong>Facilidade de uso:</strong> Vem pré-configurado, eliminando a necessidade de configurações manuais complexas.</p>
+</li>
+<li>
+<p><strong>Gratuito e de código aberto:</strong> Não há custos associados à sua utilização.</p>
+</li>
+<li>
+<p><strong>Integração de ferramentas:</strong> Inclui todos os componentes necessários para um ambiente de desenvolvimento web completo.</p>
+</li>
+</ul>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="exemplo-prático-configurando-ambiente-xampp"><a class="header" href="#exemplo-prático-configurando-ambiente-xampp">Exemplo Prático: Configurando ambiente XAMPP</a></h1>
+<p>A configuração correta de um servidor e banco de dados é essencial para o funcionamento de qualquer sistema de software. Neste exemplo prático, vamos demonstrar como configurar um ambiente de desenvolvimento local utilizando XAMPP para o servidor e MySQL para o banco de dados.</p>
+<h2 id="instalação-e-configuração-do-xampp"><a class="header" href="#instalação-e-configuração-do-xampp">Instalação e Configuração do XAMPP</a></h2>
+<ol>
+<li>
+<p>Baixe e instale o XAMPP no site oficial: https://www.apachefriends.org/pt_br/download.html</p>
+</li>
+<li>
+<p>Inicie o Painel de Controle do XAMPP e ative os serviços Apache e MySQL.</p>
+</li>
+<li>
+<p>Verifique a instalação acessando <code>http://localhost</code> no navegador.</p>
+</li>
+</ol>
+<p><em>Se ocorrer um erro ao iniciar o MySQL no XAMPP, acesse o painel de controle e encerre o processo do MySQL antes de tentar novamente.</em></p>
+<h2 id="criação-e-configuração-do-banco-de-dados-com-xampp"><a class="header" href="#criação-e-configuração-do-banco-de-dados-com-xampp">Criação e Configuração do Banco de Dados com XAMPP</a></h2>
+<ol>
+<li>
+<p>Acesse o phpMyAdmin via <code>http://localhost/phpmyadmin/</code>, ou utilize o <code>MySQL Workbench</code> como alternativa.</p>
+</li>
+<li>
+<p>Crie um novo banco de dados chamado <code>conex</code> (<em>vamos usar o exemplo do nosso projeto</em>).</p>
+</li>
+<li>
+<p>Execute o seguinte SQL para criar uma tabela de usuários:</p>
+</li>
+</ol>
+<pre><code class="language-sql">CREATE TABLE users (
+    id SERIAL PRIMARY KEY,
+    email VARCHAR(255) UNIQUE NOT NULL,
+    phone VARCHAR(15) UNIQUE,
+    password_hash VARCHAR(255) NOT NULL,
+    username VARCHAR(255) NOT NULL,
+    bio TEXT
+);
+</code></pre>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="o-que-é-docker"><a class="header" href="#o-que-é-docker">O que é Docker?</a></h1>
+<p>Docker é uma ferramenta que permite "empacotar" aplicações em contêineres a partir de um arquivo "Dockerfile", isolando dependências e ambientes. Isso facilita a implantação e distribuição em diferentes sistemas, pois cada contêiner contém tudo que a aplicação precisa para rodar, mas o que exatamente é um contêiner Docker?</p>
+<h2 id="contêiner-docker"><a class="header" href="#contêiner-docker">Contêiner Docker</a></h2>
+<p>Já ouviu a frase: "Mas na minha máquina o código funciona"? então, times que desenvolvem com Docker não passam por problemas como esse, pois com essa ferramenta, o desenvolvedor é capaz de encapsular a aplicação e todas as dependências necessárias para o seu funcionamento , incluindo o sistema operacional em um contêiner isolado, tornando o ambiente de desenvolvimento único para todos os desenvolvedores, prevenindo bug relacionado a mudança de sistema operacional ou versão das dependências utilizadas.</p>
+<p>Para quem já trabalhou com o framework Django, é semelhante a criar um “virtual environment” na pasta “venv”. Porém, um contêiner Docker vai além, ele não apenas isola dependências, mas também o ambiente de execução, e também partes do sistema operacional e configurações, tornando o isolamento ainda maior.</p>
+<h2 id="dockerhub"><a class="header" href="#dockerhub">DockerHub</a></h2>
+<p>DockerHub é um serviço de hospedagem de imagens Docker, semelhante, em algumas partes, ao GitHub. É um repositório onde são armazenadas, versionadas e compartilhadas as imagens de contêiner, permitindo que usuários façam pull (baixem) e push (publiquem) suas imagens em um repositório central.</p>
+<p>Imagem é o molde que define como o container será criado. Fazendo uma alusão à orientação a objetos, o container gerado apartir da imagem seria como um objeto e a imagem uma classe</p>
+<p>Exemplo:</p>
+<p>Uma imagem Docker para um servidor web (como nginx:latest) pode ser usada para criar múltiplos contêineres, cada um rodando de forma independente, assim como uma classe pode ser instanciada em múltiplos objetos.</p>
+<h2 id="docker-compose"><a class="header" href="#docker-compose">Docker Compose</a></h2>
+<p>O Docker Compose é uma ferramenta que permite definir e gerenciar vários contêineres, e as imagens que os originam, em um único arquivo YAML, chamado "docker-compose.yml". Em vez de executar cada contêiner individualmente, basta declarar todos os serviços necessários (por exemplo, um banco de dados, um servidor web ou uma aplicação) e então executar um único comando, para levantar todo o ambiente de forma coordenada, oque facilita o setup e manutenção do ambiente unificado.</p>
+<h2 id="principais-comandos-docker"><a class="header" href="#principais-comandos-docker">Principais comandos Docker</a></h2>
+<pre><code class="language-bash"># Lista os contêineres em execução
+docker ps
+
+# Lista todos os contêineres (em execução e parados)
+docker ps -a
+
+# Executa um novo contêiner a partir de um Dockerfile
+docker run 
+
+# Cria e inicia os contêineres em modo desanexado (background), reconstruindo se necessário
+docker-compose up --build -d
+
+# Encerra e remove os contêineres e redes criados
+docker-compose down
+
+# Para os contêineres sem removê-los
+docker-compose stop
+
+# Reinicia contêineres que foram parados
+docker-compose start
+
+# Para construir uma imagem Docker a partir de um Dockerfile
+docker build -t nome-da-imagem .
+
+# Executa um novo contêiner a partir de uma imagem
+docker run -d -p 8080:80 nome-da-imagem
+
+# Para acessar o terminal dentro de um contêiner em execução
+docker exec -it &lt;container_name&gt; bash
+
+# Para parar um contêiner
+docker stop &lt;container_name&gt;
+
+# Para remover um contêiner
+docker rm &lt;container_name&gt;
+
+# Para ver os logs de um contêiner
+docker logs &lt;container_name&gt;
+
+# Para visualizar opções gerais do Docker
+docker
+</code></pre>
+<blockquote>
+<p><strong>Observação</strong><br />
+Em alguns sistemas operacionais, o comando correto é <code>docker compose</code> em vez de <code>docker-compose</code>.</p>
+</blockquote>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="exemplo-prático-configurando-ambiente-docker"><a class="header" href="#exemplo-prático-configurando-ambiente-docker">Exemplo Prático: Configurando ambiente Docker</a></h1>
+<h2 id="criação-e-configuração-do-banco-de-dados"><a class="header" href="#criação-e-configuração-do-banco-de-dados">Criação e Configuração do Banco de Dados</a></h2>
+<pre><code class="language-yml">services:
+  db:
+    image: postgres:15-alpine
+    container_name: postgres_db
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: root
+      POSTGRES_DB: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      
+  pgadmin:
+    image: dpage/pgadmin4:8.11.0 
+    ports:
+      - 5050:80 
+    environment: 
+      - PGADMIN_DEFAULT_EMAIL=admin@mail.com
+      - PGADMIN_DEFAULT_PASSWORD=root
+    depends_on:
+      - db
+
+volumes:
+  postgres_data:
+</code></pre>
+<ol>
+<li>
+<p>Inicialize o docker deamon (no windows basta abrir o Docker Desktop)</p>
+</li>
+<li>
+<p>No terminal do diretório raiz projeto (onde está localizado o docker-compose.yml) suba o container com o comando "docker-compose up --build -d"</p>
+</li>
+<li>
+<p>use o comando "docker exec -it &lt;container_name&gt; bash" para acessar o terminal dentro de um contêiner em execução</p>
+</li>
+<li>
+<p>no bash do container use o comando psql -U &lt;POSTGRES_USER&gt; -d &lt;POSTGRES_DB&gt; para abrir o terminal do psql</p>
+</li>
+<li>
+<p>Copie o conteúdo do arquivo "db.sql" para o terminal do psql, que automaticamente serão criadas as tabelas do banco</p>
+</li>
+</ol>
+<pre><code class="language-sql">CREATE TABLE users (
+    id SERIAL PRIMARY KEY,
+    email VARCHAR(255) UNIQUE NOT NULL,
+    phone VARCHAR(15) UNIQUE,
+    password_hash VARCHAR(255) NOT NULL,
+    username VARCHAR(255) NOT NULL,
+    bio TEXT
+);
+</code></pre>
+<h3 id="services-serviços"><a class="header" href="#services-serviços">Services (Serviços)</a></h3>
+<p>Dentro de um arquivo docker-compose.yml, cada “service” representa um contêiner. Por exemplo:</p>
+<ul>
+<li><strong>db</strong> na configuração acima representa um contêiner com banco de dados PostgreSQL.</li>
+<li><strong>pgadmin</strong> representa um contêiner que roda a interface web pgAdmin.</li>
+</ul>
+<p>Cada serviço define qual imagem Docker será usada, variáveis de ambiente, portas que serão expostas, volumes para persistência de dados e dependências de outros serviços.</p>
+<p>Fazendo novamente uma analogia ao paradigma de orientação a objetos, o service "db" instancia a "classe" "postgres:15-alpine" e modifica seus "atributos": POSTGRES_USER, POSTGRES_PASSWORD, POSTGRES_DB, ports, volumes.</p>
+<h3 id="volumes"><a class="header" href="#volumes">Volumes</a></h3>
+<p>Volumes permitem que você mantenha os dados salvos entre reinicializações dos contêineres. Sem volumes, os dados seriam perdidos toda vez que o contêiner fosse parado ou recriado. Ao configurar “volumes”, o Docker mapeia um diretório interno do contêiner para uma pasta ou volume persistente na máquina host, garantindo que as informações sejam preservadas.</p>
+<h3 id="docker-no-contexto-do-projeto"><a class="header" href="#docker-no-contexto-do-projeto">Docker no contexto do projeto</a></h3>
+<p>No docker-compose.yml:</p>
+<p>• serviço “db”:</p>
+<ul>
+<li>Usa a imagem postgres:15-alpine (versão mais leve do PostgreSQL).</li>
+<li>Define variáveis de ambiente (usuário, senha e nome do banco).</li>
+<li>Expõe a porta 5432 para que outras aplicações possam fazer um bind nessa porta, e se conectar com o servidor do banco postgres.</li>
+<li>Suporta um volume para persistir os dados.</li>
+</ul>
+<p>• serviço “pgadmin”:</p>
+<ul>
+<li>Usa a imagem dpage/pgadmin4 para gerenciar o banco via interface visual no navegador.</li>
+<li>Redireciona a porta 80 do contêiner para a 5050 no host, ou seja,</li>
+<li>Define variáveis de ambiente de login e senha do pgAdmin.</li>
+<li>Cria uma dependência com o serviço “db”, ou seja, o contêiner pgAdmin só sobe quando “db” estiver disponível.</li>
+</ul>
+<p>Desse modo o banco de dados e a interface de gerenciamento são definidos em um único arquivo de configuração (YAML), facilitando a manutenção, escalabilidade e portabilidade do seu projeto.</p>
+<h2 id="outra-forma"><a class="header" href="#outra-forma">Outra forma</a></h2>
+<p>Uma alternativa à configuração direta no docker-compose.yml é criar um Dockerfile para encapsular a aplicação e, em seguida, referenciá-lo no docker-compose.yml. Isso é útil quando você precisa personalizar a imagem Docker da aplicação.</p>
+<p>Arquivo Dockerfile:</p>
+<pre><code class="language-yaml">FROM php:5.6-apache
+
+# instala as dependências do PHP: mbstring, pdo, pdo_mysql e pdo_pgsql
+RUN apt-get update &amp;&amp; apt-get install -y libpq-dev &amp;&amp; rm -rf /var/lib/apt/lists/* \ &amp;&amp; docker-php-ext-install mbstring pdo pdo_mysql pdo_pgsql
+
+# instala o módulo de reescrita de URL do Apache
+RUN a2enmod rewrite
+
+# copia o código-fonte da aplicação para o diretório raiz do servidor web
+# fazer um COPY . /var/www/html/ necessitaria de um Dockerignore, pois copia arquivos desnecessários
+COPY public/ /var/www/html/
+COPY src/ /var/www/html/src/
+COPY view/ /var/www/html/view/
+
+# define o diretório raiz do servidor web
+WORKDIR /var/www/html
+
+# expõe a porta 80 do contêiner para o host (necessário para acessar a aplicação via navegador)
+EXPOSE 80
+
+# define o comando que será executado quando o contêiner for iniciado
+CMD ["apache2-foreground"]
+</code></pre>
+<p>Arquivo docker-compose.yml:</p>
+<pre><code class="language-yml">php:
+    build: .  # usa o Dockerfile do diretório atual
+    container_name: php
+    ports:
+        - "80:80"
+    volumes:
+        - ./src:/var/www/html
+    depends_on:
+        - db
+</code></pre>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="conex---tópico-04"><a class="header" href="#conex---tópico-04">Conex - tópico 04</a></h1>
+<blockquote>
+<p>Tarefas:</p>
+<ul>
+<li>Criar conexão com banco de dados via PDO</li>
+<li>Implementar backend da view "signup.php"</li>
+</ul>
+</blockquote>
+<blockquote>
+<p>Funcionalidade:</p>
+<ul>
+<li>Cadastro de usuários no sistema</li>
+</ul>
+</blockquote>
+<h2 id="visão-do-usuário"><a class="header" href="#visão-do-usuário">Visão do usuário</a></h2>
+<h3 id="cadastro-de-usuários-no-sistema"><a class="header" href="#cadastro-de-usuários-no-sistema">Cadastro de usuários no sistema</a></h3>
+<ul>
+<li>Como um usuário visitante, quero preencher um formulário de cadastro fornecendo minhas informações (nome, e-mail, senha, telefone), para que eu possa criar uma conta no sistema e acessar todas as funcionalidades exclusivas para usuários cadastrados.</li>
+</ul>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="cadastro-de-usuários-no-sistema-1"><a class="header" href="#cadastro-de-usuários-no-sistema-1">Cadastro de usuários no sistema</a></h1>
+<h3 id="criar-conexão-com-banco-de-dados-via-pdo-exemplo-do-projeto-conex"><a class="header" href="#criar-conexão-com-banco-de-dados-via-pdo-exemplo-do-projeto-conex">Criar conexão com banco de dados via PDO (<em>exemplo do projeto conex</em>)</a></h3>
+<p>Arquivo: t04-db/database.php</p>
+<pre><code class="language-php">
+class Database
+{
+    private static $instance = null;
+    private $conn;
+
+    private function __construct()
+    {
+        $config = require __DIR__ . '/config.php';
+
+        if (!isset($config['database']['host'], $config['database']['port'], $config['database']['username'], $config['database']['password'], $config['database']['dbname'])) {
+            throw new Exception("Configuração do banco de dados incompleta");
+        }
+
+        $dsn = "mysql:host={$config['database']['host']};port={$config['database']['port']};dbname={$config['database']['dbname']};charset=utf8mb4";
+
+        try {
+            $this-&gt;conn = new PDO($dsn, $config['database']['username'], $config['database']['password'], [
+                PDO::ATTR_ERRMODE =&gt; PDO::ERRMODE_EXCEPTION,
+                PDO::ATTR_DEFAULT_FETCH_MODE =&gt; PDO::FETCH_ASSOC
+            ]);
+        } catch (PDOException $e) {
+            throw new Exception("Falha na conexão com o banco de dados: " . $e-&gt;getMessage());
+        }
+    }
+
+    public static function getInstance()
+    {
+        if (self::$instance === null) {
+            self::$instance = new self();
+        }
+        return self::$instance;
+    }
+
+    public function getConnection()
+    {
+        return $this-&gt;conn;
+    }
+}
+</code></pre>
+<p><em>Código responsável por estabelecer a conexão com o banco de dados.</em></p>
+<p>No exemplo apresentado, a classe "Database" é implementada utilizando o design pattern "Singleton". Esse pattern tem como objetivo garantir que exista apenas uma instância da classe durante o tempo de execução da aplicação, facilitando o gerenciamento e o reuso da conexão com o banco de dados.</p>
+<h3 id="observações"><a class="header" href="#observações">Observações</a></h3>
+<hr />
+<pre><code class="language-php">$config = require __DIR__ . '/config.php';
+</code></pre>
+<p><em>Aqui, o código carrega um arquivo chamado config.php que contém as configurações do banco de dados.</em></p>
+<pre><code class="language-php">if (!isset($config['database']['host'], $config['database']['port'], $config['database']['username'], $config['database']['password'], $config['database']['dbname'])) {
+            throw new Exception("Configuração do banco de dados incompleta");
+        }
+</code></pre>
+<p><em>Aqui, o código verifica se todas as chaves necessárias (host, port, username, password, dbname) existem no array $config['database'].</em></p>
+<pre><code class="language-php"> $dsn = "mysql:host={$config['database']['host']};port={$config['database']['port']};dbname={$config['database']['dbname']};charset=utf8mb4";
+</code></pre>
+<p><em>O DSN é a string usada pelo PDO para conectar ao banco de dados.</em></p>
+<p><em>Host (<code>host</code>), Porta (<code>port</code>), Nome do banco (<code>dbname</code>), Charset (<code>utf8mb4</code>)</em></p>
+<pre><code class="language-php">try {
+    $this-&gt;conn = new PDO($dsn, $config['database']['username'], $config['database']['password'], [
+        PDO::ATTR_ERRMODE =&gt; PDO::ERRMODE_EXCEPTION,
+        PDO::ATTR_DEFAULT_FETCH_MODE =&gt; PDO::FETCH_ASSOC
+    ]);
+} catch (PDOException $e) {
+    throw new Exception("Falha na conexão com o banco de dados: " . $e-&gt;getMessage());
+}
+</code></pre>
+<p><em>Aqui, o código tenta criar uma conexão com o banco de dados usando a classe PDO.</em></p>
+<hr />
+<p>Arquivo: t04-db/config.php</p>
+<pre><code class="language-php">&lt;?php
+return [
+    'database' =&gt; [
+        'host' =&gt; 'localhost',
+        'port' =&gt; '3306',
+        'username' =&gt; 'root',
+        'password' =&gt; '',
+        'dbname' =&gt; 'conex'
+    ]
+];
+</code></pre>
+<blockquote>
+<p><strong>🚨 Para usuários de XAMPP:</strong></p>
+<ul>
+<li>Teste e Validação:</li>
+</ul>
+<ol>
+<li>Salve o arquivo <code>database.php</code> no diretório do seu servidor (htdocs no XAMPP).</li>
+<li>Acesse <code>http://localhost/database.php</code> no navegador.</li>
+<li>Caso a conexão seja bem-sucedida, a página ficará em branco.</li>
+</ol>
+</blockquote>
+<h3 id="implementar-backend-da-view-signupphp-exemplo-do-projeto-conex"><a class="header" href="#implementar-backend-da-view-signupphp-exemplo-do-projeto-conex">Implementar backend da view "signup.php" (<em>exemplo do projeto conex</em>)</a></h3>
+<p>Arquivo: t04-db\view\signup.php</p>
+<pre><code class="language-html">    &lt;form class="form-group" method="POST" action="../src/post-user.php"&gt;
+      &lt;div class="icon"&gt;
+        &lt;img src="../public/img/logo.svg" alt="logo" class="logo" /&gt;
+      &lt;/div&gt;
+
+      &lt;!-- resto do código... --&gt;
+</code></pre>
+<p><em>Com esssa alteração o form de cadastro agora está referenciado ao codigo de controle de cadastro de usuários, seguido do verbo http POST</em></p>
+<hr />
+<p>Arquivo: Arquivo: t04-db\src\post-user.php</p>
+<pre><code class="language-php">&lt;?php
+
+require_once __DIR__ . '/../database.php';
+require_once __DIR__ . '/users.php';
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $name = trim($_POST['name']);
+    $phone = trim($_POST['phone']);
+    $email = trim($_POST['email']);
+    $password = $_POST['password'];
+    $password_confirm = $_POST['password-confirm'];
+
+    if (empty($name) || empty($phone) || empty($email) || empty($password) || empty($password_confirm)) {
+        $_SESSION['error'] = "Todos os campos são obrigatórios!";
+        header("Location: /view/signup.php?error=todos-os-campos-obrigatorios");
+        exit();
+    }
+
+    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        $_SESSION['error'] = "Email inválido!";
+        header("Location: /view/signup.php?error=email-invalido");
+        exit();
+    }
+
+    if ($password !== $password_confirm) {
+        $_SESSION['error'] = "As senhas não coincidem!";
+        header("Location: /view/signup.php?error=confirmação-de-senha-diferente");
+        exit();
+    }
+
+    $database = Database::getInstance();
+    $users = new Users($database);
+
+    if ($users-&gt;checkEmailExists($email)) {
+        $_SESSION['error'] = "Este email já está registrado!";
+        header("Location: /view/signup.php?error=email-ja-registrado");
+        exit();
+    }
+
+    $password_hash = password_hash($password, PASSWORD_ARGON2I);
+
+    if ($users-&gt;createUser($name, $email, $password_hash, $phone)) {
+        $_SESSION['success'] = "Usuário cadastrado com sucesso!";
+        header("Location: /");
+        exit();
+    } else {
+        $_SESSION['error'] = "Erro ao cadastrar o usuário!";
+        header("Location: /view/signup.php?error=erro-ao-cadastrar-usuario");
+        exit();
+    }
+}
+</code></pre>
+<p>Aqui, o código processa o formulário de cadastro de usuários (<code>signup.php</code>) enviado via método POST. Ele valida os dados recebidos, verifica se o e-mail já está cadastrado, cria um novo usuário no banco de dados e redireciona o usuário com mensagens de sucesso ou erro.</p>
+<p><strong>O objetivo principal deste código é:</strong></p>
+<ol>
+<li>
+<p>Processar o formulário de cadastro de usuários.</p>
+</li>
+<li>
+<p>Validar os dados fornecidos pelo usuário (campos obrigatórios, formato de e-mail, confirmação de senha).</p>
+</li>
+<li>
+<p>Verificar se o e-mail já está cadastrado no banco de dados.</p>
+</li>
+<li>
+<p>Criar um novo usuário no banco de dados com os dados fornecidos.</p>
+</li>
+<li>
+<p>Redirecionar o usuário com feedback adequado (sucesso ou erro).</p>
+</li>
+</ol>
+<hr />
+<p>Arquivo: t04-db\src\users.php</p>
+<pre><code class="language-php">class Users
+{
+    private $db;
+
+    public function __construct(Database $db)
+    {
+        $this-&gt;db = $db-&gt;getConnection();
+    }
+
+    public function createUser($username, $email, $password, $phone)
+    {
+        $sql = "INSERT INTO users (username, email, password_hash, phone) VALUES (:username, :email, :password_hash, :phone)";
+        $stmt = $this-&gt;db-&gt;prepare($sql);
+        return $stmt-&gt;execute([
+            ':username' =&gt; $username,
+            ':email' =&gt; $email,
+            ':password_hash' =&gt; $password,
+            ':phone' =&gt; $phone
+        ]);
+    }
+
+    public function checkEmailExists($email)
+    {
+        $sql = "SELECT id FROM users WHERE email = :email";
+        $stmt = $this-&gt;db-&gt;prepare($sql);
+        $stmt-&gt;execute([':email' =&gt; $email]);
+        return $stmt-&gt;fetch() ? true : false;
+    }
+}
+</code></pre>
+<p><em>Aqui, o código define uma classe chamada Users que tem como objetivo gerenciar operações relacionadas a usuários no banco de dados, especificamente a criação de novos usuários e a verificação se um e-mail já está cadastrado.</em></p>
+<h2 id="conclusão"><a class="header" href="#conclusão">Conclusão</a></h2>
+<p>Este tópico abordou de maneira prática a criação, conexão e cadastro de um usuário em um banco de dados.</p>
+<p>O exemplo demonstrou como configurar a conexão ao banco de dados utilizando <code>PDO</code> no <code>PHP</code>, garantindo que a comunicação entre o servidor e o banco seja segura e eficiente. Além disso, o código abordou o processo de cadastro de um novo usuário, incluindo validações de entrada, como a verificação de e-mail e confirmação de senha, bem como a utilização de hashing para armazenamento seguro da senha no banco de dados.</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="boas-práticas-para-desenvolvimento-php-com-gitflow"><a class="header" href="#boas-práticas-para-desenvolvimento-php-com-gitflow">Boas Práticas para Desenvolvimento PHP com GitFlow</a></h1>
+<p>O uso de GitFlow em projetos PHP ajuda a estruturar o desenvolvimento de forma organizada e colaborativa. No entanto, para garantir um fluxo de trabalho eficiente, é essencial adotar boas práticas que mantenham o código padronizado, seguro e funcional.</p>
+<h2 id="organização-do-código-php-no-repositório"><a class="header" href="#organização-do-código-php-no-repositório">Organização do Código PHP no Repositório</a></h2>
+<p><strong>Estrutura recomendada:</strong></p>
+<pre><code class="language-php">/project-root
+│── app/              # Código principal do aplicativo
+│── config/           # Arquivos de configuração
+│── public/           # Pasta pública, incluindo index.php
+│── resources/        # Views, assets, templates
+│── tests/            # Testes unitários e funcionais
+│── vendor/           # Dependências do Composer
+│── .env.example      # Exemplo do arquivo de variáveis de ambiente
+│── composer.json     # Dependências do projeto
+│── README.md         # Documentação do projeto
+</code></pre>
+<p>Manter um README atualizado também é essencial para que novos desenvolvedores compreendam rapidamente o projeto.</p>
+<h2 id="assim-como-foi-explicado-sobre-a-aplicação-do-gitflow-com-html-e-css-o-processo-em-php-segue-a-mesma-lógica"><a class="header" href="#assim-como-foi-explicado-sobre-a-aplicação-do-gitflow-com-html-e-css-o-processo-em-php-segue-a-mesma-lógica">Assim como foi explicado sobre a aplicação do GitFlow com HTML e CSS, o processo em PHP segue a mesma lógica:</a></h2>
+<ul>
+<li>Criação das branches <code>main</code> e <code>develop</code>.</li>
+<li>Desenvolvimento de <code>features</code>.</li>
+<li>Criação de <code>releases</code>.</li>
+<li>Aplicação de <code>hotfixes</code>.</li>
+<li>Realização de <code>pull requests</code>.</li>
+</ul>
+<h2 id="como-aplicar-o-gitflow"><a class="header" href="#como-aplicar-o-gitflow"><a href="./t03-3.4-gitflow-html-css.html">Como aplicar o GitFlow.</a></a></h2>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="documentação-1"><a class="header" href="#documentação-1">Documentação</a></h1>
+<p>Abaixo estão alguns links para aprofundar seus conhecimentos desse tópico.</p>
+<h2 id="manual-do-php"><a class="header" href="#manual-do-php">Manual do php</a></h2>
+<p><a href="https://www.php.net/manual/pt_BR/index.php">Visite o Google</a></p>
+<h2 id="tudo-sobre-o-xampp"><a class="header" href="#tudo-sobre-o-xampp">Tudo sobre o Xampp</a></h2>
+<p><a href="https://www.apachefriends.org/docs/">Visite o Google</a></p>
+<h2 id="mysql"><a class="header" href="#mysql">MySQL</a></h2>
+<p><a href="https://dev.mysql.com/doc/">Visite o Google</a></p>
+<h2 id="instalação"><a class="header" href="#instalação">Instalação</a></h2>
+<p><a href="https://docs.docker.com/desktop/setup/install/windows-install/">Docker (Windows)</a>
+<a href="https://docs.docker.com/desktop/setup/install/linux/ubuntu/">Docker (Ubuntu)</a></p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="sessões-de-usuário-no-navegador"><a class="header" href="#sessões-de-usuário-no-navegador">Sessões de usuário no navegador</a></h1>
+<p>As sessões são um mecanismo do site que permitem que os servidores lembrem de informações sobre um usuário ao longo de várias telas, mesmo em um ambiente onde cada requisição HTTP é, por si só, independente e stateless.</p>
+<h2 id="conceito-de-sessão"><a class="header" href="#conceito-de-sessão">Conceito de sessão</a></h2>
+<ul>
+<li>
+<p>Persistência de estado:<br />
+Sessões permitem que uma experiência personalizada seja mantida enquanto o usuário navega por diferentes páginas de um site, armazenando informações como autenticação, preferências e dados de interação.</p>
+</li>
+<li>
+<p>ID Único:<br />
+Quando o usuário acessa um site, o servidor gera um ID para essa sessão. Esse identificador é usado para associar futuros requests a um conjunto específico de dados armazenados no servidor.</p>
+</li>
+</ul>
+<blockquote>
+<p><strong>Obs: O que é "estado" no contexto de aplicações web?</strong>
+Com "estado" nos referimos às informações que indicam a situação atual de um usuário ou de uma aplicação em um dado momento. Basicamente, é o conjunto de dados que o sistema lembra sobre os usuários enquanto eles navegam no site.</p>
+</blockquote>
+<h2 id="como-funcionam-no-navegador"><a class="header" href="#como-funcionam-no-navegador">Como funcionam no navegador</a></h2>
+<ol>
+<li>
+<p>Criação e armazenamento de sessão:<br />
+Ao acessar um site, o servidor cria uma sessão para o usuário e envia um identificador único de sessão para o navegador. Esse identificador é geralmente armazenado em um cookie.</p>
+</li>
+<li>
+<p>Envio Automático do Cookie:<br />
+Toda vez que você interage com o site, clicando em um link ou preenchendo um formulário, o navegador envia o cookie junto com a requisição. O servidor usa o identificador do cookie para acessar ou atualizar a sessão e assim ajustar as informações conforme suas ações.</p>
+</li>
+<li>
+<p>Atualização do estado:<br />
+Toda vez que o usuário interage com o site (clicando em links, submetendo formulários etc.), o navegador envia o cookie contendo o identificador. O servidor utiliza esse identificador para acessar ou atualizar os dados da sessão, garantindo uma experiência personalizada e a persistência dos estados.</p>
+</li>
+<li>
+<p>Segurança dos Cookies:<br />
+Os cookies de sessão podem contar com atributos como <code>HttpOnly</code> (impede que scripts no navegador acessem o cookie, evitando ataques como o XSS) e <code>Secure</code>(permite que o cookie seja enviado em conexões HTTPS), que ajudam a proteger o seu conteúdo contra ataques e asseguram que os dados só sejam transmitidos através de conexões seguras.</p>
+</li>
+</ol>
+<h2 id="conclusão-1"><a class="header" href="#conclusão-1">Conclusão</a></h2>
+<p>Imagine que você entra em uma biblioteca onde o garçom te entrega um crachá com um número único (seu ID de sessão). Cada vez que você pede um livro (faz uma requisição), você mostra o crachá. Assim, o bibliotecário sabe quais livros você já pegou ou se você tem alguma restrição. No nosso caso, o navegador usa um cookie com o ID da sua sessão para que o servidor lembre de você sempre que visitá-lo.</p>
+<p>Este mecanismo de sessões torna possível que, mesmo que o HTTP não lembre de nada entre as requisições (seja stateless), o site possa manter uma experiência personalizada e contínua para cada usuário.</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="sessões-em-php"><a class="header" href="#sessões-em-php">Sessões em PHP</a></h1>
+<h2 id="o-que-são-sessões-em-php"><a class="header" href="#o-que-são-sessões-em-php">O que são sessões em PHP?</a></h2>
+<p>Uma sessão no PHP, assim como visto no tópico anterior, é uma maneira de armazenar dados temporários enquanto o usuário navega entre as páginas de um site. A sessão é iniciada no servidor e um identificador único é gerado para cada usuário. Este identificador é armazenado no navegador como um cookie por exemplo, permitindo que o PHP associe o usuário a uma sessão específica em futuras requisições.</p>
+<h2 id="como-iniciar-uma-sessão-com-php"><a class="header" href="#como-iniciar-uma-sessão-com-php">Como iniciar uma sessão com PHP</a></h2>
+<p>Para utilizar sessões em PHP, você deve iniciar a sessão com a função <code>session_start()</code>. Essa função deve ser chamada no início de cada página PHP onde você deseja acessar ou manipular os dados da sessão. Lembre-se de que <code>session_start()</code> deve ser chamada antes de qualquer saída HTML ou echo, caso contrário, ocorrerá um erro.</p>
+<pre><code class="language-php">&lt;?php
+session_start();
+?&gt;
+</code></pre>
+<h2 id="armazenando-dados-na-sessão-com-php"><a class="header" href="#armazenando-dados-na-sessão-com-php">Armazenando dados na sessão com PHP</a></h2>
+<p>Após iniciar a sessão, você pode armazenar dados utilizando a superglobal <code>$_SESSION</code>, que é um array associativo. Isso permite que você guarde qualquer tipo de dado durante a sessão, como informações do usuário, configurações, preferências, entre outros.</p>
+<p><strong>Exemplo:</strong></p>
+<pre><code class="language-php">$_SESSION['user_id'] = 123;  // Armazena o ID do usuário
+$_SESSION['username'] = 'Joao';  // Armazena o nome de usuário
+</code></pre>
+<p><em>Esses dados ficam acessíveis em qualquer página onde a sessão esteja iniciada.</em></p>
+<h2 id="acessando-dados-da-sessão-com-php"><a class="header" href="#acessando-dados-da-sessão-com-php">Acessando dados da sessão com PHP</a></h2>
+<p>Você pode acessar os dados armazenados na sessão utilizando a superglobal <code>$_SESSION</code>. Quando você armazena um valor, basta referenciá-lo pelo nome da chave definida.</p>
+<p><strong>Exemplo:</strong></p>
+<pre><code class="language-php">echo 'ID do usuário: ' . $_SESSION['user_id'];
+echo 'Nome de usuário: ' . $_SESSION['username'];
+</code></pre>
+<p><em>Esses valores estarão disponíveis enquanto a sessão estiver ativa.</em></p>
+<h2 id="modificando-dados-da-sessão-com-php"><a class="header" href="#modificando-dados-da-sessão-com-php">Modificando dados da sessão com PHP</a></h2>
+<p>Os dados armazenados na sessão podem ser modificados a qualquer momento. Basta atribuir um novo valor à chave correspondente na superglobal <code>$_SESSION</code>.</p>
+<p><strong>Exemplo:</strong></p>
+<pre><code class="language-php">$_SESSION['username'] = 'Maria';  // Modificando o nome de usuário
+
+</code></pre>
+<h2 id="destruindo-a-sessão-com-php"><a class="header" href="#destruindo-a-sessão-com-php">Destruindo a sessão com PHP</a></h2>
+<p>Quando você não precisa mais dos dados da sessão ou quando o usuário sai da aplicação, você pode destruir a sessão. Isso pode ser feito de duas formas</p>
+<ul>
+<li>Limpar todos os dados da sessão: A função <code>session_unset()</code> remove todas as variáveis de sessão.</li>
+</ul>
+<pre><code class="language-php">session_unset();  // Limpa todos os dados da sessão
+
+</code></pre>
+<ul>
+<li>Destruir a sessão completamente: A função session_destroy() encerra a sessão e apaga os dados no servidor. No entanto, ela não apaga as variáveis de sessão imediatamente, por isso é comum utilizar session_unset() antes de chamar session_destroy().</li>
+</ul>
+<pre><code class="language-php">session_destroy();  // Destroi a sessão completamente
+</code></pre>
+<h2 id="gerenciamento-de-tempo-de-sessão-com-php"><a class="header" href="#gerenciamento-de-tempo-de-sessão-com-php">Gerenciamento de tempo de sessão com PHP</a></h2>
+<p>O PHP permite controlar o tempo de vida da sessão, tanto no lado do servidor quanto no lado do usuário.</p>
+<ul>
+<li>Tempo de expiração da sessão: Para definir o tempo de expiração da sessão, você pode configurar a diretiva <code>session.gc_maxlifetime</code> no arquivo <code>php.in</code>. Essa configuração determina por quanto tempo os dados da sessão podem ficar armazenados no servidor antes de serem considerados expirados.</li>
+</ul>
+<p>No PHP, também é possível configurar a expiração por meio do código, alterando as configurações da sessão:</p>
+<pre><code class="language-php">ini_set('session.gc_maxlifetime', 3600);  // Define 1 hora como tempo de expiração
+
+</code></pre>
+<ul>
+<li>Controle de tempo no lado do cliente: O PHP armazena o identificador da sessão no cliente por meio de um cookie. Você pode configurar o tempo de expiração deste cookie utilizando <code>session.cookie_lifetime</code>.</li>
+</ul>
+<pre><code class="language-php">ini_set('session.cookie_lifetime', 3600);  // Expiração do cookie em 1 hora
+</code></pre>
+<p><strong>Quando se trabalha com sessões, é importante implementar medidas de segurança para evitar ataques como fixação de sessão (session fixation) ou roubo de sessão. Algumas boas práticas incluem:</strong></p>
+<ul>
+<li>Regeneração do ID da sessão: A cada novo login ou ação importante, é recomendado regenerar o ID da sessão para dificultar a captura de uma sessão antiga ou comprometida.</li>
+</ul>
+<pre><code class="language-php">session_regenerate_id(true);  // Regenera o ID da sessão
+
+</code></pre>
+<ul>
+<li>Uso de cookies seguros: Para garantir que o cookie da sessão seja enviado apenas por conexões seguras (HTTPS), ative a opção <code>session.cookie_secure</code> no <code>php.ini</code>.</li>
+</ul>
+<h2 id="conclusão-2"><a class="header" href="#conclusão-2">Conclusão</a></h2>
+<p>As sessões são um recurso fundamental em PHP para armazenar e gerenciar informações durante a navegação do usuário. Elas são amplamente utilizadas para funcionalidades como autenticação de usuários, preferências de navegação e manutenção de dados entre páginas. Com o uso adequado das funções de sessão, você pode garantir uma experiência de usuário eficiente e segura.</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="conex---tópico-05"><a class="header" href="#conex---tópico-05">Conex - tópico 05</a></h1>
+<blockquote>
+<p>Tarefas:</p>
+<ul>
+<li>Implementar Backend para autenticação de usuários registrados.</li>
+</ul>
+</blockquote>
+<blockquote>
+<p>Funcionalidades:</p>
+<ul>
+<li>Login no sistema</li>
+</ul>
+</blockquote>
+<h2 id="visão-do-usuário-1"><a class="header" href="#visão-do-usuário-1">Visão do usuário</a></h2>
+<h3 id="login-no-sistema"><a class="header" href="#login-no-sistema">Login no sistema</a></h3>
+<ul>
+<li>Como um usuário cadastrado, quero preencher o formulário de login, para que eu me autenticar no sistema e acessar todas as funcionalidades exclusivas para usuários logados.</li>
+</ul>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="login-no-sistema-exemplo-do-nosso-projeto-conex"><a class="header" href="#login-no-sistema-exemplo-do-nosso-projeto-conex">Login no sistema (<em>exemplo do nosso projeto conex</em>)</a></h1>
+<h2 id="nosso-exemplo-será-composto-por-três-páginas-principais"><a class="header" href="#nosso-exemplo-será-composto-por-três-páginas-principais">Nosso exemplo será composto por três páginas principais:</a></h2>
+<ul>
+<li>
+<p><code>login.php</code>: Página onde o usuário insere suas credenciais (email de usuário e senha).</p>
+</li>
+<li>
+<p><code>profile.php</code>: Página restrita, acessada somente após o login bem-sucedido.</p>
+</li>
+<li>
+<p><code>login-user.php</code>: Página responsável por processar os dados de login.</p>
+</li>
+</ul>
+<h2 id="vamos-utilizar-a-conexão-e-a-tabela-users-criada-no-exemplo-de-configuração-do-servidor-e-banco-de-dados"><a class="header" href="#vamos-utilizar-a-conexão-e-a-tabela-users-criada-no-exemplo-de-configuração-do-servidor-e-banco-de-dados">Vamos utilizar a conexão e a tabela <code>users</code> criada no <a href="./t04-4.3-php-gitflow.html">exemplo de configuração do servidor e banco de dados</a>.</a></h2>
+<h2 id="página-de-login-loginphp"><a class="header" href="#página-de-login-loginphp">Página de Login (<code>login.php</code>)</a></h2>
+<p>Na página de login, o usuário será solicitado a inserir seu email de e senha. Se as credenciais estiverem corretas, o sistema iniciará uma sessão e redirecionará o usuário para a página restrita (<code>profile.php</code>), se não será redirecionado novamente para o login.php com a mensagem de erro no query params.</p>
+<p>Arquivo: t05-session-php\view\login.php</p>
+<pre><code class="language-html">    &lt;form class="form-group" method="POST" action="../src/login-user.php"&gt;
+        &lt;div class="form-control"&gt;
+            &lt;label for="email"&gt;Email&lt;/label&gt;
+            &lt;input type="email" id="email" name="email" required /&gt;
+        &lt;/div&gt;
+
+        &lt;!--resto do código--&gt;
+</code></pre>
+<p><em>Com esssa alteração o form de login agora está referenciado ao código de controle de login de usuários, seguido do verbo http POST</em></p>
+<hr />
+<p>Arquivo: t05-session-php\src\login-user.php</p>
+<pre><code class="language-php">&lt;?php
+session_start();
+
+require_once __DIR__ . '/../database.php';
+require_once __DIR__ . '/users.php';
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $email = trim($_POST['email']);
+    $password = trim($_POST['password']);
+
+    if (empty($email) || empty($password)) {
+        $_SESSION['error'] = "Todos os campos são obrigatórios!";
+        header("Location: /view/login.php?error=todos-os-campos-obrigatorios");
+        exit();
+    }
+
+    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        $_SESSION['error'] = "Formato de email inválido!";
+        header("Location: /view/login.php?error=formato-de-email-invalido");
+        exit();
+    }
+
+    $database = Database::getInstance();
+    $users = new Users($database);
+
+    $user = $users-&gt;getUserByEmail($email);
+
+    if ($user &amp;&amp; password_verify($password, $user['password_hash'])) {
+        $id = $_SESSION['user_id'] = $user['id'];
+        $_SESSION['user_name'] = $user['username'];
+        $_SESSION['user_email'] = $user['email'];
+        $_SESSION['LAST_ACTIVITY'] = time();
+        $_SESSION['success'] = "Login realizado com sucesso!";
+
+        header("Location: ../view/profile.php?id={$id}&amp;success=login-realizado-com-sucesso");
+        exit();
+    } else {
+        $_SESSION['error'] = "Credenciais inválidas!";
+        header("Location: /view/login.php?error=credencial-errada");
+        exit();
+    }
+}
+</code></pre>
+<p><em>Este código PHP trata o processo de autenticação de usuários com base no formulário de login <code>login.php</code>. Ele verifica se o usuário preencheu o formulário corretamente e valida as credenciais.</em></p>
+<hr />
+<h3 id="observações-1"><a class="header" href="#observações-1">Observações</a></h3>
+<pre><code class="language-php">session_start();
+</code></pre>
+<p><em>Inicia uma nova sessão ou retoma a existente. Isso permite armazenar informações do usuário, como dados de login, em variáveis de sessão.</em></p>
+<hr />
+<pre><code class="language-php">require_once __DIR__ . '/../database.php';
+require_once __DIR__ . '/users.php';
+</code></pre>
+<p><em>Esses arquivos são incluídos para permitir o acesso ao banco de dados e manipulação de usuários.</em></p>
+<hr />
+<pre><code class="language-php">if ($_SERVER["REQUEST_METHOD"] == "POST")
+</code></pre>
+<p><em>Verifica se o método de requisição é POST, ou seja, se o formulário foi enviado.</em></p>
+<hr />
+<pre><code class="language-php"> $email = trim($_POST['email']);
+ $password = trim($_POST['password']);
+</code></pre>
+<p><em>O código coleta e "limpa" os valores do formulário com <code>trim()</code> para remover espaços extras.</em></p>
+<hr />
+<pre><code class="language-php">if (empty($email) || empty($password))
+</code></pre>
+<p><em>Verifica se os campos de email e senha estão vazios e, se sim, define uma mensagem de erro na sessão e redireciona o usuário de volta para a página de login.</em></p>
+<hr />
+<pre><code class="language-php">if ($user &amp;&amp; password_verify($password, $user['password_hash']))
+</code></pre>
+<p><em>Se o usuário for encontrado no banco de dados e a senha fornecida corresponder à senha armazenada (com o <code>password_hash</code>), a autenticação é bem-sucedida.</em></p>
+<hr />
+<pre><code class="language-php"> $id = $_SESSION['user_id'] = $user['id'];
+        $_SESSION['user_name'] = $user['username'];
+        $_SESSION['user_email'] = $user['email'];
+        $_SESSION['LAST_ACTIVITY'] = time();
+        $_SESSION['success'] = "Login realizado com sucesso!";
+
+        header("Location: ../view/profile.php?id={$id}&amp;success=login-realizado-com-sucesso");
+        exit();
+</code></pre>
+<ul>
+<li>
+<p>Se o login for bem-sucedido, as variáveis de sessão são definidas (<code>$_SESSION['user_id']</code>, <code>$_SESSION['user_name']</code>, etc.) com informações do usuário.</p>
+</li>
+<li>
+<p>Define também o tempo de atividade da sessão com <code>$_SESSION['LAST_ACTIVITY'] = time();</code>.</p>
+</li>
+<li>
+<p>Exibe uma mensagem de sucesso e redireciona o usuário para a página de perfil (<code>profile.php</code>).</p>
+</li>
+</ul>
+<hr />
+<pre><code class="language-php">else {
+        $_SESSION['error'] = "Credenciais inválidas!";
+        header("Location: /view/login.php?error=credencial-errada");
+        exit();
+    }
+
+</code></pre>
+<p><em>Se a senha não corresponder ou o usuário não for encontrado, o código define uma mensagem de erro na sessão e redireciona o usuário de volta para a página de login com um aviso de "Credenciais inválidas".</em></p>
+<h2 id="como-mencionado-anteriormente-o-login-do-usuário-está-incluído-em-dois-arquivos-o-database-responsável-pela-conexão-com-o-banco-de-dados-e-o-usersphp-vamos-entender-o-que-está-sendo-utilizado-na-classe-users-para-realizar-o-login"><a class="header" href="#como-mencionado-anteriormente-o-login-do-usuário-está-incluído-em-dois-arquivos-o-database-responsável-pela-conexão-com-o-banco-de-dados-e-o-usersphp-vamos-entender-o-que-está-sendo-utilizado-na-classe-users-para-realizar-o-login">Como mencionado anteriormente, o login do usuário está incluído em dois arquivos: o <code>database</code>, responsável pela conexão com o banco de dados, e o <code>users.php</code>. Vamos entender o que está sendo utilizado na classe users para realizar o login.</a></h2>
+<p>Arquivo: t05-session-php\src\users.php</p>
+<pre><code class="language-php">public function getUserByEmail($email)
+    {
+        $sql = "SELECT id, username, email, password_hash, phone FROM users WHERE email = :email";
+        $stmt = $this-&gt;db-&gt;prepare($sql);
+        $stmt-&gt;execute([':email' =&gt; $email]);
+        return $stmt-&gt;fetch();
+    }
+</code></pre>
+<p><em>Essa função busca um usuário no banco de dados com base no email fornecido. Ela retorna os dados do usuário (como ID, nome de usuário, email, senha e telefone) caso o email exista no banco.</em></p>
+<p><strong>O código de login usa essa função com a linha:</strong></p>
+<pre><code class="language-php">$user = $users-&gt;getUserByEmail($email);
+</code></pre>
+<p><em>Ele chama <code>getUserByEmail()</code> para verificar se um usuário existe com o email fornecido no formulário. Se um usuário for encontrado, seus dados (incluindo a senha) são retornados e usados para verificar a senha fornecida.</em></p>
+<h2 id="conclusão-3"><a class="header" href="#conclusão-3">Conclusão</a></h2>
+<p>Este exemplo básico demonstra como implementar um sistema de login com PHP usando sessões. O PHP facilita a criação de sessões com variáveis globais, permitindo que você armazene dados do usuário enquanto ele navega pelas páginas, tornando a experiência flúida.</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="boas-práticas-para-sessões-em-php"><a class="header" href="#boas-práticas-para-sessões-em-php">Boas Práticas para Sessões em PHP</a></h1>
+<p>As sessões em PHP são uma ferramenta poderosa e amplamente utilizada para armazenar e gerenciar informações de usuários em uma aplicação web. No entanto, como qualquer outro recurso, seu uso inadequado pode trazer sérios riscos de segurança. Vamos abordar algumas boas práticas para o uso de sessões, visando garantir a segurança, eficiência e confiabilidade.</p>
+<h2 id="iniciar-a-sessão-de-forma-segura"><a class="header" href="#iniciar-a-sessão-de-forma-segura">Iniciar a Sessão de Forma Segura</a></h2>
+<ul>
+<li>Iniciar a sessão no início do script: O comando <code>session_start()</code> deve ser chamado antes de qualquer saída para o navegador (como echo, HTML, ou espaços em branco), caso contrário, ocorrerá um erro.</li>
+</ul>
+<hr />
+<ul>
+<li>Verificar a presença de dados de sessão: Sempre que um usuário tentar acessar uma página restrita, verifique se a sessão foi iniciada e se os dados necessários estão presentes.</li>
+</ul>
+<pre><code class="language-php">session_start();
+if (!isset($_SESSION['user_id'])) {
+    header("Location: login.php");
+    exit();
+}
+</code></pre>
+<hr />
+<ul>
+<li>Regeneração do ID da Sessão: Após o login ou em ações críticas, é recomendável regenerar o ID da sessão para evitar ataques de fixação de sessão (session fixation). Isso impede que um atacante use um ID de sessão válido para se passar por outro usuário.</li>
+</ul>
+<pre><code class="language-php">session_regenerate_id(true);
+</code></pre>
+<h2 id="armazenar-dados-sensíveis-de-forma-segura"><a class="header" href="#armazenar-dados-sensíveis-de-forma-segura">Armazenar Dados Sensíveis de Forma Segura</a></h2>
+<ul>
+<li>Evitar armazenar dados sensíveis diretamente: Nunca armazene dados como senhas ou informações confidenciais diretamente na sessão. Em vez disso, armazene apenas informações que identificam o usuário (por exemplo, um ID de usuário) e recupere os dados sensíveis no banco de dados conforme necessário.</li>
+</ul>
+<pre><code class="language-php">$_SESSION['user_id'] = $user['id'];
+</code></pre>
+<hr />
+<ul>
+<li>Usar criptografia: Se for necessário armazenar dados sensíveis na sessão (como preferências ou tokens), utilize criptografia para proteger essas informações. O PHP oferece funções como <code>openssl_encrypt</code> para criptografar dados antes de armazená-los.</li>
+</ul>
+<pre><code class="language-php">$_SESSION['encrypted_data'] = openssl_encrypt($data, 'aes-256-cbc', $key, 0, $iv);
+</code></pre>
+<h2 id="configurar-sessões-para-funcionar-apenas-em-conexões-seguras-https"><a class="header" href="#configurar-sessões-para-funcionar-apenas-em-conexões-seguras-https">Configurar Sessões para Funcionar Apenas em Conexões Seguras (HTTPS)</a></h2>
+<ul>
+<li>Definir cookies de sessão como seguros: Use a opção <code>session.cookie_secure</code> para garantir que o cookie de sessão seja transmitido apenas por HTTPS.</li>
+</ul>
+<pre><code class="language-php">ini_set('session.cookie_secure', 1);
+</code></pre>
+<hr />
+<ul>
+<li>Forçar sessões em HTTPS: Para garantir que todas as páginas de login e áreas sensíveis sejam carregadas por HTTPS, defina uma política de segurança que redirecione os usuários automaticamente para HTTPS, caso estejam acessando via HTTP.</li>
+</ul>
+<pre><code class="language-php">if ($_SERVER['HTTPS'] != 'on') {
+    header('Location: https://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']);
+    exit();
+}
+</code></pre>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="documentação-2"><a class="header" href="#documentação-2">Documentação</a></h1>
+<h2 id="alguns-links-para-aprimorar-o-conhecimento-sobre-sessões"><a class="header" href="#alguns-links-para-aprimorar-o-conhecimento-sobre-sessões">Alguns links para aprimorar o conhecimento sobre sessões.</a></h2>
+<p><a href="https://www.php.net/manual/pt_BR/book.session.php">Manipulação de Sessão com PHP</a></p>
+<p><a href="https://www.php.net/manual/pt_BR/reserved.variables.session.php">$_SESSION</a></p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="crud-com-php"><a class="header" href="#crud-com-php">CRUD com PHP</a></h1>
+<h2 id="o-que-é-crud"><a class="header" href="#o-que-é-crud">o que é CRUD?</a></h2>
+<p>CRUD é um acrônimo para os verbos em inglês: Create, Read, Update e Delete, que se referem a operações básicas de manipulação de dados no backend da aplicação. O "create" refere-se a inserção de dados no banco, o "read" à leitura/recuperação desses dados do banco, o "update" a atualização de dados registrados e o "delete" à deleção destes dados. Esses verbos CRUD estão diretamente ligados aos verbos HTTP (GET, POST, PUT e DELETE), que são usados para definir o tipo de ação que o cliente (navegador ou outra aplicação) deseja realizar no servidor. O client (navegador) envia uma requisição ao servidor, contendo algum verbo http no cabeçalho, o backend processa essa requisição (realiza alguma ação) e envia uma resposta HTTP ao cliente, indicando o resultado desta operação.</p>
+<p>Na comunicação HTTP, cada requisição vem acompanhada de um <em>status code</em> que indica ao cliente como a operação ocorreu. Por exemplo, "201" (Created) é retornado quando um recurso é criado com sucesso, enquanto "200" (OK) confirma o sucesso da requisição. Já "204" (No Content) significa que o servidor processou a requisição e não há conteúdo a retornar. Esses códigos ajudam o client (navegador ou outra aplicação) a entender se a ação foi concluída corretamente ou se houve erro.</p>
+<p>Nos capítulos anteriores vimos como inserir dados no banco com PDO, isso já configuraria o que chamamos de "Create" no CRUD, agora iremos abordar os demais verbos neste capítulo.</p>
+<h2 id="exemplo-fictício"><a class="header" href="#exemplo-fictício">exemplo fictício</a></h2>
+<pre><code class="language-php">function create() {
+    echo "Inserindo dados no banco";
+    http_response_code(201); //status code 201: Created
+}
+
+function read() {
+    echo "Recuperando dados do banco";
+    http_response_code(200); //status code 200: OK
+}
+
+function update() {
+    echo "Atualizando dados no banco";
+    http_response_code(200); //status code 200: OK
+}
+
+function delete() {
+    echo "Deletando dados no banco";
+    http_response_code(204); //status code 204: No Content
+}
+
+//A variável global "$_SERVER" recupera o método da requisição (GET, POST, PUT, DELETE)
+$method = $_SERVER['REQUEST_METHOD'];
+
+//Roteamento básico para simular cada operação CRUD
+switch ($method) {
+    case 'POST':
+        create();
+        break;
+    case 'GET':
+        read();
+        break;
+    case 'PUT':
+        update();
+        break;
+    case 'DELETE':
+        delete();
+        break;
+}
+</code></pre>
+<blockquote>
+<p><strong>🚨 No t07-composer abordaremos na prática os conceitos de um sistema de roteamento em um projeto real</strong></p>
+</blockquote>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="camadas-da-aplicação"><a class="header" href="#camadas-da-aplicação">Camadas da aplicação</a></h1>
+<p>No exemplo prático deste capítulo criaremos um sistema CRUD com PHP dividindo a aplicação em camadas, para tornar o código mais organizado e consequentemente mais fácil de manter a longo prazo. Aplicaremos os conceitos de Controller, DAO e View na arquitetura da nossa aplicação. Porém, antes de implementar, vamos explicar o que são e como se comunicam do momento em que a requisição chega até o retorno dos dados ao usuário.</p>
+<h2 id="controller"><a class="header" href="#controller">Controller</a></h2>
+<p>Camada de controle, que recebe os dados da view (HTML), processa, faz validações de dados e os retorna para o DAO. Funciona como a porta de entrada das requisições. Recebe dados da <strong>View</strong>, valida ou transforma essa informação e decide o que fazer em seguida, por exemplo: criar registros ou buscar dados. Em seguida, faz chamadas ao <strong>DAO</strong> sempre que precisar manipular o banco de dados. Quando obtém uma resposta, o Controller retorna para a View os dados que deverão ser exibidos. O controller jamais deve acessar o banco de dados diretamente ou conter lógica de apresentação.</p>
+<h2 id="dao---data-access-object"><a class="header" href="#dao---data-access-object">DAO - Data Access Object</a></h2>
+<p>Centraliza as operações de banco de dados, executando consultas SQL de criação, leitura, atualização e exclusão, realizadas por métodos específicos (ex.: <code>createUser</code>, <code>getUserById</code>, <code>updateUser</code>, <code>deleteUser</code>) que o Controller chama. Assim, se a lógica de conexão com o banco mudar (ex.: de MySQL para PostgreSQL), é necessário alterar apenas o DAO, sem afetar a camada de controle.</p>
+<h2 id="view"><a class="header" href="#view">View</a></h2>
+<p>Representa a parte visual da aplicação, que é exibida no navegador. Responsável pela lógica de apresentação, receber os inputs do usuário em formulários e/ou fazer o display de dados processados nas outras camadas em páginas, listas, mensagens de erro ou sucesso. Esse fluxo de dados para a view é gerenciado pelo controller, A View em hipótese nenhuma pode ter acesso direto à camada de acesso a dados (DAO) ou aos dados em si.</p>
+<h1 id="exemplo---fluxo-de-comunicação-entre-as-camadas"><a class="header" href="#exemplo---fluxo-de-comunicação-entre-as-camadas">exemplo - fluxo de comunicação entre as camadas:</a></h1>
+<ol>
+<li>Um usuário interage com a <strong>View</strong> (envia um formulário).</li>
+<li>o navegador (client) envia uma requisição HTTP ao servidor (header: POST, body: dados inseridos pelo usuário).</li>
+<li>O <strong>Controller</strong> recebe a requisição, valida os dados e chama o metódo da classe <strong>DAO</strong>.</li>
+<li>O <strong>DAO</strong> acessa o banco, retorna o resultado ao <strong>Controller</strong>.</li>
+<li>O <strong>Controller</strong> pepara uma resposta HTTP para o navegador, contendo o status code, header e o corpo da requisição (um HTML ou Json)</li>
+<li>O navegador interpreta o código de status e os cabeçalhos e renderiza o conteúdo do corpo (HTML, JSON, XML, etc.) para o usuário.</li>
+</ol>
+<p>Desse modo cada camada tem uma responsabilidade bem definida, o que torna o sistema mais modular e escalável.</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="conex---tópico-06"><a class="header" href="#conex---tópico-06">Conex - tópico 06</a></h1>
+<blockquote>
+<p>Tarefas:</p>
+<ul>
+<li>Implementar o Backend de todas as funcionalidades citadas, com divisão de camadas (DAO e Controller)</li>
+<li>Refatorar a camada de view de todas as funcionalidades com a lógica de apresentação</li>
+<li>Adicionar a view de Atualização de perfil do usuário com a lógica de apresentação</li>
+</ul>
+</blockquote>
+<blockquote>
+<p>Funcionalidades:</p>
+<ul>
+<li>Criação de posts no feed</li>
+<li>Exibição dos posts de todos os usuários no feed</li>
+<li>Atualização de perfil do usuário</li>
+<li>Exibir perfil do usuário</li>
+<li>Exibir no perfil do usuário suas respectivas postagens</li>
+</ul>
+</blockquote>
+<h2 id="visão-do-usuário-2"><a class="header" href="#visão-do-usuário-2">Visão do usuário</a></h2>
+<p>Cada feature do Conex foi pensanda para criar uma solução que atenda às expectativas e necessidades dos usuários. Vejamos como cada funcionalidade se conecta à experiência de usuário na prática:</p>
+<h3 id="criação-de-posts-no-feed"><a class="header" href="#criação-de-posts-no-feed">Criação de posts no feed</a></h3>
+<ul>
+<li>Como usuário autenticado, Quero criar e publicar um novo post (por exemplo, com imagem e/ou texto) no meu feed, Para que eu possa compartilhar minhas atualizações e experiências com minha rede.</li>
+</ul>
+<h3 id="exibição-dos-posts-de-todos-os-usuários-no-feed"><a class="header" href="#exibição-dos-posts-de-todos-os-usuários-no-feed">Exibição dos posts de todos os usuários no feed</a></h3>
+<ul>
+<li>Como usuário logado, quero visualizar os posts de todos os usuários em uma única página do feed, para que eu possa acompanhar as novidades e interações da comunidade em tempo real.</li>
+</ul>
+<h3 id="atualização-do-perfil-do-usuário"><a class="header" href="#atualização-do-perfil-do-usuário">Atualização do perfil do usuário</a></h3>
+<ul>
+<li>Como usuário, quero editar minhas informações pessoais (como nome, foto, biografia, e outros dados relevantes), para que meu perfil reflita minhas informações atuais e facilite minha identificação na plataforma.</li>
+</ul>
+<h3 id="exibir-perfil-do-usuário"><a class="header" href="#exibir-perfil-do-usuário">Exibir perfil do usuário</a></h3>
+<ul>
+<li>Como qualquer usuário (ou visitante), quero acessar e visualizar o perfil de outros usuários, para que eu possa conhecer mais sobre eles, suas atividades e potencialmente interagir.</li>
+</ul>
+<h3 id="exibir-no-perfil-do-usuário-suas-respectivas-postagens"><a class="header" href="#exibir-no-perfil-do-usuário-suas-respectivas-postagens">Exibir no perfil do usuário suas respectivas postagens</a></h3>
+<ul>
+<li>Como usuário dono do perfil, quero ver uma listagem organizada de todos os meus posts, para que eu possa gerenciar minhas publicações, revisitar conteúdos antigos ou excluir posts indesejados.</li>
+</ul>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="criação-de-posts-no-feed-1"><a class="header" href="#criação-de-posts-no-feed-1">Criação de posts no feed</a></h1>
+<h2 id="planejamento-arquitetural-do-sistema"><a class="header" href="#planejamento-arquitetural-do-sistema">Planejamento Arquitetural do Sistema</a></h2>
+<ul>
+<li>
+<p>View (profile.php):</p>
+<ul>
+<li>
+<p>Exibe um formulário para o usuário fazer upload de uma foto para o feed.</p>
+</li>
+<li>
+<p>O formulário é exibido apenas para o próprio usuário (não para outros usuários).</p>
+</li>
+<li>
+<p>O formulário envia os dados para o controller (upload-feed.php) via método POST.</p>
+</li>
+</ul>
+</li>
+<li>
+<p>Controller (upload-feed.php):</p>
+<ul>
+<li>
+<p>Recebe os dados do formulário (arquivo de imagem).</p>
+</li>
+<li>
+<p>Valida e processa o upload da imagem.</p>
+</li>
+<li>
+<p>Chama o DAO para persistir os dados no banco.</p>
+</li>
+</ul>
+</li>
+<li>
+<p>DAO (posts-dao.php):</p>
+<ul>
+<li>Executa a query SQL para inserir o post no banco de dados.</li>
+</ul>
+</li>
+</ul>
+<h2 id="na-prática"><a class="header" href="#na-prática">Na prática</a></h2>
+<p>Arquivo: t06-crud-php/view/profile.php</p>
+<pre><code class="language-html">&lt;!-- Formulário de upload de foto (apenas para o próprio usuário) --&gt;
+&lt;?php if ((int)$user_id === (int)$logged_in_user_id): ?&gt;
+&lt;div class="upload-container"&gt;
+  &lt;form
+    action="&lt;?= BASE_URL ?&gt;src/controllers/posts/upload-feed-photo.php"
+    method="POST"
+    enctype="multipart/form-data"
+  &gt;
+    &lt;label for="photo"&gt;
+      &lt;img src="&lt;?= BASE_URL ?&gt;public/img/add-photo.svg" class="icon" /&gt; &lt;br /&gt;
+      Adicionar foto
+    &lt;/label&gt;
+    &lt;input type="file" id="photo" name="photo" accept="image/*" /&gt;
+    &lt;button type="submit" class="btn-upload"&gt;Enviar&lt;/button&gt;
+  &lt;/form&gt;
+&lt;/div&gt;
+&lt;?php endif; ?&gt;
+</code></pre>
+<ul>
+<li>
+<p>Responsabilidade:</p>
+<ul>
+<li>
+<p>Exibe um formulário para upload de fotos no feed.</p>
+</li>
+<li>
+<p>O formulário só é exibido se o usuário logado estiver visualizando seu próprio perfil.</p>
+</li>
+<li>
+<p>O formulário envia o arquivo para o controller (<code>upload-feed.php</code>) via POST.</p>
+</li>
+</ul>
+</li>
+</ul>
+<hr />
+<p>Arquivo: src/controllers/posts/upload-feed.php</p>
+<pre><code class="language-php">&lt;?php
+session_start();
+
+require_once __DIR__ . "/../../dao/posts-dao.php";
+require_once __DIR__ . "/../../../dir-config.php";
+require_once __DIR__ . "/../../utils/upload-handler.php";
+
+if (!isset($_SESSION['user_id'], $_SESSION['user_name'])) {
+    header("Location: " . BASE_URL . "view/login.php");
+    exit;
+}
+
+$user_id = $_SESSION['user_id'];
+$postsDao = new PostsDao();
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST' &amp;&amp; isset($_FILES['photo'])) {
+    $uploadDir = '../../../uploads/feed/';
+    $allowedTypes = ['jpg', 'jpeg', 'png', 'gif'];
+
+    $dbUpdateCallback = function ($photoUrl) use ($user_id, $postsDao) {
+        return $postsDao-&gt;createPost($user_id, $photoUrl);
+    };
+
+    $uploadResult = UploadHandler::handleUpload($_FILES['photo'], $uploadDir, $allowedTypes, $dbUpdateCallback);
+
+    if ($uploadResult['success']) {
+        $_SESSION['success'] = "Foto do feed atualizada com sucesso!";
+    } else {
+        $_SESSION['error'] = $uploadResult['error'];
+    }
+    header("Location: " . BASE_URL . "view/profile.php");
+    exit;
+}
+?&gt;
+</code></pre>
+<ul>
+<li>
+<p>Responsabilidade:</p>
+<ul>
+<li>
+<p>Inicia a sessão e verifica se o usuário está logado.</p>
+</li>
+<li>
+<p>Recebe o arquivo enviado pelo formulário <code>($\_FILES['photo'])</code>.</p>
+</li>
+<li>
+<p>Define o diretório de upload e os tipos de arquivo permitidos.</p>
+</li>
+<li>
+<p>Utiliza o <code>UploadHandler</code> para processar o upload da imagem.</p>
+</li>
+<li>
+<p>Após o upload bem-sucedido, chama o método <code>createPost</code> do DAO para inserir o post no banco de dados.</p>
+</li>
+<li>
+<p>Redireciona o usuário de volta para a página de perfil com uma mensagem de sucesso ou erro.</p>
+</li>
+</ul>
+</li>
+</ul>
+<hr />
+<p>Arquivo: src/dao/posts-dao.php</p>
+<pre><code class="language-php">public function createPost($userId, $photo_url) {
+    $sql = "INSERT INTO posts (user_id, photo_url) VALUES (:userId, :photo_url)";
+    $stmt = $this-&gt;db-&gt;prepare($sql);
+    return $stmt-&gt;execute([':userId' =&gt; $userId, ':photo_url' =&gt; $photo_url]);
+}
+</code></pre>
+<ul>
+<li>
+<p>Responsabilidade:</p>
+<ul>
+<li>
+<p>Executa a query SQL para inserir um novo post na tabela <code>posts</code>.</p>
+</li>
+<li>
+<p>Recebe o ID do usuário e a URL da foto como parâmetros.</p>
+</li>
+<li>
+<p>Retorna <code>true</code> se a inserção for bem-sucedida.</p>
+</li>
+</ul>
+</li>
+</ul>
+<hr />
+<p>Arquivo: src/utils/upload-handler.php</p>
+<pre><code class="language-php">public static function handleUpload($file, $uploadDir, $allowedTypes, $dbUpdateCallback) {
+    if (!is_dir($uploadDir)) {
+        mkdir($uploadDir, 0777, true);
+    }
+    $fileType = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
+
+    if (!in_array($fileType, $allowedTypes)) {
+        return ['success' =&gt; false, 'error' =&gt; "Apenas arquivos " . implode(", ", $allowedTypes) . " são permitidos."];
+    }
+
+    $fileName = uniqid() . '_' . basename($file['name']);
+    $targetFile = $uploadDir . $fileName;
+
+    if (move_uploaded_file($file['tmp_name'], $targetFile)) {
+        $photoUrl = $fileName;
+        $dbUpdateResult = $dbUpdateCallback($photoUrl);
+
+        if ($dbUpdateResult) {
+            return ['success' =&gt; true, 'photoUrl' =&gt; $photoUrl];
+        } else {
+            return ['success' =&gt; false, 'error' =&gt; "Erro ao atualizar o banco de dados."];
+        }
+    } else {
+        return ['success' =&gt; false, 'error' =&gt; "Erro ao fazer upload da imagem."];
+    }
+}
+</code></pre>
+<ul>
+<li>
+<p>Responsabilidade:</p>
+<ul>
+<li>
+<p>Valida o tipo de arquivo e move o arquivo para o diretório de upload.</p>
+</li>
+<li>
+<p>Gera um nome único para o arquivo.</p>
+</li>
+<li>
+<p>Chama o callback (<code>$dbUpdateCallback</code>) para atualizar o banco de dados com a URL da foto.</p>
+</li>
+<li>
+<p>Retorna um array com o status do upload e a URL da foto (em caso de sucesso) ou uma mensagem de erro.</p>
+</li>
+</ul>
+</li>
+</ul>
+<hr />
+<h2 id="fluxo-completo"><a class="header" href="#fluxo-completo">Fluxo Completo</a></h2>
+<ol>
+<li>
+<p>O usuário acessa a página de perfil (<code>profile.php</code>) e vê o formulário de upload de foto (se for o próprio perfil).</p>
+</li>
+<li>
+<p>O usuário seleciona uma imagem e clica em "Enviar".</p>
+</li>
+<li>
+<p>O formulário envia a imagem para o controller (<code>upload-feed.php</code>).</p>
+</li>
+<li>
+<p>O controller processa o upload da imagem usando o <code>UploadHandler</code>.</p>
+</li>
+<li>
+<p>Após o upload, o controller chama o método <code>createPost</code> do DAO para inserir o post no banco de dados.</p>
+</li>
+<li>
+<p>O usuário é redirecionado de volta para a página de perfil com uma mensagem de sucesso ou erro.</p>
+</li>
+</ol>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="exibição-dos-posts-de-todos-os-usuários-no-feed-1"><a class="header" href="#exibição-dos-posts-de-todos-os-usuários-no-feed-1">Exibição dos posts de todos os usuários no feed</a></h1>
+<h2 id="planejamento-arquitetural-do-sistema-1"><a class="header" href="#planejamento-arquitetural-do-sistema-1">Planejamento Arquitetural do Sistema</a></h2>
+<ul>
+<li>
+<p>View (feed.php):</p>
+<ul>
+<li>
+<p>Exibe os posts de todos os usuários em um feed.</p>
+</li>
+<li>
+<p>Itera sobre a lista de posts e renderiza cada um deles com informações como foto de perfil, nome do usuário e imagem do post.</p>
+</li>
+</ul>
+</li>
+<li>
+<p>Controller (get-all-posts.php):</p>
+<ul>
+<li>
+<p>Recupera todos os posts do banco de dados utilizando o DAO.</p>
+</li>
+<li>
+<p>Passa os dados dos posts para a view.</p>
+</li>
+</ul>
+</li>
+<li>
+<p>DAO (posts-dao.php):</p>
+<ul>
+<li>Executa a query SQL para buscar todos os posts, juntamente com as informações do usuário que fez o post.</li>
+</ul>
+</li>
+</ul>
+<h2 id="na-prática-1"><a class="header" href="#na-prática-1">Na prática</a></h2>
+<p>Arquivo: Arquivo: view/feed.php</p>
+<pre><code class="language-html">&lt;?php
+require_once __DIR__ . '/../dir-config.php';
+require_once __DIR__ . '/../src/controllers/posts/get-all-posts.php';
+?&gt;
+
+&lt;!DOCTYPE html&gt;
+&lt;html lang="pt-br"&gt;
+  &lt;head&gt;
+    &lt;meta charset="UTF-8" /&gt;
+    &lt;meta name="viewport" content="width=device-width, initial-scale=1.0" /&gt;
+    &lt;title&gt;Página Principal&lt;/title&gt;
+    &lt;link rel="stylesheet" href="&lt;?= BASE_URL ?&gt;public/css/home.css" /&gt;
+  &lt;/head&gt;
+
+  &lt;body class="home-page"&gt;
+    &lt;?php include __DIR__ . '/components/side-bar.php'; ?&gt;
+
+    &lt;!-- Conteúdo Principal --&gt;
+    &lt;main class="container"&gt;
+      &lt;!-- Seção de Feed de Posts --&gt;
+      &lt;section class="feed"&gt;
+        &lt;?php if ($posts): ?&gt;
+        &lt;!-- Itera sobre cada post --&gt;
+        &lt;?php foreach ($posts as $post): ?&gt;
+        &lt;article class="post"&gt;
+          &lt;!-- Cabeçalho do Post: Informações do Usuário --&gt;
+          &lt;header class="user-info"&gt;
+            &lt;!-- Container da Foto de Perfil --&gt;
+            &lt;div class="avatar" aria-label="Foto do Usuário"&gt;
+              &lt;?php
+                                // Define a foto de perfil do usuário
+                                $profilePhoto = !empty($post['profile_pic_url'])
+                                    ? BASE_URL . 'uploads/' . htmlspecialchars($post['profile_pic_url'])
+                                    : BASE_URL . 'public/img/profile.svg';
+                                ?&gt;
+              &lt;img
+                src="&lt;?= $profilePhoto; ?&gt;"
+                alt="Foto de Perfil"
+                class="profile-picture"
+              /&gt;
+            &lt;/div&gt;
+
+            &lt;!-- Link para o Perfil do Usuário --&gt;
+            &lt;a
+              href="&lt;?= BASE_URL ?&gt;view/profile.php?id=&lt;?= htmlspecialchars($post['user_id'] ?? '') ?&gt;"
+              class="username"
+            &gt;
+              &lt;?= htmlspecialchars($post['username'] ?? '') ?&gt;
+            &lt;/a&gt;
+          &lt;/header&gt;
+
+          &lt;!-- Container da Imagem do Post --&gt;
+          &lt;div class="image-placeholder" aria-label="Imagem do Post"&gt;
+            &lt;?php if (!empty($post['photo_url'])): ?&gt;
+            &lt;!-- Exibe a imagem do post, se houver --&gt;
+            &lt;img
+              src="&lt;?= BASE_URL . 'uploads/feed/' . htmlspecialchars($post['photo_url']) ?&gt;"
+              alt="Imagem do post"
+            /&gt;
+            &lt;?php endif; ?&gt;
+          &lt;/div&gt;
+        &lt;/article&gt;
+
+        &lt;!-- Divisor entre os posts --&gt;
+        &lt;hr class="divider" /&gt;
+        &lt;?php endforeach; ?&gt;
+        &lt;?php else: ?&gt;
+        &lt;p&gt;0 postagens no seu feed&lt;/p&gt;
+        &lt;?php endif; ?&gt;
+      &lt;/section&gt;
+    &lt;/main&gt;
+  &lt;/body&gt;
+&lt;/html&gt;
+</code></pre>
+<ul>
+<li>
+<p>Responsabilidade:</p>
+<ul>
+<li>
+<p>Exibe os posts de todos os usuários.</p>
+</li>
+<li>
+<p>Itera sobre a lista de posts (<code>$posts</code>) e renderiza cada post com:</p>
+<ul>
+<li>
+<p>Foto de perfil do usuário.</p>
+</li>
+<li>
+<p>Nome do usuário (com link para o perfil).</p>
+</li>
+<li>
+<p>Imagem do post.</p>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p>Se não houver posts, exibe uma mensagem informando que não há postagens.</p>
+</li>
+</ul>
+<hr />
+<p>Arquivo: src/controllers/posts/get-all-posts.php</p>
+<pre><code class="language-php">&lt;?php
+require __DIR__ . '/../../dao/posts-dao.php';
+
+if (!isset($_SESSION['user_id'])) {
+    header("Location: " . BASE_URL . "view/login.php");
+    exit;
+}
+
+try {
+    $postsDao = new PostsDao();
+    $posts = $postsDao-&gt;getAllPosts();
+} catch (PDOException $e) {
+    die("Erro ao buscar dados: " . $e-&gt;getMessage());
+}
+</code></pre>
+<ul>
+<li>
+<p>Responsabilidade:</p>
+<ul>
+<li>
+<p>Verifica se o usuário está logado (caso contrário, redireciona para a página de login).</p>
+</li>
+<li>
+<p>Instancia o <code>PostsDao</code> e chama o método <code>getAllPosts</code> para recuperar todos os posts.</p>
+</li>
+<li>
+<p>Em caso de erro, exibe uma mensagem de erro.</p>
+</li>
+</ul>
+</li>
+</ul>
+<hr />
+<p>Arquivo: src/dao/posts-dao.php</p>
+<pre><code class="language-php">public function getAllPosts() {
+    $sql = "SELECT p.id, p.photo_url, p.user_id, p.upload_date, p.description, u.username, u.profile_pic_url
+            FROM posts p
+            JOIN users u ON p.user_id = u.id
+            ORDER BY p.upload_date DESC";
+
+    $stmt = $this-&gt;db-&gt;prepare($sql);
+    $stmt-&gt;execute();
+    return $stmt-&gt;fetchAll(PDO::FETCH_ASSOC);
+}
+</code></pre>
+<ul>
+<li>
+<p>Responsabilidade:</p>
+<ul>
+<li>
+<p>Executa uma query SQL para buscar todos os posts, juntamente com as informações do usuário que fez o post (nome e foto de perfil).</p>
+</li>
+<li>
+<p>Ordena os posts pela data de upload (do mais recente para o mais antigo).</p>
+</li>
+<li>
+<p>Retorna um array associativo com os dados dos posts.</p>
+</li>
+</ul>
+</li>
+</ul>
+<hr />
+<h2 id="fluxo-completo-1"><a class="header" href="#fluxo-completo-1">Fluxo Completo</a></h2>
+<ol>
+<li>
+<p>O usuário acessa a página de feed (<code>feed.php</code>).</p>
+</li>
+<li>
+<p>O controller (<code>get-all-posts.php</code>) é chamado para recuperar os posts do banco de dados.</p>
+</li>
+<li>
+<p>O controller utiliza o DAO (<code>posts-dao.php</code>) para buscar todos os posts.</p>
+</li>
+<li>
+<p>Os dados dos posts são passados para a view (<code>feed.php</code>).</p>
+</li>
+<li>
+<p>A view itera sobre os posts e renderiza cada um deles com as informações do usuário e a imagem do post.</p>
+</li>
+<li>
+<p>Se não houver posts, a view exibe uma mensagem informando que não há postagens.</p>
+</li>
+</ol>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="atualização-de-perfil-do-usuário"><a class="header" href="#atualização-de-perfil-do-usuário">Atualização de perfil do usuário</a></h1>
+<p>Neste tópico, vamos entender como as camadas DAO, Controller e View se comunicam no contexto real de implementação de uma feature, exemplificado pelos arquivos "profile-update.php", "update-user.php" e "user-dao.php".</p>
+<h2 id="planejamento-arquitetural-do-sistema-2"><a class="header" href="#planejamento-arquitetural-do-sistema-2">Planejamento Arquitetural do sistema</a></h2>
+<ul>
+<li>View: Exibirá um formulário para edição dos dados do usuário, com os dados dele já setados como value dos inputs</li>
+<li>Controller: armazenará os resultados nos inputs no HTML em variáreis e passará para a camada de DAO por referência nos seus metodos</li>
+<li>DAO: executará queries SQL para persistir esses dados no banco.</li>
+</ul>
+<h2 id="na-prática-2"><a class="header" href="#na-prática-2">Na prática</a></h2>
+<p>Arquivo: t06-crud-php/view/profile-update.php</p>
+<pre><code class="language-php">&lt;?php
+require_once __DIR__ . "/../dir-config.php";
+require_once __DIR__ . "/../src/controllers/users/update-user.php";
+//echo $id;
+?&gt;
+&lt;!DOCTYPE html&gt;
+&lt;html lang="pt-BR"&gt;
+
+&lt;head&gt;
+    &lt;meta charset="UTF-8"&gt;
+    &lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;
+    &lt;title&gt;Atualizar Perfil&lt;/title&gt;
+    &lt;link rel="stylesheet" href="&lt;?= BASE_URL ?&gt;public/css/profile-update.css"&gt;
+&lt;/head&gt;
+
+&lt;body&gt;
+    &lt;?php include __DIR__ . '/components/side-bar.php'; ?&gt;  
+
+    &lt;div class="form-container"&gt;
+        &lt;h1&gt;Atualize seu perfil&lt;/h1&gt;
+        &lt;form method="POST" action="&lt;?= BASE_URL ?&gt;src/controllers/users/update-user.php?id=&lt;?= $id ?&gt;" class="form-group" enctype="multipart/form-data"&gt;
+            &lt;div class="form-wrapper"&gt;
+                &lt;div class="form-control"&gt;
+                    &lt;label for="username"&gt;Nome: &lt;/label&gt;
+                    &lt;input type="text" name="username" value="&lt;?= htmlspecialchars($user['username']) ?&gt;" id="username"/&gt;
+                &lt;/div&gt;
+                &lt;div class="form-control"&gt;
+                    &lt;label for="phone"&gt;Telefone: &lt;/label&gt;
+                    &lt;input type="tel" name="phone" value="&lt;?= htmlspecialchars($user['phone']) ?&gt;" id="phone"/&gt;
+                &lt;/div&gt;
+                &lt;div class="form-control"&gt;
+                    &lt;label for="email"&gt;Email: &lt;/label&gt;
+                    &lt;input type="email" name="email" value="&lt;?= htmlspecialchars($user['email']) ?&gt;" id="email"/&gt;
+                &lt;/div&gt;
+                &lt;div class="form-control"&gt;
+                    &lt;label for="bio"&gt;Bio: &lt;/label&gt;
+                    &lt;input type="text" name="bio" value="&lt;?= htmlspecialchars($user['bio'] || "") ?&gt;" id="bio" /&gt;
+                &lt;/div&gt;
+            &lt;/div&gt;
+            &lt;div class="form-control"&gt;
+                &lt;label for="profile_pic"&gt;Foto de Perfil: &lt;/label&gt;
+                &lt;input type="file" name="profile_pic_url" id="profile_pic_url" accept="image/*" /&gt;
+            &lt;/div&gt;
+            &lt;div class="btn-wrapper"&gt;
+                &lt;button class="btn" name="edit"&gt;Confirmar&lt;/button&gt;
+            &lt;/div&gt;
+            &lt;div class="btn-wrapper"&gt;
+                &lt;button class="btn btn-danger" name="delete" onclick="return confirm('Tem certeza que deseja excluir sua conta? Esta ação não pode ser desfeita.');"&gt;
+                    Deletar Usuário
+                &lt;/button&gt;
+                &lt;button class="btn btn-danger" name="logout" onclick="return confirm('Tem certeza que deseja sair?');"&gt;
+                    Sair
+                &lt;/button&gt;
+            &lt;/div&gt;
+        &lt;/form&gt; 
+    &lt;/div&gt;
+&lt;/body&gt;
+
+&lt;/html&gt;
+</code></pre>
+<ul>
+<li><strong>Exibe um formulário HTML</strong> contendo os inputs preenchidos com os dados atuais do usuário (como nome, e-mail, telefone, bio e foto de perfil).</li>
+<li><strong>Inclui o atributo <code>enctype="multipart/form-data"</code></strong> para possibilitar o upload de arquivos (foto de perfil).</li>
+<li><strong>Define a ação do formulário</strong> para o controller de atualização, enviando os dados via método POST.</li>
+<li><strong>Renderiza a barra lateral</strong> e demais componentes de layout para manter a consistência visual da aplicação.</li>
+</ul>
+<p>Ao enviar o formulário, os dados e o arquivo (imagem) são enviados para o <em>update-user.php</em>.</p>
+<hr />
+<p>Arquivo: t06-crud-php/src/controllers/users/update-user.php</p>
+<pre><code class="language-php">&lt;?php
+session_start();
+
+require_once __DIR__ . "/../../../dir-config.php";
+require_once __DIR__ . "/../../dao/user-dao.php";
+require_once __DIR__ . "/../../../database.php";
+require_once __DIR__ . "/../../utils/upload-handler.php";
+
+$userDao = new UserDao();
+
+if (!isset($_GET["id"])) {
+    die("Parâmetro user_id não informado.");
+}
+
+$id = $_GET["id"];
+
+$user = $userDao-&gt;getUserProfileById($id);
+
+if (!$user) {
+    die("Usuário não encontrado.");
+}
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    if (isset($_POST['edit'])) {
+        $name = trim($_POST['username']);
+        $email = trim($_POST['email']);
+        $phone = trim($_POST['phone']);
+        $bio = trim($_POST['bio']);
+
+        if (isset($_FILES['profile_pic_url']) &amp;&amp; $_FILES['profile_pic_url']['error'] === UPLOAD_ERR_OK) {
+            $uploadDir = __DIR__ . "/../../../uploads/avatars/";
+            $allowedTypes = ['jpg', 'jpeg', 'png', 'gif'];
+
+            $dbUpdateCallback = function ($photoUrl) use ($id, $userDao) {
+                return $userDao-&gt;updateProfilePic($photoUrl, $id);
+            };
+
+            $uploadResult = UploadHandler::handleUpload($_FILES['profile_pic_url'], $uploadDir, $allowedTypes, $dbUpdateCallback);
+
+            if (!$uploadResult['success']) {
+                die($uploadResult['error']);
+            }
+        }
+
+        try {
+            $userDao-&gt;updateUser($name, $email, $bio, $phone, $id);
+            $_SESSION['user_name'] = $name;
+            header("Location: " . BASE_URL . "view/profile.php?id=$id");
+            exit;
+        } catch (Exception $e) {
+            echo 'Erro: ' . $e-&gt;getMessage();
+        }
+    } else if(isset($_POST['delete'])) {
+        try {
+            $userDao-&gt;deleteUser($id);
+            session_destroy();
+            header("Location: " . BASE_URL . "view/login.php");
+            exit;
+        } catch (Exception $e) {
+            echo 'Erro: ' . $e-&gt;getMessage();
+        }
+    } else if (isset($_POST['logout'])) {
+        session_destroy();
+        header("Location: " . BASE_URL . "view/login.php");
+        exit;
+    }
+}
+</code></pre>
+<p>O arquivo <code>update-user.php</code> é responsável por:</p>
+<ul>
+<li><strong>Iniciar a sessão</strong> com <code>session_start()</code> para garantir que os dados do usuário estejam disponíveis.</li>
+<li><strong>Incluir dependências importantes</strong>, como as classes do DAO, o arquivo de configuração (<code>dir-config.php</code>), e o <em>upload-handler</em> para processar o arquivo enviado.</li>
+</ul>
+<h3 id="fluxo-do-controller"><a class="header" href="#fluxo-do-controller">Fluxo do Controller:</a></h3>
+<ol>
+<li>
+<p><strong>Verificação de parâmetros:</strong></p>
+<ul>
+<li>O controller certifica-se de que o parâmetro <code>id</code> (identificador do usuário a ser atualizado) está definido.</li>
+<li>Recupera os dados atuais do usuário usando o método <code>getUserProfileById</code> do UserDao.</li>
+</ul>
+</li>
+<li>
+<p><strong>Processamento da requisição:</strong></p>
+<ul>
+<li>Caso o método HTTP seja POST, o controller identifica qual ação será executada:
+<ul>
+<li>
+<p><strong>Editar o perfil (<code>edit</code>)</strong>:</p>
+<ul>
+<li>Extrai os dados enviados pelo formulário (nome, e-mail, telefone, bio).</li>
+<li><strong>Verifica se há um arquivo para upload</strong> (campo <code>profile_pic_url</code>), e em caso afirmativo, chama o <em>upload-handler</em> que:
+<ul>
+<li>Processa o arquivo (valida extensão, move para o diretório correto).</li>
+<li>Utiliza um callback para atualizar a foto de perfil no banco de dados (por meio do método <code>updateProfilePic</code> do DAO).</li>
+</ul>
+</li>
+<li>Após o upload (se houver) e a validação dos dados, o controller chama o método <code>updateUser</code>, que executa a query SQL para atualizar o registro.</li>
+<li>Atualiza variáveis de sessão (por exemplo, o nome do usuário) e redireciona para a página de perfil com um status de sucesso.</li>
+</ul>
+</li>
+<li>
+<p><strong>Deletar o usuário (<code>delete</code>)</strong>:</p>
+<ul>
+<li>Caso o usuário opte por excluir a conta, o controller chama o método <code>deleteUser</code>, destrói a sessão e redireciona para a tela de login.</li>
+</ul>
+</li>
+<li>
+<p><strong>Logout (<code>logout</code>)</strong>:</p>
+<ul>
+<li>Se o usuário optar por sair da aplicação, o controller encerra a sessão e redireciona para a página de login.</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p><strong>Tratamento de erros:</strong></p>
+<ul>
+<li>Caso ocorra alguma exceção (por exemplo, erro de upload ou na execução de uma query SQL), o controller imprime a mensagem de erro para auxiliar na depuração.</li>
+</ul>
+</li>
+</ol>
+<hr />
+<p>Arquivo: t06-crud-php/src/dao/user-dao.php</p>
+<pre><code class="language-php">    public function getUserProfileById($id)
+    {
+        $query = "SELECT id, username, email, phone, bio, profile_pic_url, count_followers, count_following FROM users WHERE id = :id";
+        $stmt = $this-&gt;db-&gt;prepare($query);
+        $stmt-&gt;execute([':id' =&gt; $id]);
+
+        return $stmt-&gt;fetch();
+    }
+</code></pre>
+<ul>
+<li><strong>getUserProfileById($id)</strong>
+Recupera os dados id, username, email, phone, bio, profile_pic_url, count_followers, count_following referente ao perfil do usuário apartir do seu id.</li>
+</ul>
+<pre><code class="language-php">    public function updateProfilePic($profilePicUrl, $id): bool {
+        $query = "UPDATE users SET profile_pic_url = :profile_pic_url WHERE id = :id";
+        $stmt = $this-&gt;db-&gt;prepare($query);
+        return $stmt-&gt;execute([":profile_pic_url" =&gt; $profilePicUrl, ":id" =&gt; $id]);
+    }
+</code></pre>
+<ul>
+<li><strong>updateProfilePic($profilePicUrl, $id):</strong><br />
+Método específico para atualização da foto de perfil, este método recebe a url da imagem processada e executa uma query para persistir o valor no campo <code>profile_pic_url</code> da tabela users.</li>
+</ul>
+<pre><code class="language-php">    public function updateUser($username, $email, $bio, $phone, $id): bool
+    {
+        $query = "UPDATE users SET username = :username, email = :email, bio = :bio, phone = :phone WHERE id = :id";
+        $stmt = $this-&gt;db-&gt;prepare($query);
+        $stmt-&gt;execute([":username"  =&gt; $username,":email" =&gt; $email,":bio"=&gt; $bio,":phone" =&gt; $phone,":id"=&gt; $id ]);
+        return true;
+    }
+</code></pre>
+<ul>
+<li><strong>updateUser($username, $email, $bio, $phone, $id):</strong><br />
+Atualiza os dados básicos do usuário (nome, e-mail, bio, telefone) através de uma query SQL.</li>
+</ul>
+<pre><code class="language-php">    public function deleteUser($id): bool
+    {
+        $query = "DELETE FROM users WHERE id = :id";
+        $stmt = $this-&gt;db-&gt;prepare($query);
+        $stmt-&gt;execute([':id' =&gt; $id]);
+
+        return true;
+    }
+</code></pre>
+<ul>
+<li><strong>deleteUser($id):</strong><br />
+Remove o registro do usuário do banco, sendo ativado quando o usuário opta por excluir sua conta.</li>
+</ul>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="exibir-perfil-do-usuário-1"><a class="header" href="#exibir-perfil-do-usuário-1">Exibir perfil do usuário</a></h1>
+<h2 id="planejamento-arquitetural-do-sistema-3"><a class="header" href="#planejamento-arquitetural-do-sistema-3">Planejamento Arquitetural do Sistema</a></h2>
+<ul>
+<li>
+<p>View (profile.php):</p>
+<ul>
+<li>
+<p>Exibe as informações do perfil do usuário, como nome, foto de perfil, bio, número de seguidores, número de usuários seguidos e posts do usuário.</p>
+</li>
+<li>
+<p>Renderiza os componentes de layout, como a barra lateral e o formulário de upload de foto (apenas para o próprio usuário).</p>
+</li>
+</ul>
+</li>
+<li>
+<p>Controller (profile-user.php):</p>
+<ul>
+<li>
+<p>Recupera os dados do perfil do usuário e seus posts utilizando o DAO.</p>
+</li>
+<li>
+<p>Passa os dados para a view.</p>
+</li>
+</ul>
+</li>
+<li>
+<p>DAO (user-dao.php e posts-dao.php):</p>
+<ul>
+<li>Executa as queries SQL para buscar as informações do usuário e seus posts.</li>
+</ul>
+</li>
+</ul>
+<h2 id="na-prática-3"><a class="header" href="#na-prática-3">Na Prática</a></h2>
+<p>Arquivo: view/profile.php</p>
+<pre><code class="language-html">&lt;?php
+require_once __DIR__ . "/../dir-config.php";
+require_once __DIR__ . '/../src/controllers/users/profile-user.php';
+?&gt;
+
+&lt;!DOCTYPE html&gt;
+&lt;html lang="en"&gt;
+  &lt;head&gt;
+    &lt;meta charset="UTF-8" /&gt;
+    &lt;meta name="viewport" content="width=device-width, initial-scale=1.0" /&gt;
+    &lt;title&gt;Perfil&lt;/title&gt;
+    &lt;link rel="stylesheet" href="&lt;?= BASE_URL ?&gt;public/css/profile.css" /&gt;
+  &lt;/head&gt;
+
+  &lt;body&gt;
+    &lt;?php include __DIR__ . '/components/side-bar.php'; ?&gt;
+
+    &lt;main class="profile-container"&gt;
+      &lt;!-- Seção de informações do usuário --&gt;
+      &lt;section class="info-section"&gt;
+        &lt;div class="photo-container"&gt;
+          &lt;!-- Exibe a foto de perfil do usuário --&gt;
+          &lt;img
+            src="&lt;?= $profilePhoto; ?&gt;"
+            alt="Foto de Perfil"
+            class="profile-picture"
+          /&gt;
+
+          &lt;!-- Botão de edição de perfil (apenas para o próprio usuário) --&gt;
+          &lt;?php if ((int)$user_id === (int)$logged_in_user_id): ?&gt;
+          &lt;button class="btn-edit"&gt;
+            &lt;a href="&lt;?= BASE_URL ?&gt;view/profile-update.php?id=&lt;?= $user_id; ?&gt;"
+              &gt;Editar Perfil&lt;/a
+            &gt;
+          &lt;/button&gt;
+          &lt;?php endif; ?&gt;
+        &lt;/div&gt;
+
+        &lt;div class="user-info"&gt;
+          &lt;!-- Exibe o nome do usuário --&gt;
+          &lt;h1 class="user-name"&gt;&lt;?php echo $userName; ?&gt;&lt;/h1&gt;
+          &lt;div class="stats-container"&gt;
+            &lt;!-- Exibe o número de seguidores e usuários seguidos --&gt;
+            &lt;span class="following"
+              &gt;&lt;?= $following; ?&gt;
+              seguindo&lt;/span
+            &gt;
+            &lt;span class="followers"
+              &gt;&lt;?= $followers; ?&gt;
+              seguidores&lt;/span
+            &gt;
+          &lt;/div&gt;
+
+          &lt;!-- Formulário para seguir/deixar de seguir (apenas para outros usuários) --&gt;
+          &lt;?php if ((int)$user_id !== (int)$logged_in_user_id): ?&gt;
+          &lt;form method="POST"&gt;
+            &lt;input
+              type="hidden"
+              name="action"
+              value="&lt;?= $isFollowing ? 'unfollow' : 'follow' ?&gt;"
+            /&gt;
+            &lt;button type="submit" class="btn-follow"&gt;
+              &lt;?= $isFollowing ? 'Deixar de seguir' : 'Seguir' ?&gt;
+            &lt;/button&gt;
+          &lt;/form&gt;
+          &lt;?php endif; ?&gt;
+        &lt;/div&gt;
+
+        &lt;!-- Botão de postagem (apenas para o próprio usuário) --&gt;
+        &lt;?php if ((int)$user_id === (int)$logged_in_user_id &amp;&amp; !empty($userPosts)): ?&gt;
+        &lt;div class="upload-more-photos"&gt;
+          &lt;div class="upload-container"&gt;
+            &lt;form
+              action="&lt;?= BASE_URL ?&gt;src/controllers/posts/upload-feed-photo.php"
+              method="POST"
+              enctype="multipart/form-data"
+            &gt;
+              &lt;label for="photo-top"&gt; Adicionar foto &lt;/label&gt;
+              &lt;input type="file" id="photo-top" name="photo" accept="image/*" /&gt;
+              &lt;button type="submit" class="btn-upload"&gt;Enviar&lt;/button&gt;
+            &lt;/form&gt;
+          &lt;/div&gt;
+        &lt;/div&gt;
+        &lt;?php endif; ?&gt;
+      &lt;/section&gt;
+
+      &lt;!-- Seção da foto do feed --&gt;
+      &lt;section class="info-section"&gt;
+        &lt;div class="feed-photo-container"&gt;
+          &lt;?php if ($userPosts): ?&gt;
+          &lt;?php
+                    if (isset($userPosts[0]['photo_url'])) {
+                        $relativePath = BASE_URL . "uploads/feed/" . htmlspecialchars($userPosts[0]['photo_url']);
+                        ?&gt;
+          &lt;img
+            src="&lt;?= $relativePath; ?&gt;"
+            alt="Imagem do Feed"
+            class="feed-image"
+          /&gt;
+          &lt;?php } ?&gt;
+          &lt;?php endif; ?&gt;
+        &lt;/div&gt;
+
+        &lt;!-- Formulário de upload de foto (apenas para o próprio usuário e se não houver foto) --&gt;
+        &lt;?php if (empty($userPosts) &amp;&amp; (int)$user_id === (int)$logged_in_user_id): ?&gt;
+        &lt;div class="pai-do-upload-container"&gt;
+          &lt;div class="upload-container"&gt;
+            &lt;form
+              action="&lt;?= BASE_URL ?&gt;src/controllers/posts/upload-feed-photo.php"
+              method="POST"
+              enctype="multipart/form-data"
+            &gt;
+              &lt;label for="photo"&gt;
+                &lt;img
+                  src="&lt;?= BASE_URL ?&gt;public/img/add-photo.svg"
+                  class="icon"
+                /&gt;
+                &lt;br /&gt;
+                Adicionar foto
+              &lt;/label&gt;
+              &lt;input type="file" id="photo" name="photo" accept="image/*" /&gt;
+              &lt;button type="submit" class="btn-upload"&gt;Enviar&lt;/button&gt;
+            &lt;/form&gt;
+          &lt;/div&gt;
+        &lt;/div&gt;
+        &lt;?php endif; ?&gt;
+      &lt;/section&gt;
+    &lt;/main&gt;
+  &lt;/body&gt;
+&lt;/html&gt;
+</code></pre>
+<ul>
+<li>
+<p>Responsabilidade:</p>
+<ul>
+<li>
+<p>Exibe as informações do perfil do usuário, como nome, foto de perfil, bio, número de seguidores e usuários seguidos.</p>
+</li>
+<li>
+<p>Renderiza os posts do usuário (se houver).</p>
+</li>
+<li>
+<p>Exibe um formulário de upload de foto apenas para o próprio usuário.</p>
+</li>
+<li>
+<p>Inclui a barra lateral e outros componentes de layout.</p>
+</li>
+</ul>
+</li>
+</ul>
+<hr />
+<p>Arquivo: src/controllers/users/profile-user.php</p>
+<pre><code class="language-php">&lt;?php
+require_once __DIR__ . '/../../../database.php';
+require_once __DIR__ . '/../../dao/follow-dao.php';
+require_once __DIR__ . '/../../dao/user-dao.php';
+require_once __DIR__ . '/../../../dir-config.php';
+require_once __DIR__ . '/../../dao/posts-dao.php';
+require_once __DIR__ . "/../../utils/follow-handler.php";
+
+session_start();
+if (!isset($_SESSION['user_id'])) {
+    header("Location: " . BASE_URL . "view/login.php");
+    exit;
+}
+
+$user_id = isset($_GET['id']) ? intval($_GET['id']) : $_SESSION['user_id'];
+$logged_in_user_id = $_SESSION['user_id'];
+
+$userDao = new UserDao();
+$user = $userDao-&gt;getUserProfileById($user_id);
+
+if (!$user) {
+    die("&lt;p&gt;Usuário não encontrado.&lt;/p&gt;");
+}
+
+$userName = $user['username'];
+$profilePhoto = !empty($user['profile_pic_url'])
+    ? BASE_URL . 'uploads/avatars/' . htmlspecialchars($user['profile_pic_url'])
+    : BASE_URL . 'public/img/profile.svg';
+
+$followDao = new FollowDao();
+$isFollowing = $followDao-&gt;isFollowing($user_id, $logged_in_user_id);
+
+$followers = $followDao-&gt;getFollowers($user_id);
+$following = $followDao-&gt;getFollowing($user_id);
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST' &amp;&amp; isset($_POST['action'])) {
+    $action = $_POST['action'];
+
+    $followHandler = new FollowHandler();
+    $followHandler-&gt;handleFollow($user_id, $logged_in_user_id, $isFollowing, $action);
+}
+
+$postsDao = new PostsDao();
+$userPosts = $postsDao-&gt;getPostsById($user_id);
+
+$userProfileData = [
+    'username' =&gt; htmlspecialchars($user['username']),
+    'user_id' =&gt; $user_id,
+    'logged_in_user_id' =&gt; $logged_in_user_id,
+    'profile_Pic_Url' =&gt; htmlspecialchars($profilePhoto ?? ''),
+    'is_Following' =&gt; $isFollowing,
+    'followers' =&gt; $followers,
+    'following' =&gt; $following,
+    'bio' =&gt; htmlspecialchars($user['bio'] ?? ''),
+    'photos' =&gt; $userPosts,
+];
+?&gt;
+</code></pre>
+<ul>
+<li>
+<p>Responsabilidade:</p>
+<ul>
+<li>
+<p>Inicia a sessão e verifica se o usuário está logado.</p>
+</li>
+<li>
+<p>Recupera o ID do usuário a partir da URL ou da sessão.</p>
+</li>
+<li>
+<p>Busca as informações do perfil do usuário utilizando o UserDao.</p>
+</li>
+<li>
+<p>Verifica se o usuário logado está seguindo o perfil exibido.</p>
+</li>
+<li>
+<p>Busca o número de seguidores e usuários seguidos.</p>
+</li>
+<li>
+<p>Busca os posts do usuário utilizando o PostsDao.</p>
+</li>
+<li>
+<p>Passa os dados para a view.</p>
+</li>
+</ul>
+</li>
+</ul>
+<hr />
+<p>Arquivo: src/dao/user-dao.php</p>
+<pre><code class="language-php">public function getUserProfileById($id) {
+    $query = "SELECT id, username, email, phone, bio, profile_pic_url, count_followers, count_following FROM users WHERE id = :id";
+    $stmt = $this-&gt;db-&gt;prepare($query);
+    $stmt-&gt;execute([':id' =&gt; $id]);
+
+    return $stmt-&gt;fetch();
+}
+</code></pre>
+<ul>
+<li>
+<p>Responsabilidade:</p>
+<ul>
+<li>
+<p>Executa uma query SQL para buscar as informações do perfil do usuário (nome, e-mail, telefone, bio, foto de perfil, número de seguidores e usuários seguidos).</p>
+</li>
+<li>
+<p>Retorna um array associativo com os dados do usuário.</p>
+</li>
+</ul>
+</li>
+</ul>
+<hr />
+<p>Arquivo: src/dao/posts-dao.php</p>
+<pre><code class="language-php">public function getPostsById($userId) {
+    $sql = "SELECT p.id, p.photo_url, p.upload_date, p.description, u.username, u.profile_pic_url
+            FROM posts p
+            JOIN users u ON p.user_id = u.id
+            WHERE p.user_id = :userId
+            ORDER BY p.upload_date DESC";
+
+    $stmt = $this-&gt;db-&gt;prepare($sql);
+    $stmt-&gt;execute([':userId' =&gt; $userId]);
+    return $stmt-&gt;fetchAll(PDO::FETCH_ASSOC);
+}
+</code></pre>
+<ul>
+<li>
+<p>Responsabilidade:</p>
+<ul>
+<li>
+<p>Executa uma query SQL para buscar os posts do usuário, juntamente com as informações do usuário que fez o post.</p>
+</li>
+<li>
+<p>Ordena os posts pela data de upload (do mais recente para o mais antigo).</p>
+</li>
+<li>
+<p>Retorna um array associativo com os dados dos posts.</p>
+</li>
+</ul>
+</li>
+</ul>
+<hr />
+<h2 id="fluxo-completo-2"><a class="header" href="#fluxo-completo-2">Fluxo Completo</a></h2>
+<ol>
+<li>
+<p>O usuário acessa a página de perfil (<code>profile.php</code>).</p>
+</li>
+<li>
+<p>O controller (<code>profile-user.php</code>) é chamado para recuperar os dados do perfil e os posts do usuário.</p>
+</li>
+<li>
+<p>O controller utiliza o <code>UserDao</code> para buscar as informações do perfil e o <code>PostsDao</code> para buscar os posts.</p>
+</li>
+<li>
+<p>Os dados são passados para a view (<code>profile.php</code>).</p>
+</li>
+<li>
+<p>A view renderiza as informações do perfil e os posts do usuário</p>
+</li>
+</ol>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="exibir-no-perfil-do-usuário-suas-respectivas-postagens-1"><a class="header" href="#exibir-no-perfil-do-usuário-suas-respectivas-postagens-1">Exibir no perfil do usuário suas respectivas postagens</a></h1>
+<h2 id="planejamento-arquitetural-do-sistema-4"><a class="header" href="#planejamento-arquitetural-do-sistema-4">Planejamento Arquitetural do Sistema</a></h2>
+<ul>
+<li>
+<p>View (profile.php):</p>
+<ul>
+<li>
+<p>Exibe as postagens do usuário em uma seção específica do perfil.</p>
+</li>
+<li>
+<p>Renderiza cada post com a imagem, data de upload e descrição (se houver).</p>
+</li>
+</ul>
+</li>
+<li>
+<p>Controller (profile-user.php):</p>
+<ul>
+<li>
+<p>Recupera as postagens do usuário utilizando o DAO.</p>
+</li>
+<li>
+<p>Passa os dados das postagens para a view.</p>
+</li>
+</ul>
+</li>
+<li>
+<p>DAO (posts-dao.php):</p>
+<ul>
+<li>Executa a query SQL para buscar as postagens do usuário, juntamente com as informações do usuário que fez o post.</li>
+</ul>
+</li>
+</ul>
+<h2 id="na-prática-4"><a class="header" href="#na-prática-4">Na Prática</a></h2>
+<p>Arquivo: view/profile.php</p>
+<pre><code class="language-html">&lt;!-- Seção de Feed de Posts --&gt;
+&lt;section class="info-section"&gt;
+  &lt;?php if ($userPosts): ?&gt;
+  &lt;!-- Itera sobre cada post do usuário --&gt;
+  &lt;?php foreach ($userPosts as $post): ?&gt;
+  &lt;div class="feed-photo-container"&gt;
+    &lt;?php if (!empty($post['photo_url'])): ?&gt;
+    &lt;!-- Exibe a imagem do post --&gt;
+    &lt;img
+      src="&lt;?= BASE_URL . 'uploads/feed/' . htmlspecialchars($post['photo_url']) ?&gt;"
+      alt="Imagem do post"
+      class="feed-image"
+    /&gt;
+    &lt;?php endif; ?&gt;
+
+    &lt;!-- Exibe a descrição do post (se houver) --&gt;
+    &lt;?php if (!empty($post['description'])): ?&gt;
+    &lt;p class="post-description"&gt;
+      &lt;?= htmlspecialchars($post['description']) ?&gt;
+    &lt;/p&gt;
+    &lt;?php endif; ?&gt;
+
+    &lt;!-- Exibe a data de upload do post --&gt;
+    &lt;p class="post-date"&gt;
+      Postado em:
+      &lt;?= date('d/m/Y H:i', strtotime($post['upload_date'])) ?&gt;
+    &lt;/p&gt;
+  &lt;/div&gt;
+  &lt;?php endforeach; ?&gt;
+  &lt;?php else: ?&gt;
+  &lt;!-- Mensagem caso o usuário não tenha postagens --&gt;
+  &lt;p&gt;Nenhuma postagem encontrada.&lt;/p&gt;
+  &lt;?php endif; ?&gt;
+&lt;/section&gt;
+</code></pre>
+<ul>
+<li>
+<p>Responsabilidade:</p>
+<ul>
+<li>
+<p>Exibe as postagens do usuário em uma seção específica do perfil.</p>
+</li>
+<li>
+<p>Itera sobre a lista de postagens ($userPosts) e renderiza cada post com:</p>
+<ul>
+<li>
+<p>Imagem do post.</p>
+</li>
+<li>
+<p>Descrição do post (se houver).</p>
+</li>
+<li>
+<p>Data de upload do post.</p>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p>Se não houver postagens, exibe uma mensagem informando que não há postagens.</p>
+</li>
+</ul>
+<hr />
+<p>Arquivo: src/controllers/users/profile-user.php</p>
+<pre><code class="language-php">&lt;?php
+// ... (código anterior para buscar informações do perfil)
+
+$postsDao = new PostsDao();
+$userPosts = $postsDao-&gt;getPostsById($user_id);
+
+$userProfileData = [
+    // ... (outros dados do perfil)
+    'photos' =&gt; $userPosts, // Passa as postagens para a view
+];
+?&gt;
+</code></pre>
+<ul>
+<li>
+<p>Responsabilidade:</p>
+<ul>
+<li>
+<p>Após buscar as informações do perfil, o controller utiliza o PostsDao para buscar as postagens do usuário.</p>
+</li>
+<li>
+<p>Passa os dados das postagens para a view.</p>
+</li>
+</ul>
+</li>
+</ul>
+<hr />
+<p>Arquivo: src/dao/posts-dao.php</p>
+<pre><code class="language-php">public function getPostsById($userId) {
+    $sql = "SELECT p.id, p.photo_url, p.upload_date, p.description, u.username, u.profile_pic_url
+            FROM posts p
+            JOIN users u ON p.user_id = u.id
+            WHERE p.user_id = :userId
+            ORDER BY p.upload_date DESC";
+
+    $stmt = $this-&gt;db-&gt;prepare($sql);
+    $stmt-&gt;execute([':userId' =&gt; $userId]);
+    return $stmt-&gt;fetchAll(PDO::FETCH_ASSOC);
+}
+</code></pre>
+<ul>
+<li>
+<p>Responsabilidade:</p>
+<ul>
+<li>
+<p>Executa uma query SQL para buscar as postagens do usuário, juntamente com as informações do usuário que fez o post.</p>
+</li>
+<li>
+<p>Ordena os posts pela data de upload (do mais recente para o mais antigo).</p>
+</li>
+<li>
+<p>Retorna um array associativo com os dados dos posts.</p>
+</li>
+</ul>
+</li>
+</ul>
+<hr />
+<h2 id="fluxo-completo-3"><a class="header" href="#fluxo-completo-3">Fluxo Completo</a></h2>
+<ol>
+<li>
+<p>O usuário acessa a página de perfil (<code>profile.php</code>).</p>
+</li>
+<li>
+<p>O controller (<code>profile-user.php</code>) é chamado para recuperar os dados do perfil e as postagens do usuário.</p>
+</li>
+</ol>
+<p>3.O controller utiliza o <code>PostsDao</code> para buscar as postagens do usuário.</p>
+<ol start="4">
+<li>
+<p>Os dados das postagens são passados para a view (<code>profile.php</code>).</p>
+</li>
+<li>
+<p>A view renderiza as postagens do usuário em uma seção específica do perfil.</p>
+</li>
+</ol>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+
+            </nav>
+
+        </div>
+
+        <!-- Livereload script (if served using the cli tool) -->
+        <script>
+            const wsProtocol = location.protocol === 'https:' ? 'wss:' : 'ws:';
+            const wsAddress = wsProtocol + "//" + location.host + "/" + "__livereload";
+            const socket = new WebSocket(wsAddress);
+            socket.onmessage = function (event) {
+                if (event.data === "reload") {
+                    socket.close();
+                    location.reload();
+                }
+            };
+
+            window.onbeforeunload = function() {
+                socket.close();
+            }
+        </script>
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+        <script>
+        window.addEventListener('load', function() {
+            window.setTimeout(window.print, 100);
+        });
+        </script>
+
+    </div>
+    </body>
+</html>

@@ -9,7 +9,8 @@ class Routes{
     public static function getRouter(){
         return [
             'get' => [
-                '/search' => 'site\SearchController@search'
+                '/search' => 'site\SearchController@search',
+                '/' => 'site\FeedController@show'
             ],
             'post' => [
                 
@@ -35,7 +36,7 @@ class Routes{
                 ],
                 'feed' => [
                     'get' => [
-                        '/{user_id}' => 'site\FeedController@show'
+                        //'/{user_id}' => 'site\FeedController@show'
                     ],
                     'post' => [
                         '/{user_id}/store' => 'site\FeedController@store'

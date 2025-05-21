@@ -1,0 +1,16 @@
+{
+    "name": "conex/t08-mvc",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Conex\\T08MVC\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "lauroolim",
+            "email": "lauroolimota743@gmail.com"
+        }
+    ],
+    "require": {}
+}
