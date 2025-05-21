@@ -153,12 +153,33 @@
 
                 <div id="content" class="content">
                     <main>
-                        <h1 id="introdução"><a class="header" href="#introdução">Introdução</a></h1>
+                        <h1 id="guia-básico-de-conteúdos-para-a-disciplina-de-engenharia-de-software"><a class="header" href="#guia-básico-de-conteúdos-para-a-disciplina-de-engenharia-de-software">Guia Básico de Conteúdos para a Disciplina de Engenharia de Software</a></h1>
+<p>Por Lauro Oliveira Mota, Mara Emanuella Carvalho Martins e Edeilson Milhomem da Silva, 2025</p>
+<p>Esta edição assume que você tem instalado em sua máquina as ferramentas PHP 8+, Composer e Docker (opcional) nas versões mais recentes (2025).</p>
+<p>Este material está disponível online em <a href="https://disciplinas-prof-edeilson-uft.github.io/eng-soft-geral/">Guia de Engenharia de Software</a> ou pode ser compilada localmente com o mdBook. Para isso, basta executar:</p>
+<pre><code class="language-bash">$ cd guia-mdbook
+$ mdbook serve --open
+</code></pre>
+<p>Certifique-se de ter o mdBook instalado via:</p>
+<pre><code class="language-bash">$ cargo install mdbook
+</code></pre>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="prefácio"><a class="header" href="#prefácio">Prefácio</a></h1>
+<p>Este material nasceu da experiência de quem já tropeçou em conflitos de Git, dúvidas em Code Review e desafios para manter um padrão de arquitetura. Nosso objetivo foi construir um “companheiro de estudos” que:</p>
+<ul>
+<li>Integra teoria e prática em um fluxo contínuo, apresentando snapshots progressivos de um mesmo projeto para ilustrar os conceitos de cada capítulo.</li>
+<li>Permite que você acompanhe cada etapa do desenvolvimento do sistema, desde a configuração inicial até features completas.</li>
+</ul>
+<p>Agradecemos a todos que contribuíram com feedback e sugestões. Esperamos que este guia seja inspirador na jornada de desenvolvimento do seu projeto, e que ele o ajude a evoluir como profissional e a desenvolver softwares cada vez melhores.</p>
+<hr />
+<ul>
+<li>Lauro Oliveira Mota, Mara Emanuella Carvalho Martins e Edeilson Milhomem da Silva, 2025</li>
+</ul>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="introdução"><a class="header" href="#introdução">Introdução</a></h1>
 <p>Seja bem-vindo(a) a este guia prático e teórico de Engenharia de Software!<br />
 Aqui você encontrará:</p>
 <ol>
-<li>Um <strong>mdBook</strong> organizado em capítulos curtos, com explicações claras sobre Git/GitHub, Code Review, GitFlow, PHP, CRUD, sessões e muito mais.</li>
-<li>Um <strong>projeto evolutivo</strong> em PHP/HTML/CSS que mostra, passo a passo, como aplicar cada conceito em um sistema web completo,</li>
+<li>Um mdBook organizado em capítulos curtos, com explicações claras sobre Git/GitHub, Code Review, GitFlow, PHP, CRUD, sessões e muito mais.</li>
+<li>Um projeto evolutivo em PHP/HTML/CSS que mostra, passo a passo, como aplicar cada conceito em um sistema web chamado <strong>Conex</strong>, uma rede social fictícia.</li>
 </ol>
 <p>À medida que avança, você alternará entre teoria e prática, visualizando imediatamente o resultado no navegador:</p>
 <p><img src="" alt="Tela de Login" /><br />
@@ -169,24 +190,17 @@ Figura 2. Feed de Posts dos usuários</p>
 Figura 3. Página de Perfil com opções de edição e follow</p>
 <h2 id="para-quem-é-este-guia"><a class="header" href="#para-quem-é-este-guia">Para quem é este guia?</a></h2>
 <p>Este guia é voltado para estudantes que desejam aprimorar suas habilidades em Engenharia de Software, Git/GitHub, Code Review, GitFlow e PHP. Ele é especialmente útil para aqueles que estão iniciando sua jornada na programação e desejam aprender de forma prática e aplicada. Se você nunca programou nada antes, este guia também é para você.</p>
-<blockquote>
-<p>Dica: clone este repositório, acesse <code>guia-mdbook/</code> e execute</p>
-<pre><code class="language-bash">mdbook serve --open
-</code></pre>
-<p>para navegar no guia localmente.</p>
-</blockquote>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="prefácio"><a class="header" href="#prefácio">Prefácio</a></h1>
-<p>Este material nasceu da experiência de quem já tropeçou em conflitos de Git, dúvidas em Code Review e desafios para manter um padrão de arquitetura. Nosso objetivo foi construir um “companheiro de estudos” que:</p>
+<h2 id="como-usar-este-guia"><a class="header" href="#como-usar-este-guia">Como usar este guia?</a></h2>
 <ul>
-<li>Integra conceito e código em um mesmo fluxo.</li>
-<li>Permite que você acompanhe cada etapa do desenvolvimento do sistema, desde a configuração inicial até features completas.</li>
+<li><strong>Estude os conceitos</strong>: Leia cada capítulo e entenda os conceitos apresentados.</li>
+<li><strong>Experimente</strong>: Acompanhe o desenvolvimento do projeto Conex, entrando nas pastas referentes ao capítulo que você está lendo e rode o código localmente.</li>
+<li><strong>Pratique</strong>: Aplique os conceitos aprendidos em projetos pessoais ou acadêmicos.</li>
+<li><strong>Contribua</strong>: Se você encontrar erros ou tiver sugestões, sinta-se à vontade para contribuir com o guia. Sua participação é muito bem-vinda!</li>
 </ul>
-<p>Agradecemos a todos que contribuíram com feedback e sugestões. Esperamos que este guia seja inspirador na jornada de desenvolvimento do seu projeto, e que ele o ajude a evoluir como profissional e a construir softwares cada vez melhores.</p>
-<hr />
-<p>Material elaborado por Lauro Oliveira Mota, Mara Emanuella Carvalho Martins e Edeilson Milhomem da Silva, 2025</p>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="guia-básico-de-conteúdos-para-a-disciplina-de-engenharia-de-software"><a class="header" href="#guia-básico-de-conteúdos-para-a-disciplina-de-engenharia-de-software">Guia Básico de Conteúdos para a Disciplina de Engenharia de Software</a></h1>
+<p>Bons estudos e boas práticas!</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="guia-básico-de-conteúdos-para-a-disciplina-de-engenharia-de-software-1"><a class="header" href="#guia-básico-de-conteúdos-para-a-disciplina-de-engenharia-de-software-1">Guia Básico de Conteúdos para a Disciplina de Engenharia de Software</a></h1>
 <h1 id="capítulo-1--utilizando-git-e-github"><a class="header" href="#capítulo-1--utilizando-git-e-github">Capítulo 1 – Utilizando Git e GitHub</a></h1>
-<p>Você já se perguntou como equipes espalhadas pelo mundo conseguem colaborar em um mesmo projeto de software sem perder o controle das mudanças? É aí que entram o Git e o GitHub. Neste capítulo, iremos abordar esses dois conceitos, que não são a mesma coisa e entender por que eles são essenciais e como funcionam na prática. Sem entrar ainda nos comandos, vamos descobrir o contexto e o propósito de cada etapa.</p>
+<p>Você já se perguntou como equipes espalhadas pelo mundo conseguem colaborar em um mesmo projeto de software sem perder o controle das mudanças? É aí que entram o Git e o GitHub. Neste capítulo, iremos abordar esses dois conceitos, que não são a mesma coisa, e entender por que eles são essenciais e como funcionam na prática. Sem entrar ainda nos comandos, vamos descobrir o contexto e o propósito de cada etapa.</p>
 <h2 id="100-introdução-ao-git-e-github"><a class="header" href="#100-introdução-ao-git-e-github">1.0.0. Introdução ao Git e GitHub</a></h2>
 <p>Imagine o Git como um livro de registros que anota cada detalhe do seu código: quem fez a mudança, quando e por quê. Ele é um sistema de controle de versões distribuído, ou seja, cada desenvolvedor tem sua própria cópia completa do repositório e pode trabalhar offline sem perder histórico ou dados. Isso significa que, mesmo que você esteja longe da internet, pode fazer alterações e depois sincronizar tudo quando voltar.</p>
 <p>Já o GitHub é a estante na nuvem onde você guarda esse livro. Nele, você compartilha seu repositório, revisa código em conjunto com a equipe e gerencia o projeto de forma colaborativa.</p>
@@ -257,7 +271,7 @@ Figura 3. Página de Perfil com opções de edição e follow</p>
 <p>São muitos nomes e conceitos novos, não é mesmo? Mas não se preocupe! Vamos explorar cada um deles em detalhes nos próximos capítulos. O importante agora é entender que o Git e o GitHub são ferramentas poderosas que facilitam a colaboração e o controle de versões no desenvolvimento de software. Com eles, você estará pronto para enfrentar qualquer desafio em equipe!</p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="capítulo-1--utilizando-git-e-github-1"><a class="header" href="#capítulo-1--utilizando-git-e-github-1">Capítulo 1 – Utilizando Git e GitHub</a></h1>
 <h2 id="11-principais-comandos-git-na-prática"><a class="header" href="#11-principais-comandos-git-na-prática">1.1 Principais comandos Git na prática</a></h2>
-<p>Agora que você entendeu os conceitos básicos lá na seção 1.0, vamos colocar a mão na massa e ver como usar cada comando no dia a dia.</p>
+<p>Agora que você entendeu os conceitos básicos na seção 1.0, vamos ver na prática como usar cada um desses comando, e como eles se aplicam no dia a dia de um desenvolvedor.</p>
 <h2 id="110-configurações-iniciais"><a class="header" href="#110-configurações-iniciais">1.1.0. Configurações iniciais</a></h2>
 <p>Antes de tudo, o Git precisa saber quem é você. Abra o terminal (Git Bash no Windows) e configure seu nome e e-mail:</p>
 <pre><code class="language-bash">git config --global user.name "Seu Nome"
@@ -571,18 +585,19 @@ Segue um passo a passo bem definido: checklist, testes, documentação do feedba
 </li>
 </ul>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="capítulo-3---aplicando-o-gitflow-no-git-e-github-com-html-e-css"><a class="header" href="#capítulo-3---aplicando-o-gitflow-no-git-e-github-com-html-e-css">Capítulo 3 - Aplicando o GitFlow no Git e GitHub com html e css</a></h1>
-<p>Neste capítulo, vamos criar um site usando HTML e CSS, que será uma versão estática de uma rede social chamada "Conex". Ao longo dos capítulos deste guia,transformaremos essa rede social estática em uma aplicação funcional, seguindo as boas práticas de desenvolvimento web com php, js, html e css. Mas afinal, o que são HTML e CSS?</p>
+<p>Neste capítulo, vamos dar início à nossa rede social “Conex” usando apenas HTML e CSS. Ao longo dos capítulos deste guia,transformaremos essa rede social, até então, estática em uma aplicação funcional, seguindo as boas práticas de desenvolvimento web com PHP, JS, HTML e CSS. Mas afinal, o que são HTML e CSS?</p>
 <h2 id="300-html---hyper-text-markup-language"><a class="header" href="#300-html---hyper-text-markup-language">3.0.0 HTML - Hyper Text Markup Language</a></h2>
 <p>HTML é como o "esqueleto" de qualquer página web. Ele define a estrutura e o conteúdo de um site, permitindo a criação de elementos como parágrafos, links, imagens, listas e muito mais. A criação destes elementos é feita apartir de tags (marcações de hiper-texto) que são interpretados pelo browser.</p>
 <p>Quando você digita uma URL (https://www.conex.com) no navegador (cliente), ele inicia uma comunicação com o servidor onde este site está hospedado. Essa comunicação é feita usando o protocolo HTTP (HyperText Transfer Protocol) ou sua versão com criptografia SSL (HTTPS).</p>
 <p>Requisição (Request): O navegador envia uma requisição HTTP (verbo GET) ao servidor, solicitando o recurso, neste caso, uma página HTML.</p>
 <p>Resposta (Response): O servidor processa a requisição e envia uma resposta HTTP de volta ao browser. Essa resposta contém o código HTML da página, além de outros recursos como CSS, JavaScript, imgs, etc.</p>
 <blockquote>
-<p><strong>🚨 No t07-mvc abordaremos de maneira prática a arquitetura request/response na comunicação entre clientes e servidores</strong></p>
+<p><strong>🚨 No t08-mvc abordaremos de maneira prática a arquitetura request/response na comunicação entre clientes e servidores</strong></p>
 </blockquote>
 <h2 id="301-css---cascading-style-sheets"><a class="header" href="#301-css---cascading-style-sheets">3.0.1 CSS - Cascading Style Sheets</a></h2>
 <p>CSS é responsável pela apresentação e estilo dos elementos HTML. Ele permite definir cores, fontes, tamanhos, layouts e outros aspectos visuais, garantindo que o site tenha uma aparência agradável ao usuário final.</p>
 <p>O CSS funciona através de seletores e propriedades. Um seletor é usado para selecionar os elementos HTML que você deseja estilizar, e as propriedades definem como esses elementos devem ser estilizados.</p>
+<p>Por exemplo, você pode usar um seletor para selecionar todos os parágrafos (<code>&lt;p&gt;</code>) em uma página e aplicar uma cor de texto e um tamanho de fonte específicos a eles.</p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="31-o-que-é-o-gitflow"><a class="header" href="#31-o-que-é-o-gitflow">3.1 O que é o <a href="https://gist.github.com/paulo-raoni/1a8f52138f67fd40379f454ee61aa4ce">GitFlow</a>?</a></h1>
 <p>O <strong>GitFlow</strong> é uma estratégia de ramificação (<em>branching</em>) para gerenciar o desenvolvimento de projetos de software utilizando o <strong>Git</strong>. Criado por <strong>Vincent Driessen</strong>, o GitFlow organiza o processo de desenvolvimento em diferentes tipos de branches, o que facilita a colaboração entre equipes e o controle de versões. Ele define um conjunto de regras que especifica quando e como criar novas branches para diferentes tarefas, como desenvolvimento de novas funcionalidades, correções de bugs e lançamentos de versões.</p>
 <h2 id="310-estrutura-do-gitflow"><a class="header" href="#310-estrutura-do-gitflow">3.1.0 Estrutura do GitFlow</a></h2>

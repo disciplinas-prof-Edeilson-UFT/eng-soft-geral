@@ -1,8 +1,11 @@
 # Guia Básico de Conteúdos para a Disciplina de Engenharia de Software
 
-[Introdução](./intro.md)
+[Guia Básico de Conteúdos para a Disciplina de Engenharia de Software](./guia.md)
 
 [Prefácio](./00-prefacio.md)	
+
+[Introdução](./intro.md)
+
 
 - [Capítulo 1 - Utilizando Git e GitHub](./t01-1.0-git-github.md)
 
