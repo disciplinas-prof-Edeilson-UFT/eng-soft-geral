@@ -1,22 +1,31 @@
-# Summary
+# Guia Básico de Conteúdos para a Disciplina de Engenharia de Software
 
-- [Utilizando Git e GitHub](./t01-1.0-git-github.md)
+[Guia Básico de Conteúdos para a Disciplina de Engenharia de Software](./guia.md)
+
+[Prefácio](./00-prefacio.md)	
+
+[Introdução](./intro.md)
+
+
+- [Capítulo 1 - Utilizando Git e GitHub](./t01-1.0-git-github.md)
 
   - [Principais comandos Git](./t01-1.1-git-github.md)
 
-- [Code Review e Pull Request](./t02-2.0-code-review.md)
+  - [Referências do capítulo](./t01-1.2-git-github.md)
 
-  - [O que é um Code Review?](./t02-2.1-code-review.md)
+- [Capítulo 2 - Code Review e Pull Request](./t02-2.0-code-review.md)
 
-  - [Como realizar um Code Review eficaz no GitHub](./t02-2.2-code-review.md)
+  - [Afinal, o que é Pull Request?](./t02-2.1-code-review.md)
 
-  - [O que é um Pull Request?](./t02-2.3-code-review.md)
+  - [Criando um Pull Request no GitHub](./t02-2.2-code-review.md)
 
-  - [Criando um Pull Request no GitHub](./t02-2.4-code-review.md)
+  - [Code Review](./t02-2.3-code-review.md)
 
-  - [Documentação](./t02-2.5-code-review.md)
+  - [Como realizar um Code Review eficaz no GitHub](./t02-2.4-code-review.md)
 
-- [Aplicando o GitFlow no Git e GitHub com html e css](./t03-3.0-gitflow-html-css.md)
+  - [Referências do capítulo](./t02-2.5-code-review.md)
+
+- [Capítulo 3 - Aplicando o GitFlow no Git e GitHub com html e css](./t03-3.0-gitflow-html-css.md)
 
   - [Oque é o GitFlow](./t03-3.1-gitflow-html-css.md)
 
@@ -28,7 +37,7 @@
 
   - [Documentação](./t03-3.5-gitflow-html-css.md)
 
-- [Introdução ao PHP Básico aplicando GitFlow no GitHub](./t04-4.0-php-gitflow.md)
+- [Capítulo 4 - Introdução ao PHP Básico aplicando GitFlow no GitHub](./t04-4.0-php-gitflow.md)
 
   - [Como instalar o PHP no Window](./t04-4.1-php-gitflow.md)
 
@@ -48,7 +57,7 @@
 
   - [Documentação](./t04-4.6-php-gitflow.md)
 
-- [Sessões de usuário no navegador](./t05-5.0-session-php.md)
+- [Capítulo 5 - Sessões de usuário no navegador](./t05-5.0-session-php.md)
 
   - [Sessões em PHP](./t05-5.1-session-php.md)
 
@@ -60,7 +69,7 @@
 
   - [Documentação](./t05-5.4-session-php.md)
 
-- [CRUD com PHP](./t06-6.0-crud-php.md)
+- [Capítulo 6 - CRUD com PHP](./t06-6.0-crud-php.md)
 
   - [Camadas da aplicação](t06-6.1-crud-php.md)
 

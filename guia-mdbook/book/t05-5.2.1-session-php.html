@@ -1,0 +1,368 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Login no sistema</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="highlight.css">
+        <link rel="stylesheet" href="tomorrow-night.css">
+        <link rel="stylesheet" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="toc.js"></script>
+    </head>
+    <body>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title"></h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="login-no-sistema-exemplo-do-nosso-projeto-conex"><a class="header" href="#login-no-sistema-exemplo-do-nosso-projeto-conex">Login no sistema (<em>exemplo do nosso projeto conex</em>)</a></h1>
+<h2 id="nosso-exemplo-será-composto-por-três-páginas-principais"><a class="header" href="#nosso-exemplo-será-composto-por-três-páginas-principais">Nosso exemplo será composto por três páginas principais:</a></h2>
+<ul>
+<li>
+<p><code>login.php</code>: Página onde o usuário insere suas credenciais (email de usuário e senha).</p>
+</li>
+<li>
+<p><code>profile.php</code>: Página restrita, acessada somente após o login bem-sucedido.</p>
+</li>
+<li>
+<p><code>login-user.php</code>: Página responsável por processar os dados de login.</p>
+</li>
+</ul>
+<h2 id="vamos-utilizar-a-conexão-e-a-tabela-users-criada-no-exemplo-de-configuração-do-servidor-e-banco-de-dados"><a class="header" href="#vamos-utilizar-a-conexão-e-a-tabela-users-criada-no-exemplo-de-configuração-do-servidor-e-banco-de-dados">Vamos utilizar a conexão e a tabela <code>users</code> criada no <a href="./t04-4.3-php-gitflow.html">exemplo de configuração do servidor e banco de dados</a>.</a></h2>
+<h2 id="página-de-login-loginphp"><a class="header" href="#página-de-login-loginphp">Página de Login (<code>login.php</code>)</a></h2>
+<p>Na página de login, o usuário será solicitado a inserir seu email de e senha. Se as credenciais estiverem corretas, o sistema iniciará uma sessão e redirecionará o usuário para a página restrita (<code>profile.php</code>), se não será redirecionado novamente para o login.php com a mensagem de erro no query params.</p>
+<p>Arquivo: t05-session-php\view\login.php</p>
+<pre><code class="language-html">    &lt;form class="form-group" method="POST" action="../src/login-user.php"&gt;
+        &lt;div class="form-control"&gt;
+            &lt;label for="email"&gt;Email&lt;/label&gt;
+            &lt;input type="email" id="email" name="email" required /&gt;
+        &lt;/div&gt;
+
+        &lt;!--resto do código--&gt;
+</code></pre>
+<p><em>Com esssa alteração o form de login agora está referenciado ao código de controle de login de usuários, seguido do verbo http POST</em></p>
+<hr />
+<p>Arquivo: t05-session-php\src\login-user.php</p>
+<pre><code class="language-php">&lt;?php
+session_start();
+
+require_once __DIR__ . '/../database.php';
+require_once __DIR__ . '/users.php';
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $email = trim($_POST['email']);
+    $password = trim($_POST['password']);
+
+    if (empty($email) || empty($password)) {
+        $_SESSION['error'] = "Todos os campos são obrigatórios!";
+        header("Location: /view/login.php?error=todos-os-campos-obrigatorios");
+        exit();
+    }
+
+    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        $_SESSION['error'] = "Formato de email inválido!";
+        header("Location: /view/login.php?error=formato-de-email-invalido");
+        exit();
+    }
+
+    $database = Database::getInstance();
+    $users = new Users($database);
+
+    $user = $users-&gt;getUserByEmail($email);
+
+    if ($user &amp;&amp; password_verify($password, $user['password_hash'])) {
+        $id = $_SESSION['user_id'] = $user['id'];
+        $_SESSION['user_name'] = $user['username'];
+        $_SESSION['user_email'] = $user['email'];
+        $_SESSION['LAST_ACTIVITY'] = time();
+        $_SESSION['success'] = "Login realizado com sucesso!";
+
+        header("Location: ../view/profile.php?id={$id}&amp;success=login-realizado-com-sucesso");
+        exit();
+    } else {
+        $_SESSION['error'] = "Credenciais inválidas!";
+        header("Location: /view/login.php?error=credencial-errada");
+        exit();
+    }
+}
+</code></pre>
+<p><em>Este código PHP trata o processo de autenticação de usuários com base no formulário de login <code>login.php</code>. Ele verifica se o usuário preencheu o formulário corretamente e valida as credenciais.</em></p>
+<hr />
+<h3 id="observações"><a class="header" href="#observações">Observações</a></h3>
+<pre><code class="language-php">session_start();
+</code></pre>
+<p><em>Inicia uma nova sessão ou retoma a existente. Isso permite armazenar informações do usuário, como dados de login, em variáveis de sessão.</em></p>
+<hr />
+<pre><code class="language-php">require_once __DIR__ . '/../database.php';
+require_once __DIR__ . '/users.php';
+</code></pre>
+<p><em>Esses arquivos são incluídos para permitir o acesso ao banco de dados e manipulação de usuários.</em></p>
+<hr />
+<pre><code class="language-php">if ($_SERVER["REQUEST_METHOD"] == "POST")
+</code></pre>
+<p><em>Verifica se o método de requisição é POST, ou seja, se o formulário foi enviado.</em></p>
+<hr />
+<pre><code class="language-php"> $email = trim($_POST['email']);
+ $password = trim($_POST['password']);
+</code></pre>
+<p><em>O código coleta e "limpa" os valores do formulário com <code>trim()</code> para remover espaços extras.</em></p>
+<hr />
+<pre><code class="language-php">if (empty($email) || empty($password))
+</code></pre>
+<p><em>Verifica se os campos de email e senha estão vazios e, se sim, define uma mensagem de erro na sessão e redireciona o usuário de volta para a página de login.</em></p>
+<hr />
+<pre><code class="language-php">if ($user &amp;&amp; password_verify($password, $user['password_hash']))
+</code></pre>
+<p><em>Se o usuário for encontrado no banco de dados e a senha fornecida corresponder à senha armazenada (com o <code>password_hash</code>), a autenticação é bem-sucedida.</em></p>
+<hr />
+<pre><code class="language-php"> $id = $_SESSION['user_id'] = $user['id'];
+        $_SESSION['user_name'] = $user['username'];
+        $_SESSION['user_email'] = $user['email'];
+        $_SESSION['LAST_ACTIVITY'] = time();
+        $_SESSION['success'] = "Login realizado com sucesso!";
+
+        header("Location: ../view/profile.php?id={$id}&amp;success=login-realizado-com-sucesso");
+        exit();
+</code></pre>
+<ul>
+<li>
+<p>Se o login for bem-sucedido, as variáveis de sessão são definidas (<code>$_SESSION['user_id']</code>, <code>$_SESSION['user_name']</code>, etc.) com informações do usuário.</p>
+</li>
+<li>
+<p>Define também o tempo de atividade da sessão com <code>$_SESSION['LAST_ACTIVITY'] = time();</code>.</p>
+</li>
+<li>
+<p>Exibe uma mensagem de sucesso e redireciona o usuário para a página de perfil (<code>profile.php</code>).</p>
+</li>
+</ul>
+<hr />
+<pre><code class="language-php">else {
+        $_SESSION['error'] = "Credenciais inválidas!";
+        header("Location: /view/login.php?error=credencial-errada");
+        exit();
+    }
+
+</code></pre>
+<p><em>Se a senha não corresponder ou o usuário não for encontrado, o código define uma mensagem de erro na sessão e redireciona o usuário de volta para a página de login com um aviso de "Credenciais inválidas".</em></p>
+<h2 id="como-mencionado-anteriormente-o-login-do-usuário-está-incluído-em-dois-arquivos-o-database-responsável-pela-conexão-com-o-banco-de-dados-e-o-usersphp-vamos-entender-o-que-está-sendo-utilizado-na-classe-users-para-realizar-o-login"><a class="header" href="#como-mencionado-anteriormente-o-login-do-usuário-está-incluído-em-dois-arquivos-o-database-responsável-pela-conexão-com-o-banco-de-dados-e-o-usersphp-vamos-entender-o-que-está-sendo-utilizado-na-classe-users-para-realizar-o-login">Como mencionado anteriormente, o login do usuário está incluído em dois arquivos: o <code>database</code>, responsável pela conexão com o banco de dados, e o <code>users.php</code>. Vamos entender o que está sendo utilizado na classe users para realizar o login.</a></h2>
+<p>Arquivo: t05-session-php\src\users.php</p>
+<pre><code class="language-php">public function getUserByEmail($email)
+    {
+        $sql = "SELECT id, username, email, password_hash, phone FROM users WHERE email = :email";
+        $stmt = $this-&gt;db-&gt;prepare($sql);
+        $stmt-&gt;execute([':email' =&gt; $email]);
+        return $stmt-&gt;fetch();
+    }
+</code></pre>
+<p><em>Essa função busca um usuário no banco de dados com base no email fornecido. Ela retorna os dados do usuário (como ID, nome de usuário, email, senha e telefone) caso o email exista no banco.</em></p>
+<p><strong>O código de login usa essa função com a linha:</strong></p>
+<pre><code class="language-php">$user = $users-&gt;getUserByEmail($email);
+</code></pre>
+<p><em>Ele chama <code>getUserByEmail()</code> para verificar se um usuário existe com o email fornecido no formulário. Se um usuário for encontrado, seus dados (incluindo a senha) são retornados e usados para verificar a senha fornecida.</em></p>
+<h2 id="conclusão"><a class="header" href="#conclusão">Conclusão</a></h2>
+<p>Este exemplo básico demonstra como implementar um sistema de login com PHP usando sessões. O PHP facilita a criação de sessões com variáveis globais, permitindo que você armazene dados do usuário enquanto ele navega pelas páginas, tornando a experiência flúida.</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="t05-5.2-session-php.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="t05-5.3-session-php.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="t05-5.2-session-php.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="t05-5.3-session-php.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+        <!-- Livereload script (if served using the cli tool) -->
+        <script>
+            const wsProtocol = location.protocol === 'https:' ? 'wss:' : 'ws:';
+            const wsAddress = wsProtocol + "//" + location.host + "/" + "__livereload";
+            const socket = new WebSocket(wsAddress);
+            socket.onmessage = function (event) {
+                if (event.data === "reload") {
+                    socket.close();
+                    location.reload();
+                }
+            };
+
+            window.onbeforeunload = function() {
+                socket.close();
+            }
+        </script>
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>
