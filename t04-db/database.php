@@ -1,76 +1,73 @@
 <?php
-/*
-class Database
-{
+class Database {
     private static $instance = null;
-    private $conn;
+    private $connection;
 
-    private function __construct()
-    {
+    private function __construct() {
         $config = require __DIR__ . '/config.php';
-
-        if (!isset($config['database']['host'], $config['database']['port'], $config['database']['username'], $config['database']['password'], $config['database']['dbname'])) {
-            throw new Exception("Configuração do banco de dados incompleta");
-        }
-
-        $dsn = "mysql:host={$config['database']['host']};port={$config['database']['port']};dbname={$config['database']['dbname']};charset=utf8mb4";
-
+        
+        $dbConfig = $this->detectAvailableDatabase($config['database']);
+        
         try {
-            $this->conn = new PDO($dsn, $config['database']['username'], $config['database']['password'], [
+            $this->connection = new PDO($dbConfig['dsn'], $dbConfig['username'], $dbConfig['password'], [
                 PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
                 PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC
             ]);
+
+            if (strpos($dbConfig['dsn'], 'pgsql') !== false) {
+                $this->connection->exec("SET search_path TO conex, public");
+            } else if (strpos($dbConfig['dsn'], 'mysql') !== false) {
+                $this->connection->exec("SET NAMES 'utf8mb4'");
+            }
         } catch (PDOException $e) {
-            throw new Exception("Falha na conexão com o banco de dados: " . $e->getMessage());
+            die("Falha ao conectar com o banco: " . $e->getMessage());
         }
     }
-
-    public static function getInstance()
-    {
+    
+    private function detectAvailableDatabase($configs) {
+        if ($this->testConnection($configs['postgresql'], 'postgresql')) {
+            return [
+                'dsn' => "pgsql:host={$configs['postgresql']['host']};port={$configs['postgresql']['port']};dbname={$configs['postgresql']['dbname']}",
+                'username' => $configs['postgresql']['username'],
+                'password' => $configs['postgresql']['password']
+            ];
+        }
+        
+        if ($this->testConnection($configs['mysql'], 'mysql')) {
+            return [
+                'dsn' => "mysql:host={$configs['mysql']['host']};port={$configs['mysql']['port']};dbname={$configs['mysql']['dbname']};charset=utf8mb4",
+                'username' => $configs['mysql']['username'],
+                'password' => $configs['mysql']['password']
+            ];
+        }
+        
+        throw new Exception("Nenhum banco de dados disponível");
+    }
+    
+    private function testConnection($config, $type) {
+        try {
+            if ($type === 'postgresql') {
+                $dsn = "pgsql:host={$config['host']};port={$config['port']};dbname={$config['dbname']}";
+            } else {
+                $dsn = "mysql:host={$config['host']};port={$config['port']};dbname={$config['dbname']}";
+            }
+            
+            $test = new PDO($dsn, $config['username'], $config['password']);
+            $test = null; 
+            return true;
+        } catch (PDOException $e) {
+            return false;
+        }
+    }
+    
+    public static function getInstance() {
         if (self::$instance === null) {
             self::$instance = new self();
         }
         return self::$instance;
     }
 
-    public function getConnection()
-    {
-        return $this->conn;
-    }
-}*/
-
-
-
-#Conexão com o banco postgres no contatiner docker:
-class Database {
-    private static $instance = null;
-    private $connection;
-
-    public function __construct($host, $port, $username, $password, $dbname) {
-        try {
-            $this->connection = new PDO("pgsql:host=$host;port=$port;dbname=$dbname", $username, $password);
-            $this->connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-        } catch (PDOException $e) {
-            die("Falha ao conectar com o banco: " . $e->getMessage());
-        }
-    }
-    
-    public static function getInstance() {
-        if (self::$instance === null) {
-            $config = require __DIR__ . '/config.php';
-            self::$instance = new self(
-                $config['database']['host'],
-                $config['database']['port'],
-                $config['database']['username'],
-                $config['database']['password'],
-                $config['database']['dbname']
-            );
-        }
-        return self::$instance;
-    }
-
-    public function getConnection(){
-         return $this->connection;
+    public function getConnection() {
+        return $this->connection;
     }
 }
-

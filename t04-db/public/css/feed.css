@@ -12,47 +12,6 @@
     --box-shadow-color: rgba(73, 73, 73, 0.1);
 }
 
-/* Estilos gerais do corpo */
-body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
-    background-color: var(--background-color);
-}
-
-/* Barra lateral esquerda */
-.side-bar {
-    width: 20%;
-    height: 100vh;
-    display: flex;
-    flex-direction: column;
-    border-right: 2px solid var(--divider-color);
-}
-
-.side-bar a {
-    text-decoration: none;
-    color: var(--primary-color);
-    padding: 10px;
-    font-size: 16px;
-}
-
-.side-bar-links {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    margin-top: 20px;
-    width: 80%;
-}
-
-.logo {
-    width: 70%;
-    margin-top: 30px;
-}
-
-.side-bar-links a:hover {
-    background-color: var(--hover-background-color);
-    border-radius: 10px;
-}
 
 /* Container principal */
 .container {

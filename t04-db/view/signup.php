@@ -4,15 +4,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <link rel="stylesheet" href="../public/css/cadastro.css">
+    <title>Registro de usuário</title>
+    <link rel="stylesheet" href="./css/signup.css">
 </head>
 
 <body>
     <form class="form-group" method="POST" action="../src/post-user.php"> 
 
         <div class="icon">
-            <img src="../public/img/logo.svg" alt="logo" class="logo">
+            <img src="./img/logo.svg" alt="logo" class="logo">
         </div>
         <div class="form-wrapper">
             <div class="form-control">
