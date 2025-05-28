@@ -1,7 +1,7 @@
 services:
   db:
     image: postgres:15-alpine
-    container_name: t08-mvc-db
+    container_name: conex_db_t08
     environment:
       POSTGRES_USER: admin
       POSTGRES_PASSWORD: root

@@ -81,7 +81,7 @@ class User{
             throw new \InvalidArgumentException("Senha deve ter no mínimo 8 caracteres");
         }
 
-        $this->password_hash = password_hash($password, PASSWORD_DEFAULT);
+        $this->password_hash = password_hash($password, PASSWORD_ARGON2I);
         return $this;
     }
 

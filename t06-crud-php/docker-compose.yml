@@ -1,11 +1,11 @@
 services:
   db:
     image: postgres:15-alpine
-    container_name: postgres_db
+    container_name: conex_db_t06
     environment:
       POSTGRES_USER: admin
       POSTGRES_PASSWORD: root
-      POSTGRES_DB: postgres
+      POSTGRES_DB: conex
     ports:
       - "5432:5432"
     volumes:
