@@ -10,42 +10,42 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $password = $_POST['password'];
     $password_confirm = $_POST['password-confirm'];
 
-    if (empty($name) || empty($phone) || empty($email) || empty($password) || empty($password_confirm)) {
-        $_SESSION['error'] = "Todos os campos são obrigatórios!";
+    if (empty($name) || empty($phone) || empty($email) || empty($password) || empty($password_confirm)) {        
         header("Location: /view/signup.php?error=todos-os-campos-obrigatorios");
         exit();
     }
 
     if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-        $_SESSION['error'] = "Email inválido!";
         header("Location: /view/signup.php?error=email-invalido");
         exit();
     }
 
     if ($password !== $password_confirm) {
-        $_SESSION['error'] = "As senhas não coincidem!";
         header("Location: /view/signup.php?error=confirmação-de-senha-diferente");
         exit();
     }
 
-    $database = Database::getInstance();
-    $users = new Users($database);
+    try{
+        $database = Database::getInstance();
+        $users = new Users($database);
 
-    if ($users->checkEmailExists($email)) {
-        $_SESSION['error'] = "Este email já está registrado!";
-        header("Location: /view/signup.php?error=email-ja-registrado");
+        if ($users->checkEmailExists($email)) {
+            header("Location: /view/signup.php?error=email-ja-registrado");
+            exit();
+        }
+
+        $password_hash = password_hash($password, PASSWORD_ARGON2I);
+
+        if ($users->createUser($name, $email, $password_hash, $phone)) {
+            header("Location: /?success=usuario-cadastrado-com-sucesso");
+            exit();
+        } else {
+            header("Location: /view/signup.php?error=erro-ao-cadastrar-usuario");
+            exit();
+        }
+    }catch (Exception $e) {
+        header("Location: /view/signup.php?error=" . urlencode($e->getMessage()));
         exit();
     }
 
-    $password_hash = password_hash($password, PASSWORD_ARGON2I);
-
-    if ($users->createUser($name, $email, $password_hash, $phone)) {
-        $_SESSION['success'] = "Usuário cadastrado com sucesso!";
-        header("Location: /");
-        exit();
-    } else {
-        $_SESSION['error'] = "Erro ao cadastrar o usuário!";
-        header("Location: /view/signup.php?error=erro-ao-cadastrar-usuario");
-        exit();
-    }
 }
