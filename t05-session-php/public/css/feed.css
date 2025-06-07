@@ -200,6 +200,33 @@ main {
     text-decoration: underline;
 }
 
+/* Botão de Logout */
+.logout-link {
+    color: #ff4757 !important;
+    border-top: 1px solid #eee;
+    margin-top: auto;
+}
+
+.logout-link:hover {
+    background-color: #ff4757;
+    color: white !important;
+}
+
+.btn-logout {
+    background-color: #ff4757;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+    text-decoration: none;
+    font-size: 14px;
+    margin-left: 10px;
+}
+
+.btn-logout:hover {
+    background-color: #ff3838;
+}
+
 /* Responsividade para telas menores */
 @media (max-width: 768px) {
     .side-bar {

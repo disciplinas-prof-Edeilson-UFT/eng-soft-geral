@@ -28,7 +28,7 @@
                 </div>
                 <button type="submit" class="btn">Fazer Login</button>
                 <div class="login-link">
-                    Não tem uma conta? <a href="#">Cadastre-se</a>
+                    Não tem uma conta? <a href="./signup.php">Cadastre-se</a>
                 </div>
             </form>
         </div>

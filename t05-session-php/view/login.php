@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tela de Login</title>
+    <title>Login de Usuário</title>
     <link rel="stylesheet" href="../public/css/login.css">
 </head>
 
@@ -28,7 +28,7 @@
                 </div>
                 <button type="submit" class="btn">Fazer Login</button>
                 <div class="login-link">
-                    Não tem uma conta? <a href="./cadastro.php">Cadastre-se</a>
+                    Não tem uma conta? <a href="./signup.php">Cadastre-se</a>
                 </div>
             </form>
         </div>

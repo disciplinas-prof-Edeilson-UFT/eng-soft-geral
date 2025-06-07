@@ -4,12 +4,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Cadastro de Usuário</title>
     <link rel="stylesheet" href="../public/css/signup.css">
 </head>
 
 <body>
-    <form class="form-group" method="POST" action="../src/post-user.php"> 
+    <form class="form-group" method="POST" action="../src/signup-user.php"> 
 
         <div class="icon">
             <img src="../public/img/logo.svg" alt="logo" class="logo">
