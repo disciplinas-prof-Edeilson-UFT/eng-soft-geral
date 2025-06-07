@@ -14,11 +14,11 @@
             <img src="../public/img/home.svg" class="icon">
             Página principal
         </a>
-        <a href="search">
+        <a href="#">
             <img src="../public/img/search.svg" class="icon">
             Pesquisar
         </a>
-        <a href="perfil.php">
+        <a href="/view/profile.php">
             <img src="../public/img/profile.svg" class="icon">
             Perfil
         </a>
