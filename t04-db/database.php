@@ -15,7 +15,7 @@ class Database {
             ]);
 
             if (strpos($dbConfig['dsn'], 'pgsql') !== false) {
-                $this->connection->exec("SET search_path TO conex, public");
+                $this->connection->exec("SET search_path TO conex");
             } else if (strpos($dbConfig['dsn'], 'mysql') !== false) {
                 $this->connection->exec("SET NAMES 'utf8mb4'");
             }
@@ -53,7 +53,7 @@ class Database {
             }
             
             $test = new PDO($dsn, $config['username'], $config['password']);
-            $test = null; 
+
             return true;
         } catch (PDOException $e) {
             return false;

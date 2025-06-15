@@ -11,6 +11,15 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
       - ./init_db.sql:/docker-entrypoint-initdb.d/init_db.sql
+  web:
+    container_name: conex_web_t04
+    build: .  
+    ports:
+      - "8080:80"
+    volumes:
+      - .:/var/www/html
+    depends_on:
+      - db
   pgadmin:
     image: dpage/pgadmin4:8.11.0 
     ports:
