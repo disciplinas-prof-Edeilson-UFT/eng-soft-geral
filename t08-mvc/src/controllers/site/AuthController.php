@@ -2,30 +2,20 @@
 
 namespace src\controllers\site;
 
-use core\mvc\IModelRepository;
 use src\controllers\BaseController;
 use src\database\dao\IUserDAO;
 use src\services\AuthService;
 use src\database\domain\User;
 use src\database\dao\UserDAO;
-use core\mvc\ModelRepository;
-
-require_once __DIR__ . '/../../database/domain/user.php';
-require_once __DIR__ . '/../../database/dao/user-dao.php';
-require_once __DIR__ . '/../../database/domain/user.php';
-require_once __DIR__ . '/../../../core/mvc/model-repository.php';
-require_once __DIR__ . '/../../services/auth-service.php';
 
 class AuthController extends BaseController{    
     public $authService;
-    public IUserDAO $userDAO;
+    public UserDAO $userDAO;
     public User $user;
-    public IModelRepository $IModelRespot;
 
     public function __construct() {
-        $this->IModelRespot = new ModelRepository();
         $this->user = new User(null, null, null, null, null, null, null);
-        $this->userDAO = new UserDAO($this->IModelRespot);
+        $this->userDAO = new UserDAO();
         $this->authService = new AuthService($this->userDAO, $this->user);
     }
 

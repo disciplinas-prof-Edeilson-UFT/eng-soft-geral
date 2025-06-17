@@ -5,7 +5,7 @@ namespace src\controllers;
 use core\utils\Session;
 use core\http\Request;
 use core\mvc\View;
-require_once __DIR__ . '/../../core/utils/Session.php';
+
 
 class BaseController{
 

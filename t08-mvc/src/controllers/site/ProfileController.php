@@ -3,49 +3,33 @@
 namespace src\controllers\site;
 use src\controllers\BaseController;
 use src\services\ProfileService;
-use src\database\dao\IPostDAO;
 use src\database\domain\Post;
-use core\mvc\IModelRepository;
 use src\database\dao\PostDAO;
 use core\mvc\ModelRepository;
-use src\database\dao\IFollowDAO;
 use src\database\domain\User;
 use src\database\domain\Follow;
 use src\services\FollowService;
 use src\database\dao\FollowDAO;
-use src\database\dao\IUserDAO;
 use src\database\dao\UserDAO;
 
-require_once __DIR__ . '/../../database/dao/post-dao.php';
-require_once __DIR__ . '/../../database/domain/post.php';
-require_once __DIR__ . '/../../database/domain/user.php';
-require_once __DIR__ . '/../../../core/mvc/model-repository.php';
-require_once __DIR__ . '/../../services/profile-service.php';
-require_once __DIR__ . '/../base-controller.php';
-require_once __DIR__ . '/../../services/follow-service.php';
-require_once __DIR__ . '/../../database/dao/follow-dao.php';
-require_once __DIR__ . '/../../database/dao/user-dao.php';
-require_once __DIR__ . '/../../database/domain/follow.php';
 
 class ProfileController extends BaseController{
     public $profileService;
     public $followService;
-    public IPostDAO $postDAO;
+    public PostDAO $postDAO;
     public Post $post;
-    public IModelRepository $IModelRepo;
     public User $user;
     public Follow $follow;
-    public IFollowDAO  $followDAO;
-    public IUserDAO $userDAO;
+    public FollowDAO  $followDAO;
+    public UserDAO $userDAO;
 
     public function __construct() {
-        $this->IModelRepo = new ModelRepository();
         $this->post = new Post(null, null, null, null, null, null, null);
-        $this->postDAO = new PostDAO($this->IModelRepo);
+        $this->postDAO = new PostDAO();
         $this->user = new User(null, null, null, null, null, null);
-        $this->userDAO = new UserDAO($this->IModelRepo);
+        $this->userDAO = new UserDAO();
         $this->follow = new Follow(null, null);
-        $this->followDAO = new FollowDAO($this->IModelRepo);
+        $this->followDAO = new FollowDAO();
         $this->profileService = new ProfileService($this->postDAO, $this->post, $this->user);
         $this->followService = new FollowService($this->followDAO, $this->user, $this->userDAO);
     }

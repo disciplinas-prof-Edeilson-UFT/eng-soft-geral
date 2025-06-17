@@ -1,101 +1,127 @@
-<?php 
-namespace core\mvc;
-
+<?php
+namespace core;
 use Routes;
+use Exception;
 use core\http\Request;
 use core\http\Response;
-use core\mvc\helpers\Parameters;
-class Router {
-    /*
-        router deve ser capaz de identificar se a rota é estática ou dinamica e despachar para o controller correto os seus parametros
-    */
+use core\mvc\Controller;
 
-    public Routes $routes;
-    private string $uri;
-    private string $method;
-    private array $routerRegistered;
-
+class Router{
+    private $routes;
+    
     public function __construct()
     {
-        $this->uri = Parameters::getUri();
-        $this->method = Request::getMethod();
-        $this->routerRegistered = Routes::getRouter();
-        $this->processRouteGroups();
+        $this->routes = Routes::getRouter();
     }
 
-    //verifica se a URI estatica existe corresponde a registrada no routes.php e a retorna 
-    public function staticIndividualRoute(){
+    public function dispatch()
+    {
+        $method = Request::getMethod();
+        $uri = $this->getCleanUri();
+        $result = $this->processAllRoutes($this->routes, $method, $uri);
+        
+        if ($result === null) {
+            Response::errorView(404);
+            return;
+        }
+        
+        try {
+            if (isset($result['middlewares'])) {
+                $this->applyMiddlewares($result['middlewares']);
+            }
+            
+            Controller::execute($result['controller']);
+        } catch (Exception $e) {
+            Response::errorView(500);
+        }
+    }
 
-        if (array_key_exists($this->uri, $this->routerRegistered[$this->method])) {
-            return $this->routerRegistered[$this->method][$this->uri];
+    private function processAllRoutes($routes, $method, $uri)
+    {
+        if (!isset($routes['groups'])) {
+            return null;
+        }
+        
+        foreach ($routes['groups'] as $prefix => $groupRoutes) {
+            // Calcula o caminho do prefixo
+            if ($prefix === '') {
+                $prefixPath = '';
+                $routeWithoutPrefix = $uri;
+            } else {
+                $prefixPath = '/' . trim($prefix, '/');
+                if (strpos($uri, $prefixPath) !== 0) {
+                    continue;
+                }
+                $routeWithoutPrefix = substr($uri, strlen($prefixPath));
+            }
+            
+            // Verifica se existe a rota
+            if (isset($groupRoutes[$method][$routeWithoutPrefix])) {
+                return [
+                    'controller' => $groupRoutes[$method][$routeWithoutPrefix],
+                    'middlewares' => $groupRoutes['middleware'] ?? []
+                ];
+            }
+            
+            // Verifica rotas com parâmetros
+            if (isset($groupRoutes[$method])) {
+                foreach ($groupRoutes[$method] as $route => $controller) {
+                    if ($this->matchRoute($route, $routeWithoutPrefix)) {
+                        return [
+                            'controller' => $controller,
+                            'middlewares' => $groupRoutes['middleware'] ?? []
+                        ];
+                    }
+                }
+            }
         }
         return null;
     }
 
-    //percorr URIs dinamicas ( /users/{id}) e verifica se a rota está registrada no routes.php por meio de regex e a retorna
-    private function dynamicIndividualRoute() {
-        $routerRegistered = null; 
-        $matches = [];
-
-        foreach ($this->routerRegistered[$this->method] as $index => $route) {
-            $paramPattern = preg_replace('/{([a-zA-Z0-9_]+)}/', '([^/]+)', $index);
-            $regex = str_replace('/', '\/', ltrim($paramPattern, '/'));
-
-            if ($index !== '/' && preg_match("/^$regex$/", trim($this->uri, '/'), $matches)) {
-                $routerRegistered = $route;
-
-                array_shift($matches);
-                $_REQUEST['router_params'] = $matches;
-                break;
+    private function applyMiddlewares($middlewares){
+        foreach ($middlewares as $middleware) {
+            switch ($middleware) {
+                case 'auth':
+                    $this->checkAuth();
+                    break;
+                default:
+                    break;
             }
         }
-        return $routerRegistered;
+    }
+
+    private function checkAuth(){
+        session_start();
+        if (!isset($_SESSION['user_id']) || empty($_SESSION['user_id'])) {
+            header('Location: /auth/login');
+            exit;
+        }
+    }
+
+    private function matchRoute($routePattern, $uri)
+    {
+        $routeParts = explode('/', trim($routePattern, '/'));
+        $uriParts = explode('/', trim($uri, '/'));
         
-    }
-
-    //percorre os grupos de rotas no routes.php e as registra no routerRegistered para serem despachadas para o controller correspondente
-    private function processRouteGroups() {
-        if(!isset($this->routerRegistered['groups'])) {
-            return;
+        if (count($routeParts) !== count($uriParts)) {
+            return false;
         }
-    
-        foreach ($this->routerRegistered['groups'] as $prefix => $group) {
-            foreach ($group as $method => $routes) {
-                if (!isset($this->routerRegistered[$method])) {
-                    $this->routerRegistered[$method] = [];
-                }
-                
-                foreach ($routes as $path => $controller) {
-                    $fullPath = rtrim($prefix, '/') . '/' . ltrim($path, '/');
-                    $fullPath = '/' . ltrim($fullPath, '/');
-                    
-                    $this->routerRegistered[$method][$fullPath] = $controller;
-                }
+        
+        foreach ($routeParts as $index => $segment) {
+            if (preg_match('/^\{([a-zA-Z0-9_]+)\}$/', $segment)) {
+                continue;
+            }
+            
+            if ($segment !== $uriParts[$index]) {
+                return false;
             }
         }
-        unset($this->routerRegistered['groups']);
+        
+        return true;
     }
 
-    //despacha a rota para o controller correto 
-    public function dispatch(){
-        $route = $this->staticIndividualRoute();
-        if ($route) {
-           //echo "Rota estática encontrada: " . $router . "<br>";
-            Controller::execute($route);
-            return;
-        }
-
-        $route = $this->dynamicIndividualRoute();
-        if ($route) {
-            //echo "Rota dinamica encontrada: " . $router . "<br>";
-            Controller::execute($route);
-            return;
-        }
-
-        Response::errorView(404);
-        exit();
+    private function getCleanUri(){
+        $uri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
+        return rtrim($uri, '/') ?: '/';
     }
-
 }
-
-

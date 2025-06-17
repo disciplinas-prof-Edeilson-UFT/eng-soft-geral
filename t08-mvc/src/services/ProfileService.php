@@ -1,24 +1,19 @@
 <?php
 
 namespace src\services;
-use src\database\dao\IPostDAO;
+use src\database\dao\PostDAO;
 use src\database\domain\Post;
 use src\services\UploadImageService;
 use src\database\domain\User;
 
-require_once __DIR__ . '/../database/domain/post.php';
-require_once __DIR__ . '/../database/domain/user.php';
-require_once __DIR__ . '/../database/dao/post-dao.php';
-require_once __DIR__ . '/upload-image-service.php';
-
 class ProfileService{
     private $table = 'posts';
-    public IPostDAO $postDAO;
+    public PostDAO $postDAO;
     public Post $post;
     public UploadImageService $uploadImageService;
     public User $user;
 
-    public function __construct(IPostDAO $postDAO, Post $post, User $user)
+    public function __construct(PostDAO $postDAO, Post $post, User $user)
     {
         $this->postDAO = $postDAO;
         $this->post = $post;

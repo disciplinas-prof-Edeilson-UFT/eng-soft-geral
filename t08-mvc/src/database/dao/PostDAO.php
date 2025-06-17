@@ -1,27 +1,15 @@
 <?php
 namespace src\database\dao;
-use core\mvc\IModelRepository;
-use core\mvc\traits\ModelRepositoryTrait;
+
 use Database;
 use PDO;
 
-require_once __DIR__ . '/../../../core/mvc/model-repository.php';
-require_once __DIR__ . '/../../../core/mvc/traits/model-repository-trait.php';
-require_once __DIR__ . '/../../../database.php';
-
-interface IPostDAO extends IModelRepository{
-    public function getPostsById($userId);
-    public function getAllPosts();
-}
-
-class postDAO implements IPostDAO{
-    use ModelRepositoryTrait;
+class PostDAO {
 
     protected $db;
 
-    public function __construct(IModelRepository $modelRepository)
+    public function __construct()
     {
-        $this->modelRepository = $modelRepository;
         $this->db = Database::getInstance()->getConnection();
     }
 

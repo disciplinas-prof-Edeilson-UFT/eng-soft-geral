@@ -1,23 +1,18 @@
 <?php
 namespace src\services;
 
-use src\database\dao\IFollowDAO;
-use src\database\dao\IUserDAO;
+use src\database\dao\FollowDAO;
+use src\database\dao\UserDAO;
 use src\database\domain\User;
 use src\database\domain\Follow;
 
-require_once __DIR__ . '/../database/domain/user.php';
-require_once __DIR__ . '/../database/dao/user-dao.php';
-require_once __DIR__ . '/../database/domain/follow.php';
-require_once __DIR__ . '/../database/dao/follow-dao.php';
-
 class FollowService{
-    public IFollowDAO $followDAO;
+    public FollowDAO $followDAO;
     public User $user;
-    public IUserDAO $userDAO;
+    public UserDAO $userDAO;
     public Follow $follow;  
 
-    public function __construct(IFollowDAO $followDAO, User $user, IUserDAO $userDAO)
+    public function __construct(FollowDAO $followDAO, User $user, UserDAO $userDAO)
     {
         $this->followDAO = $followDAO;
         $this->user = $user;

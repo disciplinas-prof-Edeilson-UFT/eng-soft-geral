@@ -2,24 +2,17 @@
 
 namespace src\services;
 
-use src\database\dao\IPostDAO;
+use src\database\dao\PostDAO;
 use src\database\domain\Post;
 use src\services\UploadImageService;
 
-require_once __DIR__ . '/../database/domain/post.php';
-require_once __DIR__ . '/../database/dao/post-dao.php';
-require_once __DIR__ . '/upload-image-service.php';
-
 class FeedService{
-    private $table = 'posts';
-    public IPostDAO $postDAO;
-    public Post $post;
+    public PostDAO $postDAO;
     public UploadImageService $uploadImageService;
 
-    public function __construct(IPostDAO $postDAO, Post $post)
+    public function __construct(PostDAO $postDAO)
     {
         $this->postDAO = $postDAO;
-        $this->post = $post;
         $this->uploadImageService = new UploadImageService();
     }
 

@@ -8,21 +8,12 @@ require_once __DIR__ . '/src/controllers/site/search-controller.php';
 class Routes{
     public static function getRouter(){
         return [
-            'get' => [
-                '/search' => 'site\SearchController@search',
-                '/' => 'site\FeedController@show'
-            ],
-            'post' => [
-                
-            ],
             'groups' => [
-                '/admin' => [
+                '' => [
                     'get' => [
-                        '/teste-group/{id}' => 'TesteController@showGroup'
+                        '/search' => 'site\SearchController@search',
+                        '/' => 'site\FeedController@show'
                     ],
-                    'post' => [
-                        '/teste-group' => 'TesteController@storeGroup'
-                    ]
                 ],
                 'auth' => [
                     'get' => [
@@ -36,7 +27,7 @@ class Routes{
                 ],
                 'feed' => [
                     'get' => [
-                        //'/{user_id}' => 'site\FeedController@show'
+                        //'/' => 'site\FeedController@show'
                     ],
                     'post' => [
                         '/{user_id}/store' => 'site\FeedController@store'

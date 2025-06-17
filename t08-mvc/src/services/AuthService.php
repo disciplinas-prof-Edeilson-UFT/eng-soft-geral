@@ -1,19 +1,16 @@
 <?php 
 namespace src\services;
 
-use src\database\dao\IUserDAO;
+use src\database\dao\UserDAO;
 use src\database\domain\User;
 
-require_once __DIR__ . '/../database/domain/user.php';
-require_once __DIR__ . '/../database/dao/user-dao.php';
 
 
 class AuthService {
-
-    public IUserDAO $userDAO;
     public User $user;
+    public UserDAO $userDAO;
 
-    public function __construct(IUserDAO $userDAO, User $user)
+    public function __construct(UserDAO $userDAO, User $user)
     {
         $this->userDAO = $userDAO;
         $this->user = $user;

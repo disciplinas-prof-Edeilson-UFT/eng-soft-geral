@@ -3,34 +3,21 @@ namespace src\controllers\site;
 
 use src\controllers\BaseController;
 use src\services\FeedService;
-use src\database\dao\IPostDAO;
 use src\database\domain\Post;
-use core\mvc\IModelRepository;
 use src\database\dao\PostDAO;
-use core\mvc\ModelRepository;
 use src\services\ProfileService;
 use src\database\domain\User;
 
-require_once __DIR__ . '/../../database/dao/post-dao.php';
-require_once __DIR__ . '/../../database/domain/post.php';
-require_once __DIR__ . '/../../../core/mvc/model-repository.php';
-require_once __DIR__ . '/../../services/feed-service.php';
-require_once __DIR__ . '/../base-controller.php';
-require_once __DIR__ . '/../../services/profile-service.php';
-require_once __DIR__ . '/../../database/domain/user.php';
-
 class FeedController extends BaseController{
     public $feedService;
-    public IPostDAO $postDAO;
-    public Post $post;
-    public IModelRepository $IModelRepo;
+    public PostDAO $postDAO;
+    public Post $post;    
     public ProfileService $profileService;
     public User $user;
 
     public function __construct() {
-        $this->IModelRepo = new ModelRepository();
         $this->post = new Post(null, null, null, null, null, null, null);
-        $this->postDAO = new PostDAO($this->IModelRepo);
+        $this->postDAO = new PostDAO();
         $this->feedService = new FeedService($this->postDAO, $this->post);
         $this->user = new User(null, null, null, null, null, null);
         $this->profileService = new ProfileService($this->postDAO, $this->post, $this->user);

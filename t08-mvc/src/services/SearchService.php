@@ -1,15 +1,14 @@
 <?php
 namespace src\services;
 
-use src\database\dao\IUserDAO;
+use src\database\dao\UserDAO;
 
-require_once __DIR__ . '/../database/domain/user.php';
-require_once __DIR__ . '/../database/dao/user-dao.php';
+
 
 class SearchService{
-    public IUserDAO $userDAO;
+    public UserDAO $userDAO;
 
-    public function __construct(IUserDAO $userDAO)
+    public function __construct(UserDAO $userDAO)
     {
         $this->userDAO = $userDAO;
     }

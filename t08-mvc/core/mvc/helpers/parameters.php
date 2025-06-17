@@ -4,12 +4,11 @@ namespace core\mvc\helpers;
 use Routes;
 use Exception;  
 use core\http\Request;
+
 class Parameters
 {
-    /*
-        recupera os parametros da rota como um array para serem passados para o controller   
-    */
-
+    //recupera os parametros da rota como um array para serem passados para o controller   
+    
     public static function getUri(){
         return parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
     }
@@ -62,23 +61,23 @@ class Parameters
         $method = Request::getMethod(); 
         $params = [];
 
-        if(isset($routes[$method])){
-            foreach($routes[$method] as $route => $controller){
-                if($controller === $controllerMethodPath){
-                    $params = self::filterRoute($route);
-                }
-            }
-        }
-
+        // Agora só processa grupos
         if(isset($routes['groups'])){
             foreach($routes['groups'] as $groupPrefix => $group){
+                if(isset($group[$method])){
                     foreach($group[$method] as $route => $controller){
                         if ($controller === $controllerMethodPath){
-                            $routeFormatted = '/' . trim($groupPrefix, '/') . '/' . trim($route, '/');
+                            // Se groupPrefix é vazio, não adiciona prefixo
+                            if ($groupPrefix === '') {
+                                $routeFormatted = $route;
+                            } else {
+                                $routeFormatted = '/' . trim($groupPrefix, '/') . '/' . trim($route, '/');
+                            }
 
                             $params = self::filterRoute($routeFormatted);
                         }
-                    } 
+                    }
+                } 
             }
         }
         /*foreach ($params as $param) {
