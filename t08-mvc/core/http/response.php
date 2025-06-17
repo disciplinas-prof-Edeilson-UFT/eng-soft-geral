@@ -1,6 +1,6 @@
 <?php 
-namespace core\http;
-use core\mvc\View;
+namespace Conex\MiniFramework\http;
+use Conex\MiniFramework\mvc\View;
 class Response{
 
     /* class response envia a resposta ao cliente, seja ela um conteúdo, um redirecionamento ou um erro

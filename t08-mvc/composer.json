@@ -3,8 +3,13 @@
     "license": "MIT",
     "autoload": {
         "psr-4": {
-            "Conex\\T08MVC\\": "src/"
-        }
+            "src\\": "src/",
+            "Conex\\MiniFramework\\": "core/"
+        },
+        "files": [
+            "Routes.php",
+            "Database.php"
+        ]
     },
     "authors": [
         {

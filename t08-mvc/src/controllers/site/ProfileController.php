@@ -5,7 +5,6 @@ use src\controllers\BaseController;
 use src\services\ProfileService;
 use src\database\domain\Post;
 use src\database\dao\PostDAO;
-use core\mvc\ModelRepository;
 use src\database\domain\User;
 use src\database\domain\Follow;
 use src\services\FollowService;

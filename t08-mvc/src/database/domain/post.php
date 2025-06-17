@@ -38,7 +38,7 @@ class Post{
         if (empty($photo_url)) {
             throw new \InvalidArgumentException("Photo_url não pode estar vazio");
         }
-        $this->photo_url = $photo_url;
+        $this->photo_url= $photo_url;
         return $this;
     }
 
@@ -48,7 +48,7 @@ class Post{
 
     public function setUploadDate($upload_date) {
         if (is_numeric($upload_date)) {
-            $this->upload_date = date('Y-m-d H:i:s', $upload_date);
+            $this->upload_date= date('Y-m-d H:i:s', $upload_date);
         }
         else if ($upload_date === null) {
             $this->upload_date = date('Y-m-d H:i:s');
@@ -61,26 +61,24 @@ class Post{
     }
 
     public function setDescription($description) {
-        $this->description = $description;
+        $this->description= $description;
         return $this;
     }
 
-    public function toArray() {
+    public function toArray(): array {
         $data = [
             'user_id' => $this->user_id,
+            'photo_url' => $this->photo_url,
             'description' => $this->description,
         ];
-        if (!empty($this->id)) {
-            
-            $data['id'] = $this->id;
+        
+        if ($this->id !== null) {
+            $data['id']= $this->id;
         }
-        if (!empty($this->upload_date)) {
-            $data['upload_date'] = $this->upload_date;
+        if ($this->upload_date !== null) {
+            $data['upload_date']= $this->upload_date;
         }
-
-        if (!empty($this->photo_url)) {
-            $data['photo_url'] = $this->photo_url;
-        }
+        
         return $data;
     }
 }

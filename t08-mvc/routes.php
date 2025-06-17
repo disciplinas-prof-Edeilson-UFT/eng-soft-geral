@@ -1,9 +1,5 @@
 <?php
 
-require_once __DIR__ . '/src/controllers/site/feed-controller.php';
-require_once __DIR__ . '/src/controllers/site/auth-controller.php';
-require_once __DIR__ . '/src/controllers/site/profile-controller.php';
-require_once __DIR__ . '/src/controllers/site/search-controller.php';
 
 class Routes{
     public static function getRouter(){
@@ -27,7 +23,6 @@ class Routes{
                 ],
                 'feed' => [
                     'get' => [
-                        //'/' => 'site\FeedController@show'
                     ],
                     'post' => [
                         '/{user_id}/store' => 'site\FeedController@store'

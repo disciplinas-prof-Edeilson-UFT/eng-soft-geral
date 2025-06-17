@@ -1,9 +1,9 @@
 <?php
-namespace core\mvc;
+namespace Conex\MiniFramework\mvc;
 
 use Exception;
-use core\mvc\helpers\Parameters;
-use core\http\Response;
+use Conex\MiniFramework\mvc\helpers\Parameters;
+
 class Controller
 {
     /* O Controller executa o método do controller correspondente à rota acessada pelo usuário. Para isso, o Controller deve ser capaz de identificar qual é o controller e o método que deve

@@ -1,11 +1,11 @@
 <?php 
-namespace core;
+namespace Conex\MiniFramework;
 
-use core\mvc\Router;
-use core\http\Request;
-use core\http\Response;
-use core\mvc\Controller;
-use core\mvc\View;
+use Conex\MiniFramework\mvc\Router;
+use Conex\MiniFramework\http\Request;
+use Conex\MiniFramework\http\Response;
+use Conex\MiniFramework\mvc\Controller;
+use Conex\MiniFramework\mvc\View;
 
 class App{
     public Router $router;

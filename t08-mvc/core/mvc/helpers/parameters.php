@@ -1,9 +1,9 @@
 <?php
-namespace core\mvc\helpers; 
+namespace Conex\MiniFramework\mvc\helpers; 
 
 use Routes;
 use Exception;  
-use core\http\Request;
+use Conex\MiniFramework\http\Request;
 
 class Parameters
 {
@@ -61,7 +61,6 @@ class Parameters
         $method = Request::getMethod(); 
         $params = [];
 
-        // Agora só processa grupos
         if(isset($routes['groups'])){
             foreach($routes['groups'] as $groupPrefix => $group){
                 if(isset($group[$method])){

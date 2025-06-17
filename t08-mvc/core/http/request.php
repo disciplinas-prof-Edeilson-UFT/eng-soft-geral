@@ -1,5 +1,5 @@
 <?php
-namespace core\http; 
+namespace Conex\MiniFramework\http; 
 
 use Exception;
 

@@ -1,10 +1,10 @@
 <?php
-namespace core;
+namespace Conex\MiniFramework\mvc;
 use Routes;
 use Exception;
-use core\http\Request;
-use core\http\Response;
-use core\mvc\Controller;
+use Conex\MiniFramework\http\Request;
+use Conex\MiniFramework\http\Response;
+use Conex\MiniFramework\mvc\Controller;
 
 class Router{
     private $routes;

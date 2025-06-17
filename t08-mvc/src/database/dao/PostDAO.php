@@ -1,29 +1,36 @@
 <?php
 namespace src\database\dao;
 
-use Database;
+use src\database\domain\Post;
+use src\database\BaseDAO;
 use PDO;
 
-class PostDAO {
+class PostDAO extends BaseDAO {
 
-    protected $db;
-
-    public function __construct()
-    {
-        $this->db = Database::getInstance()->getConnection();
+    public function insertPost(Post $post): bool {
+        return $this->insert('posts', $post);
     }
 
-    public function getPostsById($userId) {
+    public function getPostByUserAndPhoto($userID, $photoURL): ?Post {
+        $sql= "SELECT * FROM posts WHERE user_id = ? AND photo_url = ? LIMIT 1";
+        $result= $this->executeQuery($sql, [$userID, $photoURL]);
 
-        $sql = "SELECT p.id, p.photo_url, p.upload_date, p.description, u.username, u.profile_pic_url 
+        if (empty($result)) {
+            return null;
+        }
+
+        return $this->mapToPost($result[0]);
+    }
+
+    public function getPostsByUserID($userID) {
+
+        $sql= "SELECT p.id, p.photo_url, p.upload_date, p.description, u.username, u.profile_pic_url 
                 FROM posts p 
                 JOIN users u ON p.user_id = u.id 
-                WHERE p.user_id = :userId 
+                WHERE p.user_id = ?
                 ORDER BY p.upload_date DESC";
 
-        $stmt = $this->db->prepare($sql);
-        $stmt->execute([':userId' => $userId]);
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return $this->executeQuery($sql, [$userID]);
     }
 
     public function getAllPosts() {
@@ -32,9 +39,19 @@ class PostDAO {
                 JOIN users u ON p.user_id = u.id 
                 ORDER BY p.upload_date DESC";
 
-        $stmt = $this->db->prepare($sql);
-        $stmt->execute();
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return $this->executeQuery($sql);
+    }
+
+    public function mapToPost(array $data): Post {
+        $post= new Post($data['user_id'], $data['photo_url'], $data['description']);
+        
+        if (isset($data['id'])) {
+            $post->setId($data['id']);
+        }
+        if (isset($data['upload_date'])) {
+            $post->setUploadDate($data['upload_date']);
+        }
+        return $post;
     }
 
 }

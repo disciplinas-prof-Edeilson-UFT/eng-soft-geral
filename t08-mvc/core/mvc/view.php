@@ -1,5 +1,5 @@
 <?php 
-namespace core\mvc;
+namespace Conex\MiniFramework\mvc;
 class View{
     
     /*Renderiza uma view com um layout padrão e parametros 

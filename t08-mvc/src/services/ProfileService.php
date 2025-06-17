@@ -7,7 +7,6 @@ use src\services\UploadImageService;
 use src\database\domain\User;
 
 class ProfileService{
-    private $table = 'posts';
     public PostDAO $postDAO;
     public Post $post;
     public UploadImageService $uploadImageService;

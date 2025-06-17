@@ -3,7 +3,6 @@
 namespace src\controllers\site;
 
 use src\controllers\BaseController;
-use src\database\dao\IUserDAO;
 use src\services\AuthService;
 use src\database\domain\User;
 use src\database\dao\UserDAO;

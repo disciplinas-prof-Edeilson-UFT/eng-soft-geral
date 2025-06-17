@@ -1,10 +1,12 @@
 <?php
+
+
 class Database {
     private static $instance = null;
     private $connection;
 
     private function __construct() {
-        $config = require __DIR__ . '/config.php';
+        $config = require __DIR__ . '/dbconfig.php';
         
         $dbConfig = $this->detectAvailableDatabase($config['database']);
         

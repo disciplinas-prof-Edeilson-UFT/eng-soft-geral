@@ -1,7 +1,6 @@
 <?php
 
-use core\utils\Session;
-require_once __DIR__ . '/../../core/utils/Session.php';
+use Conex\MiniFramework\utils\Session;
 
 $logged_in_user_id = Session::get('user_id');
 error_log('Logged in user ID: ' . $logged_in_user_id);

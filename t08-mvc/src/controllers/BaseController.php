@@ -2,9 +2,9 @@
 
 namespace src\controllers;
 
-use core\utils\Session;
-use core\http\Request;
-use core\mvc\View;
+use Conex\MiniFramework\utils\Session;
+use Conex\MiniFramework\http\Request;
+use Conex\MiniFramework\mvc\View;
 
 
 class BaseController{

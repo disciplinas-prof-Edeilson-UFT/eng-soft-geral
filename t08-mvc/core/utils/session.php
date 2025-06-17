@@ -1,5 +1,5 @@
 <?php
-namespace core\utils;
+namespace Conex\MiniFramework\utils;
 
 class Session{
     
