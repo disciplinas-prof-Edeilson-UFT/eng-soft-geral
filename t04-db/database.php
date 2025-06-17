@@ -6,7 +6,7 @@ class Database {
     private function __construct() {
         $config = require __DIR__ . '/config.php';
         
-        $dbConfig = $this->detect_available_database($config['database']);
+        $dbConfig = $this->detectAvailableDatabase($config['database']);
         
         try {
             $this->connection = new PDO($dbConfig['dsn'], $dbConfig['username'], $dbConfig['password'], [
@@ -24,8 +24,8 @@ class Database {
         }
     }
     
-    private function detect_available_database($configs) {
-        if ($this->test_connection($configs['postgresql'], 'postgresql')) {
+    private function detectAvailableDatabase($configs) {
+        if ($this->testConnection($configs['postgresql'], 'postgresql')) {
             return [
                 'dsn' => "pgsql:host={$configs['postgresql']['host']};port={$configs['postgresql']['port']};dbname={$configs['postgresql']['dbname']}",
                 'username' => $configs['postgresql']['username'],
@@ -33,7 +33,7 @@ class Database {
             ];
         }
         
-        if ($this->test_connection($configs['mysql'], 'mysql')) {
+        if ($this->testConnection($configs['mysql'], 'mysql')) {
             return [
                 'dsn' => "mysql:host={$configs['mysql']['host']};port={$configs['mysql']['port']};dbname={$configs['mysql']['dbname']};charset=utf8mb4",
                 'username' => $configs['mysql']['username'],
@@ -44,7 +44,7 @@ class Database {
         throw new Exception("Nenhum banco de dados disponível");
     }
     
-    private function test_connection($config, $type) {
+    private function testConnection($config, $type) {
         try {
             if ($type === 'postgresql') {
                 $dsn = "pgsql:host={$config['host']};port={$config['port']};dbname={$config['dbname']}";
@@ -60,14 +60,14 @@ class Database {
         }
     }
     
-    public static function get_instance() {
+    public static function getInstance() {
         if (self::$instance === null) {
             self::$instance = new self();
         }
         return self::$instance;
     }
 
-    public function get_connection() {
+    public function getConnection() {
         return $this->connection;
     }
 }
