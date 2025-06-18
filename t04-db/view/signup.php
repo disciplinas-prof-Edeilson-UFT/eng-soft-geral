@@ -9,7 +9,7 @@
 </head>
 
 <body>
-    <form class="form-group" method="POST" action="../src/post-user.php"> 
+    <form class="form-group" method="POST" action="../src/register-user.php"> 
 
         <div class="icon">
             <img src="../public/img/logo.svg" alt="logo" class="logo">

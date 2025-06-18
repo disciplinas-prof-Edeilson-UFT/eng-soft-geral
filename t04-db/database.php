@@ -4,7 +4,7 @@ class Database {
     private $connection;
 
     private function __construct() {
-        $config = require __DIR__ . '/config.php';
+        $config = require __DIR__ . '/db-config.php';
         
         $dbConfig = $this->detectAvailableDatabase($config['database']);
         
