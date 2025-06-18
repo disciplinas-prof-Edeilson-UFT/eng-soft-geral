@@ -1,5 +1,4 @@
 <?php
-require_once __DIR__ . '/../../../Database.php';
 require_once __DIR__ . '/../../dao/FollowDAO.php';
 require_once __DIR__ . '/../../dao/UserDAO.php';
 require_once __DIR__ . '/../../../dir-config.php';
@@ -21,7 +20,6 @@ $user = $userDao->getUserProfileById($user_id);
 if (!$user) {
     die("<p>Usuário não encontrado.</p>");
 }
-
 
 $userName = $user['username']; 
 $profilePhoto = !empty($user['profile_pic_url'])

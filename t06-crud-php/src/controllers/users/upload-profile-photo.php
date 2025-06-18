@@ -1,7 +1,6 @@
 <?php
 session_start();
 
-require_once '/../../../database.php';
 require_once __DIR__ . "/../../dao/UserDAO.php";
 require_once __DIR__ . "/../../../dir-config.php";
 require_once __DIR__ . "/../../utils/UploadHandler.php";
