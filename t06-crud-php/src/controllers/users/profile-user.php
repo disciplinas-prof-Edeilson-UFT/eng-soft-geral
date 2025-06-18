@@ -1,10 +1,10 @@
 <?php
-require_once __DIR__ . '/../../../database.php';
-require_once __DIR__ . '/../../dao/follow-dao.php';
-require_once __DIR__ . '/../../dao/user-dao.php';
+require_once __DIR__ . '/../../../Database.php';
+require_once __DIR__ . '/../../dao/FollowDAO.php';
+require_once __DIR__ . '/../../dao/UserDAO.php';
 require_once __DIR__ . '/../../../dir-config.php';
-require_once __DIR__ . '/../../dao/posts-dao.php';
-require_once __DIR__ . "/../../utils/follow-handler.php";
+require_once __DIR__ . '/../../dao/PostDAO.php';
+require_once __DIR__ . "/../../utils/FollowHandler.php";
 
 session_start();
 if (!isset($_SESSION['user_id'] )) {

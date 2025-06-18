@@ -1,6 +1,6 @@
 <?php
 
-require_once __DIR__ . '/../../dao/search-dao.php';
+require_once __DIR__ . '/../../dao/SearchDAO.php';
 require_once __DIR__ . '/../../../dir-config.php';
 
 if (isset($_GET['query'])) {

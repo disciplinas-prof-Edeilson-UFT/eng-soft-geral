@@ -1,10 +1,10 @@
 <?php
 session_start();
 
-require '/../../../database.php';
-require_once __DIR__ . "/../../dao/user-dao.php";
+require_once '/../../../database.php';
+require_once __DIR__ . "/../../dao/UserDAO.php";
 require_once __DIR__ . "/../../../dir-config.php";
-require_once __DIR__ . "/../../utils/upload-handler.php";
+require_once __DIR__ . "/../../utils/UploadHandler.php";
 
 if (!isset($_SESSION['user_id'], $_SESSION['user_name'])) {
     header("Location: " . BASE_URL . "view/login.php");
@@ -12,16 +12,16 @@ if (!isset($_SESSION['user_id'], $_SESSION['user_name'])) {
 }
 $user_id = $_SESSION['user_id'];
 
-$userDao = new UserDao();
+$userDAO = new UserDAO();
 
-$userPhoto = $userDao->getUserProfilePhotoById($user_id);
+$userPhoto = $userDAO->getUserProfilePhotoById($user_id);
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['photo'])) {
     $uploadDir = '../../../uploads/profile/';
     $allowedTypes = ['jpg', 'jpeg', 'png', 'gif'];
 
-    $dbUpdateCallback = function ($photoUrl) use ($user_id, $userDao) {
-        return $userDao->updateProfileImage($user_id, $photoUrl);
+    $dbUpdateCallback = function ($photoUrl) use ($user_id, $userDAO) {
+        return $userDAO->updateProfileImage($user_id, $photoUrl);
     };
 
     $uploadResult = UploadHandler::handleUpload($_FILES['photo'], $uploadDir, $allowedTypes, $dbUpdateCallback);

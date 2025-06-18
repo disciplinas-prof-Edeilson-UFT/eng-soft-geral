@@ -1,5 +1,5 @@
 <?php
-require_once __DIR__ . '/../dao/follow-dao.php';
+require_once __DIR__ . '/../dao/FollowDAO.php';
 require_once __DIR__ . '/../../dir-config.php';
 
 class FollowHandler {
