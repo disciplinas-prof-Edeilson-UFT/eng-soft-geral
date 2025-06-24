@@ -11,6 +11,7 @@ class AuthController extends BaseController{
     private AuthService $authService;
 
     public function __construct() {
+        parent::__construct();
         $userDAO = new UserDAO();
         $this->authService = new AuthService($userDAO); 
     }
@@ -20,30 +21,28 @@ class AuthController extends BaseController{
     }
 
     public function login() {
-        error_log("Login method called");
-        
+
         $email = $this->input('email');
         $password = $this->input('password');
         
-        error_log("Email: $email");
+        //error_log("Email: $email");
         
         try {
             $user = $this->authService->login($email, $password);
-            error_log("User found: " . ($user ? 'YES' : 'NO'));
 
             if ($user) {
-                $this->setSession('user_id', $user->getId());
+                $this->setSession('user_id', $user->getId());   
                 $this->setSession('username', $user->getUsername());
                 
                 Flash::success('Login realizado com sucesso!');
-                error_log("Flash success set");
+                error_log("Flash setado com sucesso");
                 
                 $this->redirect('/');
                 exit;
             }
             
             Flash::error('Email ou senha incorretos');
-            error_log("Flash error set");
+            //error_log("Email ou senha incorretos");
             
             $this->redirect('/auth/login');
             
@@ -64,10 +63,10 @@ class AuthController extends BaseController{
             $username = $this->input('username');
             $email = $this->input('email');
             $password = $this->input('password');
-            $confirm_password = $this->input('confirm_password');
+            $confirmPassword = $this->input('confirmPassword');
             $phone = $this->input('phone');
 
-            $this->authService->register($username, $email, $password, $confirm_password, $phone);
+            $this->authService->register($username, $email, $password, $confirmPassword, $phone);
 
             Flash::success('Cadastro realizado com sucesso!');
             $this->redirect('/auth/login');
@@ -79,6 +78,15 @@ class AuthController extends BaseController{
             Flash::error('Erro interno do servidor');
             $this->redirect('/auth/signup');
         }
+        exit;
+    }
+
+    public function logout() {
+        $this->removeSession('user_id');
+        $this->removeSession('username');
+        
+        Flash::success('Logout realizado com sucesso!');
+        $this->redirect('/auth/login');
         exit;
     }
 }

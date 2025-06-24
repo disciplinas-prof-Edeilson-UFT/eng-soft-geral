@@ -9,6 +9,7 @@ class FeedController extends BaseController {
     private FeedService $feedService;
 
     public function __construct() {
+        parent::__construct();
         $postDAO = new PostDAO();
         $this->feedService = new FeedService($postDAO); 
     }
@@ -16,9 +17,9 @@ class FeedController extends BaseController {
     public function show() {
         try {
             $posts= $this->feedService->getAllPostsFeed();
-            $this->view('feed', ['posts' => $posts]);
+            $this->view('feed', ['posts' => $posts, 'pageTitle' => 'Feed']);
         } catch (\Exception $e) {
-            $this->view('feed', ['posts' => [], 'error' => $e->getMessage()]);
+            $this->view('feed', ['posts' => [], 'error' => $e->getMessage(), 'pageTitle' => 'Feed - error']);
         }
     }
 

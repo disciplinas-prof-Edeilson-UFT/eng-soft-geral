@@ -5,13 +5,18 @@ class View{
     /*Renderiza uma view com um layout padrão e parametros 
     */
 
-    public static function render(string $view, $params = []){
+    public static function render(string $view, $params = []) {
+        extract($params);
 
-        $layoutContent = self::layoutContent('main');
-        $viewContent = self::renderOnlyView($view, $params);  
-        
-        $content = str_replace('{{content}}', $viewContent, $layoutContent);
-        return $content;
+        ob_start();
+        include __DIR__ . '/../../view/' . $view . '.php';
+        $viewContent = ob_get_clean();
+
+        ob_start();
+        include __DIR__ . '/../../view/layouts/main.php';
+        $layoutContent = ob_get_clean();
+
+        return str_replace('{{content}}', $viewContent, $layoutContent);
     }
 
     public static function layoutContent(string $layout){

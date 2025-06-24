@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?= $page_title ?? 'Conex' ?></title>
+    <title><?= $pageTitle ?? 'Conex' ?></title>
     <link rel="stylesheet" href="/../public/css/main.css">
     <link rel="stylesheet" href="/../public/css/flash.css"> 
 </head>
@@ -23,11 +23,11 @@
                 <img src="/../public/img/search.svg" class="icon">
                 Pesquisar
             </button>
-            <a href="/profile/<?php echo $logged_in_user_id; ?>">
+            <a href="/profile/<?php echo $loggedInUserID; ?>">
                 <img src="/../public/img/profile.svg" class="icon">
                 Perfil
             </a>
-            <?php if ($is_authenticated ?? false): ?>
+            <?php if ($isAuthenticated ?? false): ?>
             <div class="user-info">
                 <span>Olá, <?= htmlspecialchars($username ?? 'Usuário') ?>!</span>
                 <a href="/auth/logout">Sair</a>
@@ -54,7 +54,7 @@
     </div>
     <script>
         function redirectToProfile() {
-            window.location.href = "/profile/<?php echo $logged_in_user_id ?? ''; ?>";
+            window.location.href = "/profile/<?php echo $loggedInUserID ?? ''; ?>";
         }
     </script>
     <script src="/js/search.js"></script>

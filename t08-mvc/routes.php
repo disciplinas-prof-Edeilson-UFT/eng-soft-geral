@@ -13,7 +13,8 @@ class Routes{
                 'auth' => [
                     'get' => [
                         '/login' => 'site\AuthController@showLogin',
-                        '/signup' => 'site\AuthController@showSignup'
+                        '/signup' => 'site\AuthController@showSignup',
+                        '/logout' => 'site\AuthController@logout' 
                     ],
                     'post' => [ 
                         '/login' => 'site\AuthController@login',

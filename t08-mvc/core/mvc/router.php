@@ -43,7 +43,7 @@ class Router{
         }
         
         foreach ($routes['groups'] as $prefix => $groupRoutes) {
-            // Calcula o caminho do prefixo
+            //calcula o caminho do prefixo
             if ($prefix === '') {
                 $prefixPath = '';
                 $routeWithoutPrefix = $uri;
@@ -55,7 +55,7 @@ class Router{
                 $routeWithoutPrefix = substr($uri, strlen($prefixPath));
             }
             
-            // Verifica se existe a rota
+            //Verifica se existe a rota
             if (isset($groupRoutes[$method][$routeWithoutPrefix])) {
                 return [
                     'controller' => $groupRoutes[$method][$routeWithoutPrefix],
@@ -63,7 +63,7 @@ class Router{
                 ];
             }
             
-            // Verifica rotas com parâmetros
+            //Verifica rotas com parametros
             if (isset($groupRoutes[$method])) {
                 foreach ($groupRoutes[$method] as $route => $controller) {
                     if ($this->matchRoute($route, $routeWithoutPrefix)) {

@@ -24,6 +24,12 @@
     z-index: 1000;
 }
 
+.auth-links {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
 .side-bar .logo {
     width: 200px; /* Largura fixa */
     height: 150px; /* Altura fixa */

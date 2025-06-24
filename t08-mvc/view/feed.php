@@ -16,7 +16,7 @@
             <?php if ($posts): ?>
                 <!-- Itera sobre cada post -->
                 <?php foreach ($posts as $post): ?>
-    
+
                     <article class="post">
                         <!-- Cabeçalho do Post: Informações do Usuário -->
                         <header class="user-info">
@@ -24,9 +24,9 @@
                             <div class="avatar" aria-label="Foto do Usuário">
                                 <?php
                                 // Define a foto de perfil do usuário
-                                $profilePhoto = !empty($user->getProfilePicUrl())
-                                    ? '/uploads/avatars/' . htmlspecialchars($user->getProfilePicUrl())
-                                    : '/img/profile.svg'; 
+                                $profilePhoto = !empty($post['profile_pic_url'])
+                                    ? '/uploads/avatars/' . htmlspecialchars($post['profile_pic_url'])
+                                    : '/img/profile.svg';
                                 ?>
                                 <img src="<?= $profilePhoto; ?>" alt="Foto de Perfil" class="profile-picture">
                             </div>

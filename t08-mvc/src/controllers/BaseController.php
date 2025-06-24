@@ -10,12 +10,16 @@ use Conex\MiniFramework\mvc\View;
 class BaseController{
 
     public function __construct() {
+        error_log("BaseController constructor called");
         Session::start();
+        
+        // ✅ Debug da sessão após start
+        error_log("Session after start: " . print_r($_SESSION, true));
     }
 
     public function view(string $view, $data = []){
-        $globalData = $this->getGlobalViewData();
-        $viewData = array_merge($globalData, $data);
+        $globalData = $this->getGlobalViewData(); 
+        $viewData = array_merge($globalData, $data); 
         
         echo View::render($view, $viewData);
     }
@@ -57,11 +61,25 @@ class BaseController{
     }
 
     private function getGlobalViewData(): array {
-        return [
-            'loggedInUserID' => Session::get('userID'),
-            'username' => Session::get('username'),
-            'isAuthenticated' => Session::has('userID'),
+        $userID = Session::get('user_id');
+        $username = Session::get('username');
+        $isAuth = Session::has('user_id');
+        
+        // ✅ Debug das sessões
+        error_log("Session debug - user_id: " . ($userID ?? 'NULL'));
+        error_log("Session debug - username: " . ($username ?? 'NULL'));
+        error_log("Session debug - has user_id: " . ($isAuth ? 'TRUE' : 'FALSE'));
+        
+        $data = [
+            'loggedInUserID' => $userID,
+            'username' => $username,
+            'isAuthenticated' => $isAuth,
             'currentURL' => $_SERVER['REQUEST_URI'] ?? '/',
         ];
+        
+        // ✅ Debug do array retornado
+        error_log("Global view data: " . print_r($data, true));
+        
+        return $data;
     }
 }
