@@ -357,49 +357,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 </ol>
 <hr />
 <p>Arquivo: t06-crud-php/src/dao/user-dao.php</p>
-<pre><code class="language-php">    public function getUserProfileById($id)
-    {
-        $query = "SELECT id, username, email, phone, bio, profile_pic_url, count_followers, count_following FROM users WHERE id = :id";
-        $stmt = $this-&gt;db-&gt;prepare($query);
-        $stmt-&gt;execute([':id' =&gt; $id]);
-
-        return $stmt-&gt;fetch();
-    }
+<pre><code class="language-php">{{#include ../../t06-crud-php/src/dao/user-dao.php:38:45}}
 </code></pre>
 <ul>
 <li><strong>getUserProfileById($id)</strong>
 Recupera os dados id, username, email, phone, bio, profile_pic_url, count_followers, count_following referente ao perfil do usuário apartir do seu id.</li>
 </ul>
-<pre><code class="language-php">    public function updateProfilePic($profilePicUrl, $id): bool {
-        $query = "UPDATE users SET profile_pic_url = :profile_pic_url WHERE id = :id";
-        $stmt = $this-&gt;db-&gt;prepare($query);
-        return $stmt-&gt;execute([":profile_pic_url" =&gt; $profilePicUrl, ":id" =&gt; $id]);
-    }
+<pre><code class="language-php">{{#include ../../t06-crud-php/src/dao/user-dao.php:81:85}}
 </code></pre>
 <ul>
 <li><strong>updateProfilePic($profilePicUrl, $id):</strong><br />
 Método específico para atualização da foto de perfil, este método recebe a url da imagem processada e executa uma query para persistir o valor no campo <code>profile_pic_url</code> da tabela users.</li>
 </ul>
-<pre><code class="language-php">    public function updateUser($username, $email, $bio, $phone, $id): bool
-    {
-        $query = "UPDATE users SET username = :username, email = :email, bio = :bio, phone = :phone WHERE id = :id";
-        $stmt = $this-&gt;db-&gt;prepare($query);
-        $stmt-&gt;execute([":username"  =&gt; $username,":email" =&gt; $email,":bio"=&gt; $bio,":phone" =&gt; $phone,":id"=&gt; $id ]);
-        return true;
-    }
+<pre><code class="language-php">{{#include ../../t06-crud-php/src/dao/user-dao.php:64:70}}
 </code></pre>
 <ul>
 <li><strong>updateUser($username, $email, $bio, $phone, $id):</strong><br />
 Atualiza os dados básicos do usuário (nome, e-mail, bio, telefone) através de uma query SQL.</li>
 </ul>
-<pre><code class="language-php">    public function deleteUser($id): bool
-    {
-        $query = "DELETE FROM users WHERE id = :id";
-        $stmt = $this-&gt;db-&gt;prepare($query);
-        $stmt-&gt;execute([':id' =&gt; $id]);
-
-        return true;
-    }
+<pre><code class="language-php">{{#include ../../t06-crud-php/src/dao/user-dao.php:71:78}}
 </code></pre>
 <ul>
 <li><strong>deleteUser($id):</strong><br />

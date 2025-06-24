@@ -152,10 +152,11 @@
 
                 <div id="content" class="content">
                     <main>
-                        <h1 id="introdução-ao-php-básico-aplicando-gitflow-no-github"><a class="header" href="#introdução-ao-php-básico-aplicando-gitflow-no-github">Introdução ao PHP Básico aplicando GitFlow no GitHub</a></h1>
-<h2 id="o-que-é-php"><a class="header" href="#o-que-é-php">O que é PHP?</a></h2>
+                        <h1 id="capítulo-4---introdução-ao-php-básico-aplicando-gitflow-no-github"><a class="header" href="#capítulo-4---introdução-ao-php-básico-aplicando-gitflow-no-github">Capítulo 4 - Introdução ao PHP Básico aplicando GitFlow no GitHub</a></h1>
+<h2 id="40-introdução-ao-php-básico-aplicando-gitflow-no-github"><a class="header" href="#40-introdução-ao-php-básico-aplicando-gitflow-no-github">4.0. Introdução ao PHP Básico aplicando GitFlow no GitHub</a></h2>
+<h2 id="401-o-que-é-php"><a class="header" href="#401-o-que-é-php">4.0.1. O que é PHP?</a></h2>
 <p>O PHP (Hypertext Preprocessor) é uma linguagem de programação de código aberto voltada para o desenvolvimento web. Criado originalmente por Rasmus Lerdorf em 1994, o PHP permite a criação de páginas dinâmicas e interativas, sendo amplamente utilizado em conjunto com HTML e bancos de dados como MySQL.</p>
-<h3 id="características-do-php"><a class="header" href="#características-do-php">Características do PHP</a></h3>
+<h2 id="402-características-do-php"><a class="header" href="#402-características-do-php">4.0.2. Características do PHP</a></h2>
 <ul>
 <li>
 <p>Execução no Servidor: O PHP é processado no servidor, gerando uma página HTML que é enviada ao navegador. Isso significa que o código PHP não aparece no navegador do usuário, apenas o HTML gerado por ele.</p>
@@ -214,23 +215,25 @@ if ($idade &gt;= 18) {
 <li>Laços de Repetição:</li>
 </ul>
 <pre><code class="language-php">&lt;?php
+// Laço for
 for ($i = 0; $i &lt; 5; $i++) {
     echo "Número: $i &lt;br&gt;";
 }
 
-
+// Laço while
 $i = 0;
 while ($i &lt; 5) {
     echo "Número: $i &lt;br&gt;";
     $i++;
 }
 
-
+// Laço foreach
 $nomes = ["João", "Maria", "José"];
 foreach ($nomes as $nome) {
     echo "Nome: $nome &lt;br&gt;";
 }
 
+// foreach para array chave-valor
 $user = ["id" =&gt; 1, "name" =&gt; "name", "password" =&gt; "123456"]
 foreach ($user as $key =&gt; $value){
   echo "dados do usuário:" . $value;
@@ -238,23 +241,21 @@ foreach ($user as $key =&gt; $value){
 ?&gt;
 
 </code></pre>
-<h3 id="vantagens-do-php"><a class="header" href="#vantagens-do-php">Vantagens do PHP</a></h3>
-<ul>
-<li>
-<p>Fácil aprendizado e uso</p>
-</li>
-<li>
-<p>Extensa documentação</p>
-</li>
-<li>
-<p>Alto desempenho para aplicações web</p>
-</li>
-<li>
-<p>Compatibilidade com diversas plataformas</p>
-</li>
-</ul>
-<p>O PHP continua sendo uma das linguagens mais populares para desenvolvimento web, oferecendo uma combinação de flexibilidade, facilidade de uso e integração com outras tecnologias.</p>
-
+<h3 id="convenções-de-nomenclatura-no-php-moderno"><a class="header" href="#convenções-de-nomenclatura-no-php-moderno">Convenções de Nomenclatura no PHP moderno</a></h3>
+<p>Seguindo as PSRs (PHP Standards Recommendations) como PSR-1, PSR-2 e PSR-12, aqui estão as convenções recomendadas e que usaremos no desenvolvimento do projeto:</p>
+<h4 id="tabela-de-convenções"><a class="header" href="#tabela-de-convenções"><strong>Tabela de Convenções</strong></a></h4>
+<div class="table-wrapper"><table><thead><tr><th>Elemento</th><th>Convenção</th><th>Exemplo</th></tr></thead><tbody>
+<tr><td><strong>Classes</strong></td><td>PascalCase</td><td><code>UserController</code></td></tr>
+<tr><td><strong>Interfaces</strong></td><td>"I" + PascalCase</td><td><code>ILogger</code></td></tr>
+<tr><td><strong>Traits</strong></td><td>PascalCase + "Trait"</td><td><code>SingletonTrait</code></td></tr>
+<tr><td><strong>Métodos</strong></td><td>camelCase</td><td><code>getUserById()</code></td></tr>
+<tr><td><strong>Variáveis</strong></td><td>camelCase</td><td><code>$userId</code></td></tr>
+<tr><td><strong>Parâmetros</strong></td><td>camelCase</td><td><code>function setUserName($userName)</code></td></tr>
+<tr><td><strong>Constantes</strong></td><td>UPPER_SNAKE_CASE</td><td><code>const MAX_USERS = 100;</code></td></tr>
+<tr><td><strong>Arquivos/Classes</strong></td><td>PascalCase.php</td><td><code>UserController.php</code></td></tr>
+<tr><td><strong>Funções globais</strong></td><td>snake_case (evitar)</td><td><code>function array_map_recursive()</code></td></tr>
+</tbody></table>
+</div>
                     </main>
 
                     <nav class="nav-wrapper" aria-label="Page navigation">

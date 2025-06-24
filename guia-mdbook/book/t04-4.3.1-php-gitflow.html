@@ -157,16 +157,25 @@
 <pre><code class="language-yml">services:
   db:
     image: postgres:15-alpine
-    container_name: postgres_db
+    container_name: conex_db_t04
     environment:
       POSTGRES_USER: admin
       POSTGRES_PASSWORD: root
-      POSTGRES_DB: postgres
+      POSTGRES_DB: conex
     ports:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
-      
+      - ./init_db.sql:/docker-entrypoint-initdb.d/init_db.sql
+  web:
+    container_name: conex_web_t04
+    build: .  
+    ports:
+      - "8080:80"
+    volumes:
+      - .:/var/www/html
+    depends_on:
+      - db
   pgadmin:
     image: dpage/pgadmin4:8.11.0 
     ports:
