@@ -9,20 +9,10 @@ require_once __DIR__ . "/../dir-config.php";
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Atualizar Perfil</title>
-    <link rel="stylesheet" href="/css/profile-update.css">
+    <link rel="stylesheet" href="/../public/css/profile-update.css">
 </head>
 
 <body>
-    <?php if(!empty($error)): ?>
-        <script>
-            alert("<?php echo htmlspecialchars($error); ?>");
-        </script>
-    <?php 
-    elseif(!empty($errors) && is_array($errors)): ?>
-        <script>
-            alert("<?php foreach($errors as $err){ echo htmlspecialchars($err) . '\n'; } ?>");
-        </script>
-    <?php endif; ?>
 
     <div class="form-container">
         <h1>Atualize seu perfil</h1>

@@ -5,22 +5,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-    <link rel="stylesheet" href="../public/css/signup.css">
+    <link rel="stylesheet" href="/../public/css/signup.css">
 </head>
 
 <body>
-    <?php if (!empty($error)): ?>
-        <script>
-            alert("<?php echo htmlspecialchars($error); ?>");
-        </script>
-    <?php
-    elseif (!empty($errors) && is_array($errors)): ?>
-        <script>
-            alert("<?php foreach ($errors as $err) {
-                        echo htmlspecialchars($err) . '\n';
-                    } ?>");
-        </script>
-    <?php endif; ?>
     <form method="POST" action="/auth/signup" class="form-group">
 
         <div class="icon">

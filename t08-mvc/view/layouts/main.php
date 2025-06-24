@@ -1,18 +1,10 @@
-<?php
-
-use Conex\MiniFramework\utils\Session;
-
-$logged_in_user_id = Session::get('user_id');
-error_log('Logged in user ID: ' . $logged_in_user_id);
-?>
-
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title><?= $page_title ?? 'Conex' ?></title>
     <link rel="stylesheet" href="/../public/css/main.css">
 </head>
 
@@ -33,6 +25,17 @@ error_log('Logged in user ID: ' . $logged_in_user_id);
                 Perfil
             </a>
         </div>
+        <?php if ($is_authenticated ?? false): ?>
+            <div class="user-info">
+                <span>Olá, <?= htmlspecialchars($username ?? 'Usuário') ?>!</span>
+                <a href="/auth/logout">Sair</a>
+            </div>
+        <?php else: ?>
+            <div class="auth-links">
+                <a href="/auth/login">Entrar</a>
+                <a href="/auth/signup">Cadastrar</a>
+            </div>
+        <?php endif; ?>
     </aside>
     <div id="searchBox" class="search-box">
         <form method="GET" onsubmit="handleSearch(event)">

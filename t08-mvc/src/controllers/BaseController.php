@@ -14,7 +14,10 @@ class BaseController{
     }
 
     public function view(string $view, $data = []){
-        echo View::render($view, $data);
+        $globalData = $this->getGlobalViewData();
+        $viewData = array_merge($globalData, $data);
+        
+        echo View::render($view, $viewData);
     }
 
     public function staticView(string $view, $data = []){
@@ -53,5 +56,12 @@ class BaseController{
         return Session::destroy();
     }
 
-
+    private function getGlobalViewData(): array {
+        return [
+            'loggedInUserID' => Session::get('userID'),
+            'username' => Session::get('username'),
+            'isAuthenticated' => Session::has('userID'),
+            'currentURL' => $_SERVER['REQUEST_URI'] ?? '/',
+        ];
+    }
 }

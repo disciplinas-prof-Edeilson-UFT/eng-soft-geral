@@ -23,6 +23,11 @@ class Session{
         self::start();
         unset($_SESSION[$key]);
     }
+
+    public static function has($key) {
+        self::start();
+        return isset($_SESSION[$key]);
+    }
     
     public static function destroy() {
         self::start();

@@ -5,21 +5,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Página Principal</title>
-    <link rel="stylesheet" href="/css/feed.css">
+    <link rel="stylesheet" href="/../public/css/feed.css">
 </head>
 
 <body class="home-page">
-    <?php if(!empty($error)): ?>
-        <script>
-            alert("<?php echo htmlspecialchars($error); ?>");
-        </script>
-    <?php 
-    elseif(!empty($errors) && is_array($errors)): ?>
-        <script>
-            alert("<?php foreach($errors as $err){ echo htmlspecialchars($err) . '\n'; } ?>");
-        </script>
-    <?php endif; ?>
-
     <!-- Conteúdo Principal -->
     <main class="container">
         <!-- Seção de Feed de Posts -->

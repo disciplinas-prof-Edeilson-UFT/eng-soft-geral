@@ -3,14 +3,14 @@ namespace src\database\domain;
 
 class Post{
     private $id;
-    private $user_id;
-    private $photo_url;
-    private $upload_date;
+    private $userID;
+    private $photoUrl;
+    private $uploadDate;
     private $description;
 
-    public function __construct($user_id, $photo_url, $description = null) {
-        $this->user_id = $user_id;
-        $this->photo_url = $photo_url;
+    public function __construct($userID, $photoUrl, $description = null) {
+        $this->userID = $userID;
+        $this->photoUrl = $photoUrl;
         $this->description = $description;
     }
 
@@ -27,31 +27,31 @@ class Post{
     }
 
     public function getUserId(){
-        return $this->user_id;
+        return $this->userID;
     }
 
     public function getPhotoUrl(){
-        return $this->photo_url;
+        return $this->photoUrl;
     }
 
-    public function setPhotoUrl($photo_url) {
-        if (empty($photo_url)) {
-            throw new \InvalidArgumentException("Photo_url não pode estar vazio");
+    public function setPhotoUrl($photoUrl) {
+        if (empty($photoUrl)) {
+            throw new \InvalidArgumentException("PhotoUrl não pode estar vazio");
         }
-        $this->photo_url= $photo_url;
+        $this->photoUrl= $photoUrl;
         return $this;
     }
 
     public function getUploadDate(){
-        return $this->upload_date;
+        return $this->uploadDate;
     }
 
-    public function setUploadDate($upload_date) {
-        if (is_numeric($upload_date)) {
-            $this->upload_date= date('Y-m-d H:i:s', $upload_date);
+    public function setUploadDate($uploadDate) {
+        if (is_numeric($uploadDate)) {
+            $this->uploadDate= date('Y-m-d H:i:s', $uploadDate);
         }
-        else if ($upload_date === null) {
-            $this->upload_date = date('Y-m-d H:i:s');
+        else if ($uploadDate === null) {
+            $this->uploadDate = date('Y-m-d H:i:s');
         }
         return $this;
     }
@@ -67,16 +67,16 @@ class Post{
 
     public function toArray(): array {
         $data = [
-            'user_id' => $this->user_id,
-            'photo_url' => $this->photo_url,
+            'user_id' => $this->userID,
+            'photo_url' => $this->photoUrl,
             'description' => $this->description,
         ];
         
         if ($this->id !== null) {
             $data['id']= $this->id;
         }
-        if ($this->upload_date !== null) {
-            $data['upload_date']= $this->upload_date;
+        if ($this->uploadDate !== null) {
+            $data['upload_date']= $this->uploadDate;
         }
         
         return $data;

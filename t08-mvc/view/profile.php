@@ -11,21 +11,10 @@ require_once __DIR__ . "/../dir-config.php";
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Perfil</title>
-    <link rel="stylesheet" href="/css/profile.css">
+    <link rel="stylesheet" href="/../public/css/profile.css">
 </head>
 
 <body>
-    <?php if(!empty($error)): ?>
-        <script>
-            alert("<?php echo htmlspecialchars($error); ?>");
-        </script>
-    <?php 
-    elseif(!empty($errors) && is_array($errors)): ?>
-        <script>
-            alert("<?php foreach($errors as $err){ echo htmlspecialchars($err) . '\n'; } ?>");
-        </script>
-    <?php endif; ?>
-
     <main class="profile-container">
         <!-- Seção de informações do usuário -->
         <section class="info-section">

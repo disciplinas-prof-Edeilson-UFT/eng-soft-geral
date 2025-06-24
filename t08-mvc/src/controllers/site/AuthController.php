@@ -4,41 +4,44 @@ namespace src\controllers\site;
 
 use src\controllers\BaseController;
 use src\services\AuthService;
-use src\database\domain\User;
 use src\database\dao\UserDAO;
 
 class AuthController extends BaseController{    
-    public $authService;
-    public UserDAO $userDAO;
-    public User $user;
+    private AuthService $authService;
 
     public function __construct() {
-        $this->user = new User(null, null, null, null, null, null, null);
-        $this->userDAO = new UserDAO();
-        $this->authService = new AuthService($this->userDAO, $this->user);
+        $userDAO = new UserDAO();
+        $this->authService = new AuthService($userDAO); 
     }
 
     public function showLogin(){
         $this->staticView('login');
     }
 
-    public function login(){
-        $email = $this->input('email');
-        $password = $this->input('password');
+    public function login() {
+        $email= $this->input('email');
+        $password= $this->input('password');
 
-        $registeredUser = $this->authService->login($email, $password);
+        try {
+            $user= $this->authService->login($email, $password);
 
-        if($registeredUser){
-
-            $this->setSession('user_id', $registeredUser->id);
-            error_log('User ID set in session: ' . $_SESSION['user_id']);
-
-            //echo 'id:' . $_SESSION['user'];
-        
-            $this->redirect('/feed/'. $registeredUser->id . '?success=Loggedin');
-            exit;
+            if ($user) {
+                $this->setSession('user_id', $user->getId());
+                $this->setSession('username', $user->getUsername());
+                
+                //Flash::success('Login realizado com sucesso!');
+                $this->redirect('/');
+                exit;
+            }
+            
+            //Flash::error('Email ou senha incorretos');
+            $this->redirect('/auth/login');
+            
+        } catch (\Exception $e) {
+            //Flash::error('Erro no login: ' . $e->getMessage());
+            
+            $this->redirect('/auth/login');
         }
-        $this->redirect('/auth/login?error=email ou senha incorretos');
         exit;
     }
 
@@ -46,27 +49,26 @@ class AuthController extends BaseController{
         $this->staticView('signup');
     }
 
-    public function signup(){
-        try{
+    public function signup() {
+        try {
             $username = $this->input('username');
             $email = $this->input('email');
             $password = $this->input('password');
             $confirm_password = $this->input('confirm_password');
             $phone = $this->input('phone');
-            $bio = null;
-            $profile_pic_url = null;
 
-            $this->authService->register($username, $email, $password, $confirm_password,$phone, $bio, $profile_pic_url);
+            $this->authService->register($username, $email, $password, $confirm_password, $phone);
 
-            header('Location: /auth/login?success=');
-        }catch(\InvalidArgumentException $e){
-            $this->staticView('signup', ['error' => $e->getMessage()]);
-            exit;
-        }catch(\Exception $e){
-            $this->staticView('signup', ['error' => 'Erro interno do server']);
-            exit;
+            //Flash::success('Cadastro realizado com sucesso!');
+            $this->redirect('/auth/login');
+            
+        } catch (\InvalidArgumentException $e) {
+            //Flash::error($e->getMessage());
+            $this->redirect('/auth/signup');
+        } catch (\Exception $e) {
+            //Flash::error('Erro interno do servidor');
+            $this->redirect('/auth/signup');
         }
-        
-
+        exit;
     }
 }

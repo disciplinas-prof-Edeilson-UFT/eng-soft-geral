@@ -1,26 +1,25 @@
 <?php 
 namespace src\database\domain;
-use DateTime;
 
 class User{
     private $id;
     private $username;
     private $email;
-    private $password_hash;
+    private $passwordHash;
     private $phone;
     private $bio;
-    private $profile_pic_url;
-    private $count_followers;
-    private $count_following;
+    private $profilePicURL;
+    private $countFollowers;
+    private $countFollowing;
+    private $createdAt;
 
-    public function __construct($username, $email, $password_hash, $phone, $bio = null, $profile_pic_url = null) {
-        $this->username = $username;
-        $this->email = $email;
-        $this->password_hash = $password_hash;
-        $this->phone = $phone;
-        $this->bio = $bio;
-        $this->profile_pic_url = $profile_pic_url;
-
+    public function __construct($username, $email, $passwordHash, $phone, $bio= null, $profilePicURL = null) {
+        $this->setUsername($username);  
+        $this->setEmail($email);
+        $this->setPhone($phone);
+        $this->passwordHash = $passwordHash;
+        $this->bio = $bio;       
+        $this->setProfilePicURL($profilePicURL);
     }
 
     public function getId(){
@@ -37,6 +36,19 @@ class User{
 
     public function getUsername(){
         return $this->username;
+    }
+
+    public function getCreatedAt(){
+        return $this->createdAt;
+    }
+
+    public function setCreatedAt($createdAt) {
+        if (is_numeric($createdAt)) {
+            $this->createdAt = date('Y-m-d H:i:s', $createdAt);
+        } else if ($createdAt === null) {
+            $this->createdAt = date('Y-m-d H:i:s');
+        }
+        return $this;
     }
 
     public function setUsername($username) {
@@ -65,26 +77,28 @@ class User{
     }
 
     public function getPasswordHash(){
-        return $this->password_hash;
+        return $this->passwordHash;
     }
 
-    public function setPasswordHash($password, $confirm_password) {
+    public function setPasswordHash($passwordHash) {
+        $this->passwordHash= $passwordHash;
+        return $this;
+    }
+
+    public function setPassword($password, $confirm_password) {
         if ($password !== $confirm_password) {
             throw new \InvalidArgumentException("Senhas não conferem");
         }
-
         if (empty($password)) {
             throw new \InvalidArgumentException("Senha não pode estar vazia");
         }
-
         if (strlen($password) < 8) {
             throw new \InvalidArgumentException("Senha deve ter no mínimo 8 caracteres");
         }
 
-        $this->password_hash = password_hash($password, PASSWORD_ARGON2I);
+        $this->passwordHash = password_hash($password, PASSWORD_ARGON2I);
         return $this;
     }
-
 
     public function getPhone(){
         return $this->phone;
@@ -112,46 +126,62 @@ class User{
         return $this;
     }
 
-    public function getProfilePicUrl(){
-        return $this->profile_pic_url;
+    public function getProfilePicURL(){
+        return $this->profilePicURL;
     }
 
-    public function setProfilePicUrl($profile_pic_url) {
-        $this->profile_pic_url = $profile_pic_url;
+    public function setProfilePicURL($profilePicURL) {
+        if ($profilePicURL !== null && !preg_match('/\.(jpg|jpeg|png|gif)$/i', $profilePicURL)) {
+            throw new \InvalidArgumentException("URL de foto de perfil deve terminar com .jpg, .jpeg, .png ou .gif");
+        }
+        $this->profilePicURL = $profilePicURL;
         return $this;
     }
 
     public function getCountFollowers(){
-        return $this->count_followers;
+        return $this->countFollowers;
     }
 
-    public function setCountFollowers($count_followers) {
-        $this->count_followers = $count_followers;
+    public function setCountFollowers($countFollowers) {
+        $this->countFollowers = $countFollowers;
         return $this;
     }
 
     public function getCountFollowing(){
-        return $this->count_following;
+        return $this->countFollowing;
     }
 
-    public function setCountFollowing($count_following) {
-        $this->count_following = $count_following;
+    public function setCountFollowing($countFollowing) {
+        $this->countFollowing = $countFollowing;
         return $this;
     }
 
-    public function toArray() {
+    public function toArray(): array {
         $data = [
             'username' => $this->username,
             'email' => $this->email,
-            'password_hash' => $this->password_hash,
+            'password_hash' => $this->passwordHash,      
             'phone' => $this->phone,
             'bio' => $this->bio,
-            'profile_pic_url' => $this->profile_pic_url,
+            'profile_pic_url' => $this->profilePicURL,  
         ];
-        //só será adicionado no array depois de setado no authService@singup
+        
         if ($this->id !== null) {
             $data['id'] = $this->id;
         }
+        
+        if ($this->countFollowers !== null) {
+            $data['count_followers'] = $this->countFollowers;
+        }
+        
+        if ($this->countFollowing !== null) {
+            $data['count_following'] = $this->countFollowing;
+        }
+        
+        if ($this->createdAt !== null) {
+            $data['created_at'] = $this->createdAt;
+        }
+        
         return $data;
     }
 }

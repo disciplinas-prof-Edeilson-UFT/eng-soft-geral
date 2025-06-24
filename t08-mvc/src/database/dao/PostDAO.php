@@ -3,7 +3,6 @@ namespace src\database\dao;
 
 use src\database\domain\Post;
 use src\database\BaseDAO;
-use PDO;
 
 class PostDAO extends BaseDAO {
 
