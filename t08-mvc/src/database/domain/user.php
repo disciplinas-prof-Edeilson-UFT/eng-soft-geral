@@ -53,7 +53,7 @@ class User{
 
     public function setUsername($username) {
         if (empty($username)) {
-            throw new \InvalidArgumentException("Username não pode estar vazio");
+            throw new \InvalidArgumentException("Username nao pode estar vazio");
         }
         $this->username = $username;
         return $this;
@@ -65,11 +65,11 @@ class User{
 
     public function setEmail($email) {
         if (empty($email)) {
-            throw new \InvalidArgumentException("Email não pode estar vazio");
+            throw new \InvalidArgumentException("Email nao pode estar vazio");
         }
 
         if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-            throw new \InvalidArgumentException("formato de email inválido");
+            throw new \InvalidArgumentException("formato de email invalido");
         }
 
         $this->email = $email;
@@ -87,10 +87,10 @@ class User{
 
     public function setPassword($password, $confirm_password) {
         if ($password !== $confirm_password) {
-            throw new \InvalidArgumentException("Senhas não conferem");
+            throw new \InvalidArgumentException("Senhas nao conferem");
         }
         if (empty($password)) {
-            throw new \InvalidArgumentException("Senha não pode estar vazia");
+            throw new \InvalidArgumentException("Senha nao pode estar vazia");
         }
         if (strlen($password) < 8) {
             throw new \InvalidArgumentException("Senha deve ter no mínimo 8 caracteres");
@@ -105,15 +105,19 @@ class User{
     }
 
     public function setPhone($phone) {
-        if (empty($phone)) {
-            throw new \InvalidArgumentException("Telefone não pode estar vazio");
+        if ($phone === null) {
+            $this->phone = null;
+            return $this; 
         }
+        if (empty($phone)) {
+            throw new \InvalidArgumentException("Telefone nao pode estar vazio");
+        }
+        
         //ex: (99) 99999-9999
         if (!preg_match('/^(\d{2}|\(\d{2}\))?\s*\d{4,5}[-\s]?\d{4}$/', $phone)) {
-             throw new \InvalidArgumentException("Numero de telefone inválido");
-         }
-
-        $this->phone = $phone;
+            throw new \InvalidArgumentException("Numero de telefone invalido");
+        }
+        $this->phone= $phone;
         return $this;
     }
 

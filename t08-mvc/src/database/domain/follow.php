@@ -18,7 +18,7 @@ class Follow{
 
     public function setUserId($user_id) {
         if (empty($user_id)) {
-            throw new \InvalidArgumentException("User ID não pode estar vazio");
+            throw new \InvalidArgumentException("User ID nao pode estar vazio");
         }
         $this->user_id = $user_id;
         return $this;
@@ -42,7 +42,7 @@ class Follow{
 
     public function setFollowerId($follower_id) {
         if (empty($follower_id)) {
-            throw new \InvalidArgumentException("Follower ID não pode estar vazio");
+            throw new \InvalidArgumentException("Follower ID nao pode estar vazio");
         }
         $this->follower_id = $follower_id;
         return $this;
@@ -54,7 +54,7 @@ class Follow{
 
     public function setFollowingId($user_id) {
         if (empty($user_id)) {
-            throw new \InvalidArgumentException("Following ID não pode estar vazio");
+            throw new \InvalidArgumentException("Following ID nao pode estar vazio");
         }
         $this->user_id = $user_id;
         return $this;
