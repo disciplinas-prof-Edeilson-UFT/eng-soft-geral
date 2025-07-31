@@ -1,84 +1,82 @@
 <?php
-
 namespace src\controllers\site;
+
 use src\controllers\BaseController;
 use src\services\ProfileService;
-use src\database\domain\Post;
-use src\database\dao\PostDAO;
-use src\database\domain\User;
-use src\database\domain\Follow;
 use src\services\FollowService;
+use src\database\dao\PostDAO;
 use src\database\dao\FollowDAO;
 use src\database\dao\UserDAO;
+use Conex\MiniFramework\utils\Flash;
 
-
-class ProfileController extends BaseController{
-    public $profileService;
-    public $followService;
-    public PostDAO $postDAO;
-    public Post $post;
-    public User $user;
-    public Follow $follow;
-    public FollowDAO  $followDAO;
-    public UserDAO $userDAO;
+class ProfileController extends BaseController {
+    private ProfileService $profileService;
+    private FollowService $followService;
 
     public function __construct() {
-        $this->post = new Post(null, null, null, null, null, null, null);
-        $this->postDAO = new PostDAO();
-        $this->user = new User(null, null, null, null, null, null);
-        $this->userDAO = new UserDAO();
-        $this->follow = new Follow(null, null);
-        $this->followDAO = new FollowDAO();
-        $this->profileService = new ProfileService($this->postDAO, $this->post, $this->user);
-        $this->followService = new FollowService($this->followDAO, $this->user, $this->userDAO);
+        parent::__construct();
+        $postDAO = new PostDAO();
+        $userDAO = new UserDAO();
+        $followDAO = new FollowDAO();
+
+        $this->profileService = new ProfileService($userDAO, $postDAO);
+        $this->followService = new FollowService($followDAO, $userDAO);
     }
 
     public function show($user_id) {
         try {
             $profile = $this->profileService->getProfileData($user_id);
-            $profile_pic_url = $profile->getProfilePicUrl();
             $posts = $this->profileService->getProfileFeed($user_id);
-        
+            
             $logged_in_user_id = $this->getSession('user_id', 0);
-            
             $isFollowing = $this->followService->isFollowing($user_id, $logged_in_user_id);
-
             
-            $this->view('profile', ['user' => $profile, 'user_id' => $user_id,'logged_in_user_id' => $logged_in_user_id, 'isFollowing' => $isFollowing,'userPosts' => $posts, 'profilePhoto' => $profile_pic_url]);
+            $this->view('profile', [
+                'user' => $profile,                    
+                'user_id' => $user_id,
+                'logged_in_user_id' => $logged_in_user_id,
+                'isFollowing' => $isFollowing,
+                'userPosts' => $posts,
+                'profilePhoto' => $profile->getProfilePicUrl()
+            ]);
 
         } catch (\InvalidArgumentException $e) {
             error_log('InvalidArgumentException: ' . $e->getMessage());
-            $this->view('profile', ['error' => $e->getMessage(), ]);
-            exit;
+            $this->view('profile', ['error' => $e->getMessage()]);
         } catch (\Exception $e) {
             error_log('Exception: ' . $e->getMessage());
             $this->view('profile', ['error' => 'Erro ao carregar perfil: ' . $e->getMessage()]);
-            exit;
         }
     }
 
     public function follow($user_id) {
         $logged_in_user_id = $this->getSession('user_id', 0);
-        $action = $this->input('action');
         
         if (!$logged_in_user_id) {
+            Flash::error('Você precisa estar logado');
             $this->redirect('/auth/login');
             exit;
         }
         
         try {
+            $action = $this->input('action');
             $success = $this->followService->handleFollow($user_id, $logged_in_user_id, $action);
-            $this->redirect('/profile/' . $user_id . ($success ? '?success=Ação realizada com sucesso' : '?error=Não foi possível realizar esta ação'));
+            
+            Flash::success($success ? 'Ação realizada com sucesso' : 'Não foi possível realizar esta ação');
+            $this->redirect('/profile/' . $user_id);
+            
         } catch (\Exception $e) {
-            $this->redirect('/profile/' . $user_id . '?error=' . urlencode($e->getMessage()));
+            Flash::error($e->getMessage());
+            $this->redirect('/profile/' . $user_id);
         }
+        exit;
     }
-
 
     public function edit($user_id) {
         $logged_in_user_id = $this->getSession('user_id', 0);
         
         if ((int)$user_id !== (int)$logged_in_user_id) {
+            Flash::error('Você só pode editar seu próprio perfil');
             $this->redirect('/profile/' . $user_id);
             exit;
         }
@@ -87,55 +85,68 @@ class ProfileController extends BaseController{
             $user = $this->profileService->getProfileData($user_id);
             $this->view('profile-update', [
                 'user_id' => $user_id,
-                'user' => $user
+                'user' => $user  
             ]);
         } catch (\Exception $e) {
-            $this->redirect('/profile/' . $user_id . '?error=' . urlencode($e->getMessage()));
+            Flash::error($e->getMessage());
+            $this->redirect('/profile/' . $user_id);
         }
     }
 
     public function update($user_id) {
         try {
             $logged_in_user_id = $this->getSession('user_id', 0);
+            
             if ((int)$user_id !== (int)$logged_in_user_id) {
+                Flash::error('Você só pode editar seu próprio perfil');
                 $this->redirect('/profile/' . $user_id);
                 exit;
             }
 
             $action = $this->input('action');
-            if ($action === 'delete') {
-                $this->destroySession();
-                $this->redirect('/auth/login?success=Conta excluída com sucesso');
-                exit;
-            }
             
-            if ($action === 'logout') {
-                $this->destroySession();
-                $this->redirect('/auth/login?success=Logout');
-                exit;
-            }
+            switch ($action) {
+                case 'delete':
+                    $this->profileService->deleteProfile($user_id);
+                    $this->destroySession();
+                    Flash::success('Conta excluída com sucesso');
+                    $this->redirect('/auth/login');
+                    break;
+                    
+                case 'logout':
+                    $this->destroySession();
+                    Flash::success('Logout realizado com sucesso');
+                    $this->redirect('/auth/login');
+                    break;
+                    
+                case 'edit':
+                    $phone = $this->input('phone');
+                    $username = $this->input('username');
+                    $email = $this->input('email'); 
+                    $bio = $this->input('bio');
 
-            if ($action === 'edit') {
-                $phone = $this->input('phone');
-                $username = $this->input('username');
-                $email = $this->input('email'); 
-                $bio = $this->input('bio');
-
-                error_log("Atualizando usuário $user_id - username: '$username', email: '$email', phone: '$phone', bio: '$bio'");
-                $this->profileService->updateProfileData($user_id, $username, $phone, $email, $bio);
-            
-                if (isset($_FILES['profile_pic_url']) && $_FILES['profile_pic_url']['error'] === UPLOAD_ERR_OK) {
-                    $this->profileService->updateProfilePhoto($user_id, $_FILES['profile_pic_url']);
-                }
+                    $this->profileService->updateProfileData($user_id, $username, $phone, $email, $bio);
+                
+                    if (isset($_FILES['profile_pic_url']) && $_FILES['profile_pic_url']['error'] === UPLOAD_ERR_OK) {
+                        $this->profileService->updateProfilePhoto($user_id, $_FILES['profile_pic_url']);
+                    }
+                    
+                    Flash::success('Perfil atualizado com sucesso');
+                    break;
+                    
+                default:
+                    throw new \InvalidArgumentException('Ação inválida');
             }
 
             $this->redirect('/profile/' . $user_id);
 
         } catch (\InvalidArgumentException $e) {
-            $this->redirect('/profile/' . $user_id . '/edit?error=' . urlencode($e->getMessage()));
-        }catch(\Exception $e){
-            $this->redirect('/profile/' . $user_id . '/edit?error=' . urlencode($e->getMessage()));
-
+            Flash::error($e->getMessage());
+            $this->redirect('/profile/' . $user_id . '/edit');
+        } catch (\Exception $e) {
+            Flash::error('Erro interno: ' . $e->getMessage());
+            $this->redirect('/profile/' . $user_id . '/edit');
         }
+        exit;
     }
 }

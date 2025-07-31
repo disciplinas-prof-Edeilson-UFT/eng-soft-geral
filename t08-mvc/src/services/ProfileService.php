@@ -1,122 +1,80 @@
 <?php
-
 namespace src\services;
+
+use src\database\dao\UserDAO;
 use src\database\dao\PostDAO;
-use src\database\domain\Post;
-use src\services\UploadImageService;
 use src\database\domain\User;
+use src\database\mappers\UserMapper;
 
-class ProfileService{
-    public PostDAO $postDAO;
-    public Post $post;
-    public UploadImageService $uploadImageService;
-    public User $user;
+class ProfileService {
+    private UserDAO $userDAO;
+    private PostDAO $postDAO;
+    private UserMapper $userMapper;
 
-    public function __construct(PostDAO $postDAO, Post $post, User $user)
-    {
+    public function __construct(UserDAO $userDAO, PostDAO $postDAO) {
+        $this->userDAO = $userDAO;
         $this->postDAO = $postDAO;
-        $this->post = $post;
-        $this->uploadImageService = new UploadImageService();
-        $this->user = $user;
+        $this->userMapper = new UserMapper();
     }
 
-    public function getProfileFeed($user_id){
-        $profileFeed = $this->postDAO->getPostsById($user_id);
+    public function getProfileData(int $userId): User {
+        if($userId <= 0) {
+            throw new \InvalidArgumentException('ID de user invalido');
+        }
+
+        $userData = $this->userDAO->getUserProfileById($userId);
         
-        return $profileFeed;
+        if(!$userData) {
+            throw new \InvalidArgumentException('user nao encontrado');
+        }
+
+        return $this->userMapper->mapToUserProfile($userData);
     }
 
-
-
-    public function getProfileData($user_id) {
-        $userData = $this->postDAO->find('users', ['id' => $user_id], ['*']);
-        
-        if (empty($userData)) {
-            throw new \InvalidArgumentException("Perfil não encontrado");
-        }
-        
-        $userObj = is_array($userData) ? $userData[0] : $userData;
-        
-        $userArray = [];
-        if (is_object($userObj)) {
-            $userArray = get_object_vars($userObj);
-        } else if (is_array($userObj)) {
-            $userArray = $userObj;
-        } else {
-            throw new \InvalidArgumentException("Formato de dados de usuário inválido");
-        }
-        
-        $user = new User(
-            $userArray['username'] ?? null,
-            $userArray['email'] ?? null, 
-            $userArray['password_hash'] ?? null,
-            $userArray['phone'] ?? null,
-            $userArray['bio'] ?? null,
-            $userArray['profile_pic_url'] ?? null
-        );
-        
-        /*foreach ($userArray as $key => $value) {
-            echo $key . ' => ' . $value . '<br>';
-        }*/
-        if (isset($userArray['id'])) {
-            $user->setId($userArray['id']);
-        }
-        
-        $user->setCountFollowers($userArray['count_followers'] ?? 0);
-        $user->setCountFollowing($userArray['count_following'] ?? 0);
-        
-        return $user;
+    public function getProfileFeed(int $userId): array {
+        return $this->postDAO->getPostsByUserId($userId);
     }
 
-    public function getUserProfile($user_id){
-        $profileFeed = $this->getProfileFeed($user_id);   
-        $profileData = $this->getProfileData($user_id);
-        return ['profileFeed' => $profileFeed, 'profileData' => $profileData];
+    public function updateProfileData(int $userId, string $username, string $phone, string $email, string $bio): bool {
+        if(empty($username) || strlen($username) < 3) {
+            throw new \InvalidArgumentException('Username deve ter pelo menos 3 caracteres');
+        }
+
+        if(!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            throw new \InvalidArgumentException('Email inválido');
+        }
+
+        if($this->userDAO->checkEmailExists($email, $userId)) {
+            throw new \InvalidArgumentException('Email já está em uso');
+        }
+        return $this->userDAO->updateUser($username, $email, $bio, $phone, $userId);
     }
 
-    public function updateProfilePhoto($id, $file)
-    {
-        if (!isset($file) || !is_uploaded_file($file['tmp_name'])) {
-            throw new \InvalidArgumentException("Arquivo inválido ou upload falhou");
+    public function updateProfilePhoto(int $userId, array $file): bool {
+        $allowedTypes = ['jpg', 'jpeg', 'png', 'gif'];
+        
+        $uploadResult = UploadImageService::handleUpload($file, 'avatars', $allowedTypes);
+
+        if (!$uploadResult['success']) {
+            throw new \InvalidArgumentException($uploadResult['error']);
         }
 
-        $allowTypes = array('jpeg', 'png');
-        $uploadDir = '/uploads/avatars/';
-        $result = $this->uploadImageService->handleUpload($file, $uploadDir, $allowTypes);
-        
-        if ( !$result['success']) {
-            throw new \InvalidArgumentException("Erro ao fazer upload da foto de perfil");
-        }
-        
-        $fileUrl = $result['file_name'];
-        $this->user->setProfilePicUrl($fileUrl);
-        $updated = $this->postDAO->update('users', ['id' => $id], ['profile_pic_url' => $fileUrl]);
-        
-        if (!$updated) {
-            throw new \InvalidArgumentException("Erro ao atualizar foto de perfil no banco de dados");
-        }
-
-        return $fileUrl;
+        return $this->userDAO->updateProfilePic($userId, $uploadResult['file_name']);
     }
 
-    public function updateProfileData($user_id, $username, $phone, $email, $bio){
-        $registeredUser = $this->postDAO->find('users', ['id' => $user_id], ['*']);
-        if (empty($registeredUser)) {
-            throw new \InvalidArgumentException("Usuário não encontrado");
-        }
-        
-        $updatedUser = $this->postDAO->update('users', ['id' => $user_id], ['username' => $username,'email' => $email,'bio' => $bio, 'phone' => $phone]);
-        
-        if (!$updatedUser) {
-            throw new \InvalidArgumentException("Erro ao atualizar user no banco");
-        }
-        $this->user->setId($user_id);
-        $this->user->setUsername($username);
-        $this->user->setEmail($email);
-        $this->user->setBio($bio);
-        
-        if (isset($registeredUser[0]->profile_pic_url)) {
-            $this->user->setProfilePicUrl($registeredUser[0]->profile_pic_url);
+    public function deleteProfile(int $userId): bool {
+        try {
+            $this->userDAO->beginTransaction();
+            
+            $this->postDAO->deleteAllPostsByUserId($userId);
+            $result = $this->userDAO->deleteUser($userId);
+            
+            $this->userDAO->commit();
+            return $result;
+            
+        } catch (\Exception $e) {
+            $this->userDAO->rollback();
+            throw $e;
         }
     }
 }

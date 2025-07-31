@@ -3,11 +3,18 @@ namespace src\database\dao;
 
 use src\database\domain\Post;
 use src\database\BaseDAO;
+use src\database\mappers\PostMapper;
 
 class PostDAO extends BaseDAO {
+    private PostMapper $mapper;
+
+    public function __construct() {
+        parent::__construct();
+        $this->mapper = new PostMapper();
+    }
 
     public function insertPost(Post $post): bool {
-        return $this->insert('posts', $post);
+        return $this->insert('posts', $post->toArray());
     }
 
     public function getPostByUserAndPhoto($userID, $photoURL): ?Post {
@@ -18,7 +25,7 @@ class PostDAO extends BaseDAO {
             return null;
         }
 
-        return $this->mapToPost($result[0]);
+        return $this->mapper->mapToPost($result[0]);
     }
 
     public function getPostsByUserID($userID) {
@@ -38,19 +45,14 @@ class PostDAO extends BaseDAO {
                 JOIN users u ON p.user_id = u.id 
                 ORDER BY p.upload_date DESC";
 
-        return $this->executeQuery($sql);
+        return $this->executeQuery($sql); 
     }
 
-    public function mapToPost(array $data): Post {
-        $post= new Post($data['user_id'], $data['photo_url'], $data['description']);
-        
-        if (isset($data['id'])) {
-            $post->setId($data['id']);
-        }
-        if (isset($data['upload_date'])) {
-            $post->setUploadDate($data['upload_date']);
-        }
-        return $post;
+    public function deleteAllPostsByUserId($userId): bool {
+        $sql = "DELETE FROM posts WHERE user_id = ?";
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute([$userId]);
+        return $stmt->rowCount(); 
     }
 
 }

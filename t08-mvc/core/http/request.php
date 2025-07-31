@@ -10,66 +10,89 @@ class Request
     Método (GET/POST)
     Query strings
     Dados de formulários
-    Headers
     */
 
     //obtem o método da requisição: GET, POST, PUT, DELETE, (são enviados pelo browser)
-    public static function getMethod()
-    {
+    public static function getMethod(){
         return strtolower($_SERVER['REQUEST_METHOD']);
     }
 
     //obtem o caminho da requisição (URI): /users/1 no browser
-    public static function getPath()
-    {
+    public static function getPath(){
         $path = $_SERVER['REQUEST_URI'];
         $position = strpos($path, '?');
-
-        if (!$position) {
-            return $path;
-        }
-        return substr($path, 0, $position);
-    }
-
-    //obtem o corpo da requisição com todos os dados do POST ou GET em um array, ex: $_POST['name'] = 'abc' => ['name' => 'abc']
-    public static function getBody(): array{
-        $body = [];
-        if (self::getMethod() === 'get'){
-            foreach ($_GET as $key => $value){
-                $body[$key] = filter_input(INPUT_GET, $key, FILTER_SANITIZE_SPECIAL_CHARS);
-            }
-        }
-        if (self::getMethod() === 'post'){
-            foreach ($_POST as $key => $value){
-                $body[$key] = filter_input(INPUT_POST, $key, FILTER_SANITIZE_SPECIAL_CHARS);
-            }
-        }
-        return $body;
+        return $position ? substr($path, 0, $position) : $path;
     }
 
     // obtem um campo específico do POST
     //Request::input('name') representa $_POST['name']
-    public static function input(string $input)
+    public static function input(string $input, bool $sanitize = true)
     {
         if(self::getMethod() !== 'post'){
-            throw new Exception("Não é um metodo do tipo POST");
+            throw new Exception("Nao e um metodo do tipo POST");
         }
-        $body = self::getBody();
+        $value = $_POST[$input] ?? null;
 
-        return $body[$input] ?? throw new Exception("Campo {$input} não encontrado no body da requisição");
+        if ($value === null) {
+            throw new Exception("Campo {$input} não encontrado");
+        }
+
+        return $sanitize ? filter_var($value, FILTER_SANITIZE_SPECIAL_CHARS) : $value;
     }
 
     //recupera um campo específico do GET
     // Request::query('name') representa um $_GET['name']
-    public static function query(string $query)
+    public static function query(string $query, bool $sanitize = true)
     {
         if(self::getMethod() !== 'get'){
-            throw new Exception("Não é um metodo do tipo get");
+            throw new Exception("Nao e um metodo do tipo get");
         }
-        $body = self::getBody();
+        $value = $_GET[$query] ?? null;
 
-        return $body[$query] ?? throw new Exception("O campo {$query} não foi encontrado na url"); 
+        if ($value === null) {
+            throw new Exception("Campo {$query} não encontrado na URL");
+        }
 
+        return $sanitize ? filter_var($value, FILTER_SANITIZE_SPECIAL_CHARS) : $value;
+
+    }
+
+    // ex: Request::getAllPost()
+    /* Retorna:
+        Array (
+            [username] => abc123
+            [idade] => 123
+    */
+    public static function getAllPost(bool $sanitize = true): array {
+        if (self::getMethod() !== 'post') {
+            return [];
+        }
+        
+        if (!$sanitize) {
+            return $_POST;
+        }
+        
+        return array_map(fn($value) => filter_var($value, FILTER_SANITIZE_SPECIAL_CHARS), $_POST);
+    }
+
+    // ex: Request::getAllQuery()
+    /* Retorna:
+        Array (
+            [nome] => abc
+            [categoria] => teste
+            [page] => 2
+        )
+    */
+    public static function getAllQuery(bool $sanitize = true): array {
+        if (self::getMethod() !== 'get') {
+            return [];
+        }
+
+        if (!$sanitize) {
+            return $_GET;
+        }
+
+        return array_map(fn($value) => filter_var($value, FILTER_SANITIZE_SPECIAL_CHARS), $_GET);
     }
 
 }

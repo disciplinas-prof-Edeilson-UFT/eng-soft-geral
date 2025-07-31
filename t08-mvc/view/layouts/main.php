@@ -1,42 +1,47 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?= $pageTitle ?? 'Conex' ?></title>
-    <link rel="stylesheet" href="/../public/css/main.css">
-    <link rel="stylesheet" href="/../public/css/flash.css"> 
+    <link rel="stylesheet" href="/public/css/main.css">
+    <link rel="stylesheet" href="/public/css/flash.css"> 
+    <?php if (isset($pageCSS)): ?>
+        <link rel="stylesheet" href="/public/css/<?= $pageCSS ?>.css">
+    <?php endif; ?>
 </head>
 
 <body>
     <?php include __DIR__ . '/../components/flash.php'; ?>
     
     <aside class="side-bar">
-        <img src="/../public/img/logo.svg" alt="logo" class="logo">
+        <img src="/public/img/logo.svg" alt="logo" class="logo">
         <div class="side-bar-links">
             <a href="/">
-                <img src="/../public/img/home.svg" class="icon">
+                <img src="/public/img/home.svg" class="icon">
                 Página principal
             </a>
             <button id="searchButton" onclick="toggleSearch()">
-                <img src="/../public/img/search.svg" class="icon">
+                <img src="/public/img/search.svg" class="icon">
                 Pesquisar
             </button>
-            <a href="/profile/<?php echo $loggedInUserID; ?>">
-                <img src="/../public/img/profile.svg" class="icon">
-                Perfil
-            </a>
+
+            <!-- ✅ CORRIGIDO: Só mostrar link de perfil se usuário logado -->
             <?php if ($isAuthenticated ?? false): ?>
-            <div class="user-info">
-                <span>Olá, <?= htmlspecialchars($username ?? 'Usuário') ?>!</span>
-                <a href="/auth/logout">Sair</a>
-            </div>
-            <?php else: ?>
-                <div class="auth-links">
-                    <a href="/auth/login">Entrar</a>
-                    <a href="/auth/signup">Cadastrar</a>
+                <a href="/profile/<?= $loggedInUserID; ?>">
+                    <img src="/public/img/profile.svg" class="icon">
+                    Perfil
+                </a>
+                <div class="user-info">
+                    <span>Olá, <?= htmlspecialchars($username ?? 'Usuário') ?>!</span>
+                    <a href="/auth/logout">Sair</a>
                 </div>
+            <?php else: ?>
+                <!-- ✅ CORRIGIDO: Link para login ao invés de perfil -->
+                <a href="/auth/login">
+                    <img src="/public/img/profile.svg" class="icon">
+                    Entrar
+                </a>
             <?php endif; ?>
         </div>
     </aside>
@@ -52,12 +57,16 @@
     <div class="main-content">
         {{content}}
     </div>
+
     <script>
         function redirectToProfile() {
-            window.location.href = "/profile/<?php echo $loggedInUserID ?? ''; ?>";
+            <?php if ($isAuthenticated ?? false): ?>
+                window.location.href = "/profile/<?= $loggedInUserID; ?>";
+            <?php else: ?>
+                window.location.href = "/auth/login";
+            <?php endif; ?>
         }
     </script>
-    <script src="/js/search.js"></script>
+    <script src="/public/js/search.js"></script>
 </body>
-
 </html>

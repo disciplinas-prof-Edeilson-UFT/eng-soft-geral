@@ -1,7 +1,5 @@
 <?php 
-require_once __DIR__ . "/../dir-config.php";
-//echo "userID = " . $user_id;
-//echo "logged in user ID = " . $logged_in_user_id;
+require_once __DIR__ . "/../dirconfig.php";
 ?>
 
 <!DOCTYPE html>
@@ -20,9 +18,9 @@ require_once __DIR__ . "/../dir-config.php";
         <section class="info-section">
             <div class="photo-container">
                 <?php if ($user->getProfilePicUrl()): ?>
-                    <img src="/uploads/avatars/<?= htmlspecialchars($user->getProfilePicUrl()) ?>" alt="Foto de Perfil" class="profile-picture">
+                    <img src="/public/uploads/avatars/<?= htmlspecialchars($user->getProfilePicUrl()) ?>" alt="Foto de Perfil" class="profile-picture">
                 <?php else: ?>
-                    <img src="/img/profile.svg" alt="Foto de Perfil" class="profile-picture">
+                    <img src="/public/img/profile.svg" alt="Foto de Perfil" class="profile-picture">
                 <?php endif; ?>
 
                 <!-- Botão de edição de perfil (apenas para o próprio usuário) -->
@@ -35,10 +33,10 @@ require_once __DIR__ . "/../dir-config.php";
                     
             <div class="user-info">
                 <h1 class="user-name"><?php echo htmlspecialchars($user->getUsername()) ?></h1>
-                <p class="user-bio"><?php echo htmlspecialchars($user->getBio()) ?></p>
+                <p class="user-bio"><?php echo htmlspecialchars($user->getBio() ?? 'adicione uma bio') ?></p>
                 <div class="stats-container">
-                    <span class="following"><?= htmlspecialchars($user->getCountFollowers()) ?> seguindo</span>
-                    <span class="followers"><?= htmlspecialchars($user->getCountFollowing()) ?> seguidores</span>
+                    <span class="following"><?= htmlspecialchars($user->getCountFollowing()) ?> seguindo</span>
+                    <span class="followers"><?= htmlspecialchars($user->getCountFollowers()) ?> seguidores</span>
                 </div>
                     
                 <!-- Formulário para seguir/deixar de seguir (apenas para outros usuários) -->
@@ -53,11 +51,11 @@ require_once __DIR__ . "/../dir-config.php";
             </div>
 
             <!-- exibir botão de postagem caso o usuario ja tenha postado algo -->
-            <div class="add-more-posts-button">
-                <?php if (!empty($userPosts)): ?>
+            <?php if (!empty($userPosts)): ?>
+                <div class="add-more-posts-button">
                     <div class="upload-more-photos">
                         <div class="upload-container">
-                            <form action="/feed/<?= $logged_in_user_id ?>/store" method="POST" enctype="multipart/form-data">
+                            <form action="/feed/<?= $user_id ?>/store" method="POST" enctype="multipart/form-data">
                                 <label for="photo">
                                     Adicionar foto 
                                 </label>
@@ -66,8 +64,8 @@ require_once __DIR__ . "/../dir-config.php";
                             </form>
                         </div>
                     </div>
-                <?php endif; ?>
-            </div>
+                </div>
+            <?php endif; ?>
         </section>
 
         <!-- Seção da foto do feed -->
@@ -78,18 +76,18 @@ require_once __DIR__ . "/../dir-config.php";
                     if (isset($userPosts[0]['photo_url'])) {
                         $relativePath = "/uploads/feed/" . htmlspecialchars($userPosts[0]['photo_url']);
                         ?>
-                        <img src="<?= $relativePath; ?>" alt="Imagem do Feed" class="feed-image">
+                        <img src="/public/uploads/feed/<?= htmlspecialchars($userPosts[0]['photo_url']) ?>" alt="Post" class="feed-image">
                     <?php } ?>
                 <?php endif; ?>
             </div>
 
             <!-- Formulário de upload de foto (apenas para o próprio usuário e se não houver foto) -->
-            <?php if (empty($userPosts) && $user_id == $_SESSION['user_id']): ?>
+            <?php if (empty($userPosts) && (int)$user_id === (int)$_SESSION['user_id']): ?>
                 <div class="pai-do-upload-container">
                     <div class="upload-container">
-                        <form action="/feed/<?= $logged_in_user_id ?>/store" method="POST" enctype="multipart/form-data">
+                        <form action="/feed/<?= $user_id ?>/store" method="POST" enctype="multipart/form-data">
                             <label for="photo">
-                                <img src="/img/add-photo.svg" class="icon"> <br>
+                                <img src="/public/img/add-photo.svg" class="icon"> <br>
                                 Adicionar foto
                             </label>
                             <input type="file" id="photo" name="file" accept="image/*">

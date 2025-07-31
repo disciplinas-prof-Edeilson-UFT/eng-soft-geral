@@ -1,48 +1,86 @@
-.container {
+/* Herda todas as variáveis e estilos base do main.css */
+
+/* Container principal do feed */
+.feed-container {
     width: 100%;
-    max-width: 600px;
-    margin: 0 auto; 
+    max-width: 800px;
+    margin: 0 auto;
     padding: 20px;
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
+    min-height: 100vh;
 }
 
+/* Header do feed */
+.feed-header {
+    margin-bottom: 30px;
+    text-align: center;
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.feed-header h1 {
+    font-size: 28px; /* Usa a mesma definição do main.css */
+    font-weight: 600;
+    color: var(--text-color);
+    margin: 0 0 8px 0;
+}
+
+.feed-header p {
+    color: var(--text-gray);
+    font-size: 16px;
+    margin: 0;
+}
+
+/* Content wrapper */
+.feed-content {
+    width: 100%;
+}
+
+/* Lista de posts */
 .feed {
     display: flex;
     flex-direction: column;
-    gap: 20px;
+    gap: 30px;
+    max-width: 600px;
+    margin: 0 auto;
 }
 
+/* Post individual */
 .post {
-    background: #ffffff;
-    border: 1px solid #e3e3e3;
-    border-radius: 12px;
+    background: var(--white);
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
     overflow: hidden;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-    transition: box-shadow 0.2s ease;
+    box-shadow: var(--shadow-light);
+    transition: var(--transition);
 }
 
 .post:hover {
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+    box-shadow: var(--shadow-medium);
+    transform: translateY(-2px);
 }
 
+/* Header do post (informações do usuário) */
 .user-info {
     padding: 16px 20px;
     display: flex;
     align-items: center;
     gap: 12px;
-    background: #ffffff;
-    border-bottom: 1px solid #f0f0f0;
+    background: var(--white);
+    border-bottom: 1px solid var(--border-color);
 }
 
 .avatar {
-    width: 40px;
-    height: 40px;
+    width: 44px;
+    height: 44px;
     border-radius: 50%;
     overflow: hidden;
-    border: 2px solid #f0f0f0;
-    flex-shrink: 0; 
+    border: 2px solid var(--border-color);
+    flex-shrink: 0;
+    transition: var(--transition);
+}
+
+.avatar:hover {
+    border-color: var(--primary-color);
 }
 
 .avatar img,
@@ -55,69 +93,174 @@
 
 .username {
     font-weight: 600;
-    font-size: 14px;
-    color: #262626;
+    font-size: 15px;
+    color: var(--text-color);
     text-decoration: none;
-    transition: color 0.2s ease;
+    transition: var(--transition);
 }
 
 .username:hover {
-    color: #0095f6;
+    color: var(--primary-color);
 }
 
-.image-placeholder {
+/* Container da imagem do post */
+.image-container {
     width: 100%;
-    max-height: 600px; 
+    max-height: 500px;
     overflow: hidden;
-    background-color: #f8f9fa;
+    background-color: var(--background-color);
     display: flex;
     justify-content: center;
     align-items: center;
     position: relative;
 }
 
+.post-image,
 .image-placeholder img {
     width: 100%;
     height: auto;
+    max-height: 500px;
     object-fit: cover;
     display: block;
+    transition: var(--transition);
 }
 
+.post-image:hover,
+.image-placeholder img:hover {
+    transform: scale(1.02);
+}
+
+/* Placeholder para quando não há imagem */
 .image-placeholder:empty::after {
     content: "📷";
     font-size: 48px;
-    color: #c7c7c7;
+    color: var(--text-light);
 }
 
+/* Descrição do post */
+.post-description {
+    padding: 16px 20px 0;
+}
+
+.post-description p {
+    color: var(--text-color);
+    font-size: 14px;
+    line-height: 1.6; /* Usa a mesma definição do main.css */
+    margin: 0;
+    word-wrap: break-word;
+}
+
+/* Meta informações (data) */
+.post-meta {
+    padding: 12px 20px 16px;
+    border-top: 1px solid var(--border-color);
+    background: var(--background-color);
+}
+
+.post-meta time {
+    color: var(--text-gray);
+    font-size: 12px;
+    font-weight: 400;
+}
+
+/* Divisor entre posts */
 .divider {
     border: none;
     height: 1px;
-    background: linear-gradient(90deg, transparent, #e3e3e3, transparent);
+    background: linear-gradient(90deg, transparent, var(--border-color), transparent);
     margin: 30px 0;
 }
 
-.feed p {
+/* Estado "sem posts" */
+.no-posts {
     text-align: center;
-    color: #8e8e8e;
-    font-size: 18px;
     padding: 60px 20px;
-    background: #ffffff;
-    border: 2px dashed #e3e3e3;
-    border-radius: 12px;
+    background: var(--white);
+    border: 2px dashed var(--border-color);
+    border-radius: var(--border-radius);
     margin: 20px 0;
 }
 
-@media (max-width: 768px) {
-    .container {
+.no-posts-icon {
+    width: 64px;
+    height: 64px;
+    opacity: 0.5;
+    margin-bottom: 20px;
+}
+
+.no-posts h3 {
+    color: var(--text-color);
+    font-size: 20px;
+    font-weight: 600;
+    margin: 0 0 8px 0;
+}
+
+.no-posts p {
+    color: var(--text-gray);
+    font-size: 16px;
+    margin: 0 0 20px 0;
+    line-height: 1.6;
+}
+
+.btn-create-post {
+    display: inline-block;
+    background: var(--primary-color);
+    color: var(--white);
+    padding: 12px 24px;
+    border-radius: var(--border-radius-sm);
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 14px;
+    transition: var(--transition);
+    font-family: inherit;
+}
+
+.btn-create-post:hover {
+    background: var(--secondary-color);
+    color: var(--white);
+}
+
+/* Estados de loading */
+.post.loading {
+    opacity: 0.6;
+    pointer-events: none;
+}
+
+.post.loading .image-container {
+    background: linear-gradient(90deg, var(--background-color) 25%, var(--border-color) 50%, var(--background-color) 75%);
+    background-size: 200% 100%;
+    animation: loading 1.5s infinite;
+}
+
+@keyframes loading {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+}
+
+/* ===== RESPONSIVIDADE ===== */
+@media (max-width: 1024px) {
+    .feed-container {
         max-width: 100%;
-        padding: 10px;
-        gap: 15px;
+        padding: 20px 15px;
+    }
+    
+    .feed {
+        max-width: 100%;
+    }
+}
+
+@media (max-width: 768px) {
+    .feed-container {
+        padding: 15px 10px;
+    }
+    
+    .feed {
+        gap: 20px;
     }
     
     .post {
-        border-radius: 0; 
-        border-left: none;
-        border-right: none;
+        border-radius: var(--border-radius-sm);
+        margin: 0;
     }
     
     .user-info {
@@ -125,67 +268,83 @@
     }
     
     .avatar {
-        width: 32px;
-        height: 32px;
+        width: 36px;
+        height: 36px;
     }
     
     .username {
-        font-size: 13px;
+        font-size: 14px;
     }
     
-    .image-placeholder {
+    .image-container {
         max-height: 400px;
     }
     
-    .divider {
-        margin: 20px 0;
-    }
-}
-
-@media (max-width: 480px) {
-    .container {
-        padding: 5px;
+    .post-image,
+    .image-placeholder img {
+        max-height: 400px;
     }
     
-    .feed p {
-        font-size: 16px;
+    .post-description {
+        padding: 12px 16px 0;
+    }
+    
+    .post-meta {
+        padding: 10px 16px 12px;
+    }
+    
+    .feed-header h1 {
+        font-size: 24px;
+    }
+    
+    .no-posts {
+        margin: 0;
         padding: 40px 15px;
     }
 }
 
-@media (min-width: 768px) {
-    .container {
-        margin-left: 0; 
-        max-width: 100%;
+@media (max-width: 480px) {
+    .feed-container {
+        padding: 10px 5px;
+    }
+    
+    .feed-header {
+        margin-bottom: 20px;
+    }
+    
+    .feed-header h1 {
+        font-size: 22px;
+    }
+    
+    .image-container {
+        max-height: 300px;
+    }
+    
+    .post-image,
+    .image-placeholder img {
+        max-height: 300px;
+    }
+    
+    .no-posts {
+        padding: 30px 10px;
+    }
+    
+    .no-posts h3 {
+        font-size: 18px;
+    }
+    
+    .no-posts p {
+        font-size: 14px;
     }
 }
 
-
+/* ===== ACESSIBILIDADE ===== */
 .username:focus {
-    outline: 2px solid #0095f6;
+    outline: 2px solid var(--primary-color);
     outline-offset: 2px;
+    border-radius: 4px;
 }
 
 .post {
-    scroll-margin-top: 20px; 
-}
-
-.post.loading {
-    opacity: 0.6;
-    pointer-events: none;
-}
-
-.post.loading .image-placeholder {
-    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
-    background-size: 200% 100%;
-    animation: loading 1.5s infinite;
-}
-
-@keyframes loading {
-    0% {
-        background-position: 200% 0;
-    }
-    100% {
-        background-position: -200% 0;
-    }
+    scroll-margin-top: 20px;
 }

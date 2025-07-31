@@ -6,9 +6,8 @@ use Conex\MiniFramework\mvc\helpers\Parameters;
 
 class Controller
 {
-    /* O Controller executa o método do controller correspondente à rota acessada pelo usuário. Para isso, o Controller deve ser capaz de identificar qual é o controller e o método que deve
+    /* Executa o método do controller correspondente à rota acessada pelo usuário. Para isso, o Controller deve ser capaz de identificar qual é o controller e o método que deve
     ser executado
-    
     */
 
     //Executa o metodo do controller correspondente à rota acessada pelo usuário, passando os parâmetros

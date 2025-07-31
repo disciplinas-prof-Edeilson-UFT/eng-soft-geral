@@ -16,10 +16,11 @@ class FeedController extends BaseController {
 
     public function show() {
         try {
+            $loggedUserId = $this->getSession('user_id');
             $posts= $this->feedService->getAllPostsFeed();
-            $this->view('feed', ['posts' => $posts, 'pageTitle' => 'Feed']);
+            $this->view('feed', ['posts' => $posts, 'pageTitle' => 'Feed', 'loggedUserId' => $loggedUserId, 'pageCSS' => 'feed']);
         } catch (\Exception $e) {
-            $this->view('feed', ['posts' => [], 'error' => $e->getMessage(), 'pageTitle' => 'Feed - error']);
+            $this->view('feed', ['posts' => [], 'error' => $e->getMessage(), 'pageTitle' => 'Feed - error', 'pageCSS' => 'feed']);
         }
     }
 

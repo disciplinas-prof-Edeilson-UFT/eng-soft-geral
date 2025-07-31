@@ -3,8 +3,16 @@ namespace src\database\dao;
 
 use src\database\domain\User;
 use src\database\BaseDAO;
+use src\database\mappers\UserMapper;
 
 class UserDAO extends BaseDAO {
+    private UserMapper $mapper;
+
+    public function __construct() {
+        parent::__construct();
+        $this->mapper = new UserMapper();
+    }
+
     public function insertUser(User $user): bool {
         return $this->insert('users', $user->toArray());
     }
@@ -46,7 +54,7 @@ class UserDAO extends BaseDAO {
 
     public function getUserById($id): ?User {
         $userData = $this->find('users', $id);
-        return $userData ? $this->mapToUser($userData) : null;
+        return $userData ? $this->mapper->mapToUser($userData) : null;
     }
 
     public function findByEmail($email): ?User {
@@ -57,16 +65,11 @@ class UserDAO extends BaseDAO {
             return null;
         }
         
-        return $this->mapToUser($result[0]);
+        return $this->mapper->mapToUser($result[0]);
     }
 
     public function updateUser($username, $email, $bio, $phone, $id): bool {
-        $data= [
-            'username' => $username,
-            'email' => $email,
-            'bio' => $bio,
-            'phone' => $phone
-        ];
+        $data= ['username' => $username,'email' => $email,'bio'=> $bio,'phone' => $phone];
         return $this->update('users', $data, $id);
     }
 
@@ -89,37 +92,46 @@ class UserDAO extends BaseDAO {
         return $this->delete('users', $id);
     }
 
-    public function mapToUser(array $data): User {
-        $user = new User(
-            $data['username'], 
-            $data['email'], 
-            null, 
-            $data['phone'] ?? null,
-            $data['bio'] ?? null,
-            $data['profile_pic_url'] ?? null
-        );
+    private function getCount($userId, $countColumn)
+    {
+        $allowedColumns = ['count_followers', 'count_following'];
         
-        if (isset($data['id'])) {
-            $user->setId($data['id']);
-        }
-        
-        if (isset($data['password_hash'])) {
-            $user->setPasswordHash($data['password_hash']);
-        }
-        
-        if (isset($data['created_at'])) {
-            $user->setCreatedAt($data['created_at']);
+        if (!in_array($countColumn, $allowedColumns)) {
+            throw new \InvalidArgumentException("Invalid column name: $countColumn");
         }
 
-        if (isset($data['count_followers'])) {
-            $user->setCountFollowers($data['count_followers']);
-        }
+        $query = "SELECT $countColumn FROM users WHERE id = :user_id";
+        $stmt = $this->db->prepare($query);
+        $stmt->execute([":user_id" => $userId]);
+        return $stmt->fetchColumn();
+    }
 
-        if (isset($data['count_following'])) {
-            $user->setCountFollowing($data['count_following']);
-        }
-        
-        return $user;
+    public function getFollowers($userId)
+    {
+        return $this->getCount($userId, 'count_followers');
+    }
+
+    public function getFollowing($userId)
+    {
+        return $this->getCount($userId, 'count_following');
+    }
+
+    public function incrementFollowers($userId)
+    {
+        return $this->update('users', ['id' => $userId], ['count_followers' => 'count_followers + 1']);
+    }
+
+    public function incrementFollowing($userId)
+    {
+        return $this->update('users', ['id' => $userId], ['count_following' => 'count_following + 1']);
+    }
+
+    public function decrementFollowing($userId): bool {
+        return $this->update('users', ['id' => $userId], ['count_following' => 'count_following - 1']);
+    }
+
+    public function decrementFollowers($userId): bool {
+        return $this->update('users', ['id' => $userId], ['count_followers' => 'count_followers - 1']);
     }
 
     public function createUserWithPassword($username, $email, $password, $confirm_password, $phone): bool {

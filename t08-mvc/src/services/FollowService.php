@@ -3,70 +3,84 @@ namespace src\services;
 
 use src\database\dao\FollowDAO;
 use src\database\dao\UserDAO;
-use src\database\domain\User;
 use src\database\domain\Follow;
 
 class FollowService{
-    public FollowDAO $followDAO;
-    public User $user;
-    public UserDAO $userDAO;
-    public Follow $follow;  
+    private FollowDAO $followDAO;
+    private UserDAO $userDAO;
 
-    public function __construct(FollowDAO $followDAO, User $user, UserDAO $userDAO)
+
+    public function __construct(FollowDAO $followDAO, UserDAO $userDAO)
     {
         $this->followDAO = $followDAO;
-        $this->user = $user;
         $this->userDAO = $userDAO;
-        $this->follow = new Follow(null, null);
     }
-    public function isFollowing($profileId, $currentUserId):bool {
-        $result = $this->followDAO->find('follow', ['user_id' => $profileId,'follower_id' => $currentUserId], ['id']);
-        if (empty($result)) {
-            return false;
-        }
-        return true;
+    public function isFollowing($userId, $followerId): bool {
+        $follow = $this->followDAO->isFollowing($userId, $followerId);
+        return $follow !== null;
     }
 
-    public function follow($profileId, $currentUserId):bool {
-        $follow = new Follow($currentUserId, $profileId);
-        
-        $result = $this->followDAO->create('follow', $follow->toArray());
+    public function follow($followingId, $followerId):bool {
+        if ($this->isFollowing($followingId, $followerId)) {
+            throw new \InvalidArgumentException("user ja esta sendo seguido");
+        }
+        if ($followingId === $followerId) {
+            throw new \InvalidArgumentException("user nao pode seguir a si mesmo");
+        }
+
+        $this->userDAO->beginTransaction();
+
+        $follow = new Follow($followerId, $followingId);
+        $result = $this->followDAO->follow($follow);
         
         if (!$result) {
-            return false;
+            throw new \Exception("Erro ao seguir user");
         }
 
-        $this->userDAO->update('users', ['id' => $profileId], ['count_followers' => 'count_followers + 1']);
-        $this->userDAO->update('users', ['id' => $currentUserId], ['count_following' => 'count_following + 1']);
+        $this->userDAO->incrementFollowers($followingId);      
+        $this->userDAO->incrementFollowing($followerId);
         
+        $this->userDAO->commit();
         return true;
     }
 
-    public function unfollow($profileId, $currentUserId):bool {
-        $result = $this->followDAO->delete('follow', [
-            'user_id' => $profileId,
-            'follower_id' => $currentUserId
-        ]);
+    public function unfollow($followingId, $followerId):bool {
+    
+        if ($this->isFollowing($followingId, $followerId)) {
+            throw new \InvalidArgumentException("user ja esta sendo seguido");
+        }
+
+        $this->userDAO->beginTransaction();
         
+        $result = $this->followDAO->unfollow($followerId, $followingId);
+
         if (!$result) {
-            return false;
+            throw new \Exception("Erro ao deixar de seguir user");
         }
 
-        $this->userDAO->update('users', ['id' => $profileId], ['count_followers' => 'count_followers - 1']);
-        $this->userDAO->update('users', ['id' => $currentUserId], ['count_following' => 'count_following - 1']);
-        
+        $this->userDAO->decrementFollowers($followerId);
+        $this->userDAO->decrementFollowing($followingId);
+
+        $this->userDAO->commit();
         return true;
     }
 
-    public function handleFollow($profileId, $currentUserId, $action):bool {
-        if ($action === 'follow') {
-            return $this->follow($profileId, $currentUserId);
-        } else if ($action === 'unfollow') {
-            return $this->unfollow($profileId, $currentUserId);
+    public function handleFollow($profileId, $currentUserId, $action): bool {
+        switch ($action) {
+            case 'follow':
+                return $this->follow($profileId, $currentUserId);
+            case 'unfollow':
+                return $this->unfollow($profileId, $currentUserId);
+            default:
+                throw new \InvalidArgumentException("acao invalida: $action");
         }
-        return false;
     }
 
+    public function getFollowersCount($userId): int {
+        return $this->userDAO->getFollowers($userId);
+    }
 
-
+    public function getFollowingCount($userId): int {
+        return $this->userDAO->getFollowing($userId);
+    }
 }

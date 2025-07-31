@@ -52,4 +52,16 @@ abstract class BaseDAO {
         $stmt->execute($params);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+
+    public function beginTransaction(): void {
+        $this->db->beginTransaction();
+    }
+
+    public function commit(): void {
+        $this->db->commit();
+    }
+
+    public function rollback(): void {
+        $this->db->rollBack();
+    }
 }

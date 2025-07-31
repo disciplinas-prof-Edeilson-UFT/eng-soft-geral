@@ -59,12 +59,14 @@ class AuthController extends BaseController{
     }
 
     public function signup() {
-        try {
+        try { 
             $username = $this->input('username');
             $email = $this->input('email');
             $password = $this->input('password');
-            $confirmPassword = $this->input('confirmPassword');
+            $confirmPassword = $this->input('confirm_password');
             $phone = $this->input('phone');
+
+            //error_log("username: $username, email: $email, phone: $phone");
 
             $this->authService->register($username, $email, $password, $confirmPassword, $phone);
 
@@ -72,10 +74,12 @@ class AuthController extends BaseController{
             $this->redirect('/auth/login');
             
         } catch (\InvalidArgumentException $e) {
+            //error_log("InvalidArgumentException: " . $e->getMessage());
             Flash::error($e->getMessage());
             $this->redirect('/auth/signup');
         } catch (\Exception $e) {
-            Flash::error('Erro interno do servidor');
+            //error_log("Exception no metodo signup: " . $e->getMessage());
+            Flash::error('Erro no cadastro: ' . $e->getMessage());
             $this->redirect('/auth/signup');
         }
         exit;

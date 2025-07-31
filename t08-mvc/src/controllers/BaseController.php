@@ -10,11 +10,7 @@ use Conex\MiniFramework\mvc\View;
 class BaseController{
 
     public function __construct() {
-        error_log("BaseController constructor called");
         Session::start();
-        
-        // ✅ Debug da sessão após start
-        error_log("Session after start: " . print_r($_SESSION, true));
     }
 
     public function view(string $view, $data = []){
@@ -29,7 +25,14 @@ class BaseController{
     }
 
     public function redirect(string $path){
+        if (headers_sent($file, $line)) {
+            error_log("Headers already sent in $file:$line - Cannot redirect to $path");
+        
+            exit;
+        }
+        
         header("Location: {$path}");
+        exit;
     }
 
     public function input(string $input){
@@ -65,21 +68,12 @@ class BaseController{
         $username = Session::get('username');
         $isAuth = Session::has('user_id');
         
-        // ✅ Debug das sessões
-        error_log("Session debug - user_id: " . ($userID ?? 'NULL'));
-        error_log("Session debug - username: " . ($username ?? 'NULL'));
-        error_log("Session debug - has user_id: " . ($isAuth ? 'TRUE' : 'FALSE'));
-        
         $data = [
             'loggedInUserID' => $userID,
             'username' => $username,
             'isAuthenticated' => $isAuth,
             'currentURL' => $_SERVER['REQUEST_URI'] ?? '/',
         ];
-        
-        // ✅ Debug do array retornado
-        error_log("Global view data: " . print_r($data, true));
-        
         return $data;
     }
 }

@@ -3,13 +3,16 @@ namespace src\services;
 
 use src\database\dao\UserDAO;
 use src\database\domain\User;
+use src\database\mappers\UserMapper;
 
 class AuthService {
-    public UserDAO $userDAO;
+    private UserDAO $userDAO;
+    private UserMapper $userMapper;
 
     public function __construct(UserDAO $userDAO)
     {
         $this->userDAO = $userDAO;
+        $this->userMapper = new UserMapper();
     }
 
     public function register($username, $email, $password, $confirm_password, $phone, $bio = null, $profile_pic_url = null): User {
@@ -32,10 +35,14 @@ class AuthService {
         if (!$userData) {
             return null; 
         }
-        if (!password_verify($password, $userData['password_hash'])) {
-            return null;
+
+        $user = $this->userMapper->mapToUserAuth($userData);
+        
+        if (!password_verify($password, $user->getPasswordHash())) {
+            throw new \InvalidArgumentException('senha incorreta');
         }
-        return $this->userDAO->mapToUser($userData);
+        
+        return $user;
     }
 
 }
