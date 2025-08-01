@@ -17,9 +17,9 @@ class PostDAO extends BaseDAO {
         return $this->insert('posts', $post->toArray());
     }
 
-    public function getPostByUserAndPhoto($userID, $photoURL): ?Post {
+    public function getPostByUserAndPhoto($userId, $photoUrl): ?Post {
         $sql= "SELECT * FROM posts WHERE user_id = ? AND photo_url = ? LIMIT 1";
-        $result= $this->executeQuery($sql, [$userID, $photoURL]);
+        $result= $this->executeQuery($sql, [$userId, $photoUrl]);
 
         if (empty($result)) {
             return null;
@@ -28,7 +28,7 @@ class PostDAO extends BaseDAO {
         return $this->mapper->mapToPost($result[0]);
     }
 
-    public function getPostsByUserID($userID) {
+    public function getPostsByUserId($userId) {
 
         $sql= "SELECT p.id, p.photo_url, p.upload_date, p.description, u.username, u.profile_pic_url 
                 FROM posts p 
@@ -36,7 +36,7 @@ class PostDAO extends BaseDAO {
                 WHERE p.user_id = ?
                 ORDER BY p.upload_date DESC";
 
-        return $this->executeQuery($sql, [$userID]);
+        return $this->executeQuery($sql, [$userId]);
     }
 
     public function getAllPosts() {
