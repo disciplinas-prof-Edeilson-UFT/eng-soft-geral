@@ -7,25 +7,21 @@ class UploadImageService {
         try {
             $uploadFinalDir = __DIR__ . '/../../public/uploads/' . trim($uploadDir, '/');
             
-            error_log("UploadImageService: Trying to use directory: " . $uploadFinalDir);
+            //error_log("UploadImageService: tentando usar o dir: " . $uploadFinalDir);
             
-            // ✅ Verificar se diretório existe
             if (!is_dir($uploadFinalDir)) {
-                error_log("Directory does not exist: " . $uploadFinalDir);
-                // ✅ Como já foi criado no Dockerfile, não deveria chegar aqui
+                //error_log("Dir nao existe: " . $uploadFinalDir);
                 if (!mkdir($uploadFinalDir, 0755, true)) {
-                    error_log("Failed to create directory: " . $uploadFinalDir);
+                    //error_log("falha ao criar o dir: " . $uploadFinalDir);
                     return ['success' => false, 'error' => "Não foi possível criar o diretório de upload"];
                 }
             }
 
-            // ✅ Verificar permissões
             if (!is_writable($uploadFinalDir)) {
-                error_log("Directory is not writable: " . $uploadFinalDir);
-                return ['success' => false, 'error' => "Diretório sem permissão de escrita"];
+                //error_log("Dir sem permissao de escrita: " . $uploadFinalDir);
+                return ['success' => false, 'error' => "Dir sem permissao de escrita"];
             }
 
-            // ✅ Validar arquivo
             if (!is_array($file) || !isset($file['name'])) {
                 return ['success' => false, 'error' => "Arquivo inválido"];
             }
@@ -35,24 +31,18 @@ class UploadImageService {
                 return ['success' => false, 'error' => "Apenas arquivos " . implode(", ", $allowedTypes) . " são permitidos"];
             }
 
-            // ✅ Gerar nome seguro
             $fileName = uniqid() . '_' . basename($file['name']);
             $targetFile = $uploadFinalDir . '/' . $fileName;
-            
-            error_log("Attempting to move file to: " . $targetFile);
-            
-            // ✅ Upload
+                        
             if (move_uploaded_file($file['tmp_name'], $targetFile)) {
                 chmod($targetFile, 0644);
-                error_log("File uploaded successfully: " . $targetFile);
-                
+
                 return [
                     'success' => true, 
                     'file_name' => $fileName,
                     'file_path' => $targetFile
                 ];
             } else {
-                error_log("Failed to move uploaded file");
                 return ['success' => false, 'error' => "Erro ao fazer upload da imagem para $targetFile"];
             }
 

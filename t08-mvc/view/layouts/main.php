@@ -26,18 +26,16 @@
                 Pesquisar
             </button>
 
-            <!-- ✅ CORRIGIDO: Só mostrar link de perfil se usuário logado -->
             <?php if ($isAuthenticated ?? false): ?>
                 <a href="/profile/<?= $loggedInUserID; ?>">
                     <img src="/public/img/profile.svg" class="icon">
                     Perfil
                 </a>
-                <div class="user-info">
+                <div class="user-info-side-bar">
                     <span>Olá, <?= htmlspecialchars($username ?? 'Usuário') ?>!</span>
                     <a href="/auth/logout">Sair</a>
                 </div>
             <?php else: ?>
-                <!-- ✅ CORRIGIDO: Link para login ao invés de perfil -->
                 <a href="/auth/login">
                     <img src="/public/img/profile.svg" class="icon">
                     Entrar
@@ -65,6 +63,11 @@
             <?php else: ?>
                 window.location.href = "/auth/login";
             <?php endif; ?>
+        }
+        function toggleSearch() {
+            const searchBox = document.getElementById('searchBox');
+            searchBox.style.display = searchBox.style.display === 'block' ? 'none' : 'block';
+            document.getElementById('searchInput').focus();
         }
     </script>
     <script src="/public/js/search.js"></script>

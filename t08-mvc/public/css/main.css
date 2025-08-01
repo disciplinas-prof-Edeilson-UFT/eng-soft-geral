@@ -138,6 +138,14 @@ a:hover {
     font-size: 13px;
 }
 
+.user-info-side-bar {
+    margin-top: auto;
+    padding: 16px;
+    border-top: 1px solid var(--border-color);
+    font-size: 13px;
+
+}
+
 .user-info span {
     display: block;
     font-weight: 600;

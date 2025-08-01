@@ -78,7 +78,7 @@ class AuthController extends BaseController{
             Flash::error($e->getMessage());
             $this->redirect('/auth/signup');
         } catch (\Exception $e) {
-            //error_log("Exception no metodo signup: " . $e->getMessage());
+            error_log("Exception no metodo signup: " . $e->getMessage());
             Flash::error('Erro no cadastro: ' . $e->getMessage());
             $this->redirect('/auth/signup');
         }
