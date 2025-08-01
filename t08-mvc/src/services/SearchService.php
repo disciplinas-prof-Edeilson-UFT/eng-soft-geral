@@ -13,12 +13,7 @@ class SearchService{
         $this->userDAO = $userDAO;
     }
 
-    public function searchUsers($username)
-    {
-        $table = 'users';
-        $conditions = ['username' => $username];
-        $data = ['id', 'username','email', 'profile_pic_url'];
-        
-        return $this->userDAO->find($table, $conditions, $data);
+    public function searchUsers($username): array {
+        return $this->userDAO->searchUsers($username);
     }
 }

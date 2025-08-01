@@ -45,9 +45,9 @@
     </aside>
 
     <div id="searchBox" class="search-box">
-        <form method="GET" onsubmit="handleSearch(event)">
-            <input id="searchInput" type="text" name="query" placeholder="Pesquisar" required>
-            <button type="submit">Ir</button>
+        <form onsubmit="handleSearch(event)">
+            <input id="searchInput" type="text" name="query" placeholder="Pesquisar usuários..." required>
+            <button type="submit">Buscar</button>
         </form>
         <div id="searchResults" class="search-results"></div>
     </div>
@@ -56,20 +56,6 @@
         {{content}}
     </div>
 
-    <script>
-        function redirectToProfile() {
-            <?php if ($isAuthenticated ?? false): ?>
-                window.location.href = "/profile/<?= $loggedInUserID; ?>";
-            <?php else: ?>
-                window.location.href = "/auth/login";
-            <?php endif; ?>
-        }
-        function toggleSearch() {
-            const searchBox = document.getElementById('searchBox');
-            searchBox.style.display = searchBox.style.display === 'block' ? 'none' : 'block';
-            document.getElementById('searchInput').focus();
-        }
-    </script>
     <script src="/public/js/search.js"></script>
 </body>
 </html>

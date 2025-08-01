@@ -1,35 +1,38 @@
 <?php
-
 namespace src\controllers\site;
+
 use src\controllers\BaseController;
 use src\services\SearchService;
 use src\database\dao\UserDAO;
 
-
 class SearchController extends BaseController {
-    public $searchService;
-    public UserDAO $userDAO;
+    private SearchService $searchService;
 
     public function __construct() {
-        $this->userDAO = new UserDAO();
-        $this->searchService = new SearchService($this->userDAO);
+        parent::__construct();
+        $userDAO = new UserDAO();
+        $this->searchService = new SearchService($userDAO);
     }
-    
+
     public function search() {
-        try {
-            $query = $this->input('query');
-            
-            
-            $results = $this->searchService->searchUsers($query);
-            
-            if (empty($results)) {
-                return $this->redirect('/feed');
+        $query = $_GET['query'] ?? '';
+        $response = ['users' => []];
+        
+        if (!empty($query)) {
+            $users = $this->searchService->searchUsers($query);
+            foreach ($users as $user) {
+                $response['users'][] = [
+                    'id' => $user['id'],
+                    'name' => $user['username'],
+                    'photo' => !empty($user['profile_pic_url'])
+                        ?  "/public/uploads/avatars/" . $user['profile_pic_url']
+                        :  "/public/img/profile.svg"
+                ];
             }
-            
-            return $this->redirect("/profile/{$results[0]['id']}");
-            
-        } catch (\Exception $e) {
-            return $this->view('search', ['error' => $e->getMessage()]);
         }
+        
+        header('Content-Type: application/json');
+        echo json_encode($response);
+        exit;
     }
-}
+} 

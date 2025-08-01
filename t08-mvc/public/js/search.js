@@ -23,9 +23,21 @@ async function handleSearch(event) {
 
     try {
         const response = await fetch(`/search?query=${encodeURIComponent(query)}`);
-        const results = await response.text();
-
-        resultsContainer.innerHTML = results;
+        const results = await response.json(); 
+        
+        let html = '';
+        if (results.users && results.users.length > 0) {
+            results.users.forEach(user => {
+                html += `<div class='search-result'>`;
+                html += `<img src='${user.photo}' alt='Foto de ${user.name}' class='profile-pic'>`;
+                html += `<a href='/profile/${user.id}' class='user-link'>${user.name}</a>`;
+                html += `</div>`;
+            });
+        } else {
+            html = `<p class='no-results'>Nenhum usuário encontrado.</p>`;
+        }
+        
+        resultsContainer.innerHTML = html;
     } catch (error) {
         resultsContainer.innerHTML = '<p class="no-results">Erro ao buscar resultados.</p>';
         console.error('Erro na busca:', error);
