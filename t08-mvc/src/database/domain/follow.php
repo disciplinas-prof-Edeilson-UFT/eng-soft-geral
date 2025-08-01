@@ -1,32 +1,66 @@
-<?php 
+<?php
 namespace src\database\domain;
 
 class Follow {
-    private $id;
-    private $follower_id;    
-    private $following_id;  
-    private $created_at;
+    private ?int $id = null;
+    private int $followerId;
+    private int $followingId;
+    private ?string $createdAt = null;
 
-    public function __construct($follower_id, $following_id) {
-        $this->follower_id = $follower_id;
-        $this->following_id = $following_id;
-        $this->created_at = date('Y-m-d H:i:s');
+    public function __construct(?int $followerId = null, ?int $followingId = null, ?string $createdAt = null, ?int $id = null) {
+        $this->followerId = $followerId;
+        $this->followingId = $followingId;
+        $this->createdAt = $createdAt;
+        $this->id = $id;
+
     }
 
-    public function getId() { return $this->id; }
-    public function setId($id) { $this->id = $id; return $this; }
-    
-    public function getFollowerId() { return $this->follower_id; }
-    public function getFollowingId() { return $this->following_id; }
-    
-    public function getCreatedAt() { return $this->created_at; }
-    public function setCreatedAt($created_at) { $this->created_at = $created_at; return $this; }
+    public function getId(): ?int {
+        return $this->id;
+    }
+
+    public function getFollowerId(): int {
+        return $this->followerId;
+    }
+
+    public function getFollowingId(): int {
+        return $this->followingId;
+    }
+
+    public function getCreatedAt(): ?string {
+        return $this->createdAt;
+    }
+
+    public function setId(int $id): void {
+        $this->id = $id;
+    }
+
+    public function setFollowerId(int $followerId): void {
+        $this->followerId = $followerId;
+    }
+
+    public function setFollowingId(int $followingId): void {
+        $this->followingId = $followingId;
+    }
+
+    public function setCreatedAt(string $createdAt): void {
+        $this->createdAt = $createdAt;
+    }
 
     public function toArray(): array {
-        return [
-            'follower_id' => $this->follower_id,
-            'following_id' => $this->following_id,
-            'created_at' => $this->created_at
+        $array = [
+            'follower_id' => $this->followerId,
+            'following_id' => $this->followingId
         ];
+        
+        if ($this->id !== null) {
+            $array['id'] = $this->id;
+        }
+        
+        if ($this->createdAt !== null) {
+            $array['created_at'] = $this->createdAt;
+        }
+        
+        return $array;
     }
 }

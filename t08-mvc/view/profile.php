@@ -2,103 +2,144 @@
 require_once __DIR__ . "/../dirconfig.php";
 ?>
 
-<!DOCTYPE html>
-<html lang="en">
+<div class="profile-container">
+    <!-- Seção de informações do usuário -->
+    <section class="profile-header">
+        <div class="photo-container">
+            <?php if ($user->getProfilePicUrl()): ?>
+                <img src="/public/uploads/avatars/<?= htmlspecialchars($user->getProfilePicUrl()) ?>" 
+                     alt="Foto de Perfil de <?= htmlspecialchars($user->getUsername()) ?>" 
+                     class="profile-picture">
+            <?php else: ?>
+                <img src="/public/img/profile.svg" 
+                     alt="Foto de Perfil Padrão" 
+                     class="profile-picture">
+            <?php endif; ?>
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Perfil</title>
-    <link rel="stylesheet" href="/../public/css/profile.css">
-</head>
-
-<body>
-    <main class="profile-container">
-        <!-- Seção de informações do usuário -->
-        <section class="info-section">
-            <div class="photo-container">
-                <?php if ($user->getProfilePicUrl()): ?>
-                    <img src="/public/uploads/avatars/<?= htmlspecialchars($user->getProfilePicUrl()) ?>" alt="Foto de Perfil" class="profile-picture">
-                <?php else: ?>
-                    <img src="/public/img/profile.svg" alt="Foto de Perfil" class="profile-picture">
-                <?php endif; ?>
-
-                <!-- Botão de edição de perfil (apenas para o próprio usuário) -->
-                <?php if ((int)$user_id === (int)$logged_in_user_id): ?>
-                    <button class="btn-edit">
-                        <a href="/profile/<?= $logged_in_user_id; ?>/edit">Editar Perfil</a>
+            <!-- Botão de edição de perfil (apenas para o próprio usuário) -->
+            <?php if ((int)$user_id === (int)$logged_in_user_id): ?>
+                <a href="/profile/<?= $user_id; ?>/edit" class="btn-edit">
+                    Editar Perfil
+                </a>
+            <?php endif; ?>
+        </div>
+                
+        <div class="user-info">
+            <h1 class="user-name"><?= htmlspecialchars($user->getUsername()) ?></h1>
+            <p class="user-bio"><?= htmlspecialchars($user->getBio() ?? 'Sem biografia') ?></p>
+            
+            <div class="stats-container">
+                <span class="following">
+                    <?= htmlspecialchars($user->getCountFollowing()) ?> seguindo
+                </span>
+                <span class="followers">
+                    <?= htmlspecialchars($user->getCountFollowers()) ?> seguidores
+                </span>
+            </div>
+                
+            <!-- Formulário para seguir/deixar de seguir (apenas para outros usuários) -->
+            <?php if ((int)$user_id !== (int)$logged_in_user_id): ?>
+                <form method="POST" action="/profile/<?= $user_id ?>/follow" class="follow-form">
+                    <input type="hidden" name="action" value="<?= $isFollowing ? 'unfollow' : 'follow' ?>">
+                    <button type="submit" class="btn-follow">
+                        <?= $isFollowing ? 'Deixar de seguir' : 'Seguir' ?>
                     </button>
-                <?php endif; ?>
-            </div>
-                    
-            <div class="user-info">
-                <h1 class="user-name"><?php echo htmlspecialchars($user->getUsername()) ?></h1>
-                <p class="user-bio"><?php echo htmlspecialchars($user->getBio() ?? 'adicione uma bio') ?></p>
-                <div class="stats-container">
-                    <span class="following"><?= htmlspecialchars($user->getCountFollowing()) ?> seguindo</span>
-                    <span class="followers"><?= htmlspecialchars($user->getCountFollowers()) ?> seguidores</span>
-                </div>
-                    
-                <!-- Formulário para seguir/deixar de seguir (apenas para outros usuários) -->
-                <?php if ((int)$user_id !== (int)$logged_in_user_id): ?>
-                    <form method="POST" action="/profile/<?= $user_id ?>/follow">
-                        <input type="hidden" name="action" value="<?= $isFollowing ? 'unfollow' : 'follow' ?>">
-                        <button type="submit" class="btn-follow">
-                            <?= $isFollowing ? 'Deixar de seguir' : 'Seguir' ?>
-                        </button>
-                    </form>
-                <?php endif; ?>
-            </div>
+                </form>
+            <?php endif; ?>
+        </div>
+    </section>
 
-            <!-- exibir botão de postagem caso o usuario ja tenha postado algo -->
-            <?php if (!empty($userPosts)): ?>
-                <div class="add-more-posts-button">
-                    <div class="upload-more-photos">
-                        <div class="upload-container">
-                            <form action="/feed/<?= $user_id ?>/store" method="POST" enctype="multipart/form-data">
-                                <label for="photo">
-                                    Adicionar foto 
-                                </label>
-                                <input type="file" id="photo" name="file" accept="image/*">
-                                <button type="submit" class="btn-upload">Enviar</button>
-                            </form>
+    <!-- Seção de upload (apenas para o próprio usuário) -->
+    <?php if ((int)$user_id === (int)$logged_in_user_id): ?>
+        <section class="upload-section">
+            <div class="upload-container">
+                <form action="/feed/<?= $user_id ?>/store" method="POST" enctype="multipart/form-data" class="upload-form">
+                    <div class="upload-area">
+                        <label for="photo" class="upload-label">
+                            <img src="/public/img/add-photo.svg" class="upload-icon" alt="Adicionar foto">
+                            <span><?= empty($userPosts) ? 'Adicionar primeira foto' : 'Adicionar nova foto' ?></span>
+                        </label>
+                        <input type="file" id="photo" name="file" accept="image/*" required>
+                    </div>
+                    
+                    <div class="description-area">
+                        <textarea name="description" placeholder="Descrição (opcional)..." maxlength="500" rows="3"></textarea>
+                    </div>
+                    
+                    <button type="submit" class="btn-upload">Publicar</button>
+                </form>
+            </div>
+        </section>
+    <?php endif; ?>
+
+    <!-- Seção de posts (todos os posts do user) -->
+    <section class="posts-section">
+        <?php if (!empty($userPosts)): ?>
+            <div class="posts-header">
+                <h2>Posts de <?= htmlspecialchars($user->getUsername()) ?></h2>
+                <span class="posts-count"><?= count($userPosts) ?> post<?= count($userPosts) !== 1 ? 's' : '' ?></span>
+            </div>
+            
+            <div class="posts-grid">
+                <?php foreach ($userPosts as $post): ?>
+                    <article class="post-item">
+                        <div class="post-image-container">
+                            <?php if (!empty($post['photo_url'])): ?>
+                                <img src="/public/uploads/feed/<?= htmlspecialchars($post['photo_url']) ?>" 
+                                     alt="Post de <?= htmlspecialchars($user->getUsername()) ?>" 
+                                     class="post-image">
+                            <?php else: ?>
+                                <div class="post-no-image">
+                                    <img src="/public/img/add-photo.svg" alt="Sem imagem">
+                                </div>
+                            <?php endif; ?>
+                            
+                            <div class="post-overlay">
+                                <div class="post-info">
+                                    <?php if (!empty($post['description'])): ?>
+                                        <p class="post-description"><?= htmlspecialchars($post['description']) ?></p>
+                                    <?php endif; ?>
+                                    <time class="post-date" datetime="<?= $post['created_at'] ?? '' ?>">
+                                        <?= isset($post['created_at']) ? date('d/m/Y H:i', strtotime($post['created_at'])) : '' ?>
+                                    </time>
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                </div>
-            <?php endif; ?>
-        </section>
 
-        <!-- Seção da foto do feed -->
-        <section class="info-section">
-            <div class="feed-photo-container">
-                <?php if ($userPosts): ?>
-                    <?php
-                    if (isset($userPosts[0]['photo_url'])) {
-                        $relativePath = "/uploads/feed/" . htmlspecialchars($userPosts[0]['photo_url']);
-                        ?>
-                        <img src="/public/uploads/feed/<?= htmlspecialchars($userPosts[0]['photo_url']) ?>" alt="Post" class="feed-image">
-                    <?php } ?>
-                <?php endif; ?>
+                        <?php if ((int)$user_id === (int)$logged_in_user_id): ?>
+                            <form method="POST" action="/feed/<?= $post['id'] ?>/delete" class="delete-form" onsubmit="return confirm('Tem certeza que deseja deletar este post?')">
+                                <button type="submit" class="btn-delete" title="Deletar post">
+                                    x
+                                </button>
+                            </form>
+                        <?php endif; ?>
+                    </article>
+                <?php endforeach; ?>
             </div>
-
-            <!-- Formulário de upload de foto (apenas para o próprio usuário e se não houver foto) -->
-            <?php if (empty($userPosts) && (int)$user_id === (int)$_SESSION['user_id']): ?>
-                <div class="pai-do-upload-container">
-                    <div class="upload-container">
-                        <form action="/feed/<?= $user_id ?>/store" method="POST" enctype="multipart/form-data">
-                            <label for="photo">
-                                <img src="/public/img/add-photo.svg" class="icon"> <br>
-                                Adicionar foto
-                            </label>
-                            <input type="file" id="photo" name="file" accept="image/*">
-                            <button type="submit" class="btn-upload">Enviar</button>
-                        </form>
-                    </div>
+        <?php else: ?>
+            <div class="no-posts">
+                <div class="no-posts-content">
+                    <img src="/public/img/add-photo.svg" alt="Sem posts" class="no-posts-icon">
+                    <h3>
+                        <?php if ((int)$user_id === (int)$logged_in_user_id): ?>
+                            Você ainda não tem posts
+                        <?php else: ?>
+                            <?= htmlspecialchars($user->getUsername()) ?> ainda não tem posts
+                        <?php endif; ?>
+                    </h3>
+                    <p>
+                        <?php if ((int)$user_id === (int)$logged_in_user_id): ?>
+                            Comece compartilhando sua primeira foto!
+                        <?php else: ?>
+                            Quando <?= htmlspecialchars($user->getUsername()) ?> compartilhar algo, aparecerá aqui.
+                        <?php endif; ?>
+                    </p>
+                    
+                    <?php if ((int)$user_id === (int)$logged_in_user_id): ?>
+                        <p class="upload-hint">Use o formulário acima para fazer seu primeiro post.</p>
+                    <?php endif; ?>
                 </div>
-            <?php endif; ?>
-
-        </section>
-    </main>
-</body>
-
-</html>
+            </div>
+        <?php endif; ?>
+    </section>
+</div>

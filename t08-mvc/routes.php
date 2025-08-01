@@ -31,10 +31,12 @@ class Routes{
                 'profile'=> [
                     'get' => [
                         '/{user_id}' => 'site\ProfileController@show',
-                        '/{user_id}/edit' => 'site\ProfileController@edit'
+                        '/{user_id}/edit' => 'site\ProfileController@edit',
+
                     ],
                     'post' => [
-                        '/{user_id}/edit' => 'site\ProfileController@update'
+                        '/{user_id}/edit' => 'site\ProfileController@update',
+                        '/{user_id}/follow' => 'site\ProfileController@follow'
                     ]
                 ]
             ]

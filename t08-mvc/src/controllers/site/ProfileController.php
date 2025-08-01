@@ -37,7 +37,9 @@ class ProfileController extends BaseController {
                 'logged_in_user_id' => $logged_in_user_id,
                 'isFollowing' => $isFollowing,
                 'userPosts' => $posts,
-                'profilePhoto' => $profile->getProfilePicUrl()
+                'profilePhoto' => $profile->getProfilePicUrl(),
+                'pageTitle' => 'Perfil de ' . htmlspecialchars($profile->getUsername()),
+                'pageCSS' => 'profile',
             ]);
 
         } catch (\InvalidArgumentException $e) {

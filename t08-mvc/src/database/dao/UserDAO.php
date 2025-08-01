@@ -18,12 +18,12 @@ class UserDAO extends BaseDAO {
     }
 
     public function searchUsers($username): array {
-        $sql= "SELECT id, username, email, profile_pic_url FROM users WHERE username LIKE ?";
+        $sql = "SELECT id, username, email, profile_pic_url FROM users WHERE username LIKE ?";
         return $this->executeQuery($sql, ["%{$username}%"]);
     }
 
     public function checkEmailExists($email): bool {
-        $sql= "SELECT id FROM users WHERE email = ?";
+        $sql = "SELECT 1 FROM users WHERE email = ? LIMIT 1";
         $result = $this->executeQuery($sql, [$email]);
         return !empty($result);
     }
@@ -41,14 +41,14 @@ class UserDAO extends BaseDAO {
     }
 
     public function getUserNameById($id): ?string {
-        $sql= "SELECT username FROM users WHERE id = ?";
-        $result= $this->executeQuery($sql, [$id]);
+        $sql = "SELECT username FROM users WHERE id = ? LIMIT 1";
+        $result = $this->executeQuery($sql, [$id]);
         return !empty($result) ? $result[0]['username'] : null;
     }
 
     public function getUserProfilePhotoById($id): ?string {
-        $sql= "SELECT profile_pic_url FROM users WHERE id = ?";
-        $result= $this->executeQuery($sql, [$id]);
+        $sql = "SELECT profile_pic_url FROM users WHERE id = ? LIMIT 1";
+        $result = $this->executeQuery($sql, [$id]);
         return !empty($result) ? $result[0]['profile_pic_url'] : null;
     }
 
@@ -59,7 +59,7 @@ class UserDAO extends BaseDAO {
 
     public function findByEmail($email): ?User {
         $sql = "SELECT * FROM users WHERE email = ? LIMIT 1";
-        $result= $this->executeQuery($sql, [$email]);
+        $result = $this->executeQuery($sql, [$email]);
         
         if (empty($result)) {
             return null;
@@ -69,17 +69,22 @@ class UserDAO extends BaseDAO {
     }
 
     public function updateUser($username, $email, $bio, $phone, $id): bool {
-        $data= ['username' => $username,'email' => $email,'bio'=> $bio,'phone' => $phone];
+        $data = [
+            'username' => $username,
+            'email' => $email,
+            'bio' => $bio,
+            'phone' => $phone
+        ];
         return $this->update('users', $data, $id);
     }
 
     public function updateProfilePic($profilePicUrl, $id): bool {
-        $data= ['profile_pic_url' => $profilePicUrl];
+        $data = ['profile_pic_url' => $profilePicUrl];
         return $this->update('users', $data, $id);
     }
 
     public function updateUserFollowerCount($userId, $followers_count): bool {
-        $data= ['count_followers' => $followers_count];
+        $data = ['count_followers' => $followers_count];
         return $this->update('users', $data, $userId);
     }
 
@@ -92,46 +97,48 @@ class UserDAO extends BaseDAO {
         return $this->delete('users', $id);
     }
 
-    private function getCount($userId, $countColumn)
-    {
+    private function getCount($userId, $countColumn) {
         $allowedColumns = ['count_followers', 'count_following'];
         
         if (!in_array($countColumn, $allowedColumns)) {
             throw new \InvalidArgumentException("Invalid column name: $countColumn");
         }
 
-        $query = "SELECT $countColumn FROM users WHERE id = :user_id";
-        $stmt = $this->db->prepare($query);
-        $stmt->execute([":user_id" => $userId]);
-        return $stmt->fetchColumn();
+        $sql = "SELECT {$countColumn} FROM users WHERE id = ? LIMIT 1";
+        $result = $this->executeQuery($sql, [$userId]);
+        return !empty($result) ? (int) $result[0][$countColumn] : 0;
     }
 
-    public function getFollowers($userId)
-    {
+    public function getFollowers($userId) {
         return $this->getCount($userId, 'count_followers');
     }
 
-    public function getFollowing($userId)
-    {
+    public function getFollowing($userId) {
         return $this->getCount($userId, 'count_following');
     }
 
-    public function incrementFollowers($userId)
-    {
-        return $this->update('users', ['id' => $userId], ['count_followers' => 'count_followers + 1']);
+    public function incrementFollowers($userId): bool {
+        $sql = "UPDATE users SET count_followers = count_followers + 1 WHERE id = ?";
+        $stmt = $this->db->prepare($sql);
+        return $stmt->execute([$userId]);
     }
 
-    public function incrementFollowing($userId)
-    {
-        return $this->update('users', ['id' => $userId], ['count_following' => 'count_following + 1']);
+    public function incrementFollowing($userId): bool {
+        $sql = "UPDATE users SET count_following = count_following + 1 WHERE id = ?";
+        $stmt = $this->db->prepare($sql);
+        return $stmt->execute([$userId]);
     }
 
     public function decrementFollowing($userId): bool {
-        return $this->update('users', ['id' => $userId], ['count_following' => 'count_following - 1']);
+        $sql = "UPDATE users SET count_following = GREATEST(count_following - 1, 0) WHERE id = ?";
+        $stmt = $this->db->prepare($sql);
+        return $stmt->execute([$userId]);
     }
 
     public function decrementFollowers($userId): bool {
-        return $this->update('users', ['id' => $userId], ['count_followers' => 'count_followers - 1']);
+        $sql = "UPDATE users SET count_followers = GREATEST(count_followers - 1, 0) WHERE id = ?";
+        $stmt = $this->db->prepare($sql);
+        return $stmt->execute([$userId]);
     }
 
     public function createUserWithPassword($username, $email, $password, $confirm_password, $phone): bool {
@@ -140,5 +147,4 @@ class UserDAO extends BaseDAO {
         
         return $this->insert('users', $user->toArray());
     }
-
 }
