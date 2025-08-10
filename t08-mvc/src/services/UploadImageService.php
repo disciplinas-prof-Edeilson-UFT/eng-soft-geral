@@ -1,53 +1,59 @@
 <?php
+declare(strict_types=1);
+
 namespace src\services;
 
-class UploadImageService {
+class UploadImageService
+{
+    private const MAX_SIZE_BYTES = 5_000_000; // 5MB
 
-    public static function handleUpload($file, $uploadDir, $allowedTypes): array {
+    /**
+     * Manipula upload de imagem com validações básicas
+     * Retorna array: success(bool), file_name?, file_path?, error?
+     */
+    public static function handleUpload(array $file, string $uploadDir, array $allowedTypes): array
+    {
         try {
-            $uploadFinalDir = __DIR__ . '/../../public/uploads/' . trim($uploadDir, '/');
-            
-            //error_log("UploadImageService: tentando usar o dir: " . $uploadFinalDir);
-            
-            if (!is_dir($uploadFinalDir)) {
-                //error_log("Dir nao existe: " . $uploadFinalDir);
-                if (!mkdir($uploadFinalDir, 0755, true)) {
-                    //error_log("falha ao criar o dir: " . $uploadFinalDir);
-                    return ['success' => false, 'error' => "Não foi possível criar o diretório de upload"];
-                }
-            }
+            $baseDir = __DIR__ . '/../../public/uploads/';
+            $uploadFinalDir = $baseDir . trim($uploadDir, '/');
 
+            if (!is_dir($uploadFinalDir) && !mkdir($uploadFinalDir, 0755, true)) {
+                return ['success' => false, 'error' => 'Não foi possível criar o diretório de upload'];
+            }
             if (!is_writable($uploadFinalDir)) {
-                //error_log("Dir sem permissao de escrita: " . $uploadFinalDir);
-                return ['success' => false, 'error' => "Dir sem permissao de escrita"];
+                return ['success' => false, 'error' => 'Diretório sem permissão de escrita'];
+            }
+            if (!isset($file['name'], $file['tmp_name'], $file['error'])) {
+                return ['success' => false, 'error' => 'Arquivo inválido'];
+            }
+            if (($file['error'] ?? UPLOAD_ERR_OK) !== UPLOAD_ERR_OK) {
+                return ['success' => false, 'error' => 'Erro no upload (código ' . $file['error'] . ')'];
+            }
+            if (!empty($file['size']) && $file['size'] > self::MAX_SIZE_BYTES) {
+                return ['success' => false, 'error' => 'Arquivo excede o tamanho máximo de 5MB'];
             }
 
-            if (!is_array($file) || !isset($file['name'])) {
-                return ['success' => false, 'error' => "Arquivo inválido"];
+            $extension = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
+            if (!in_array($extension, $allowedTypes, true)) {
+                return ['success' => false, 'error' => 'Apenas ' . implode(', ', $allowedTypes) . ' são permitidos'];
             }
 
-            $fileType = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
-            if (!in_array($fileType, $allowedTypes)) {
-                return ['success' => false, 'error' => "Apenas arquivos " . implode(", ", $allowedTypes) . " são permitidos"];
-            }
-
-            $fileName = uniqid() . '_' . basename($file['name']);
+            $baseName = preg_replace('/[^a-zA-Z0-9_\.-]/', '_', pathinfo($file['name'], PATHINFO_FILENAME));
+            $fileName = uniqid('img_', true) . '_' . $baseName . '.' . $extension;
             $targetFile = $uploadFinalDir . '/' . $fileName;
-                        
-            if (move_uploaded_file($file['tmp_name'], $targetFile)) {
-                chmod($targetFile, 0644);
 
-                return [
-                    'success' => true, 
-                    'file_name' => $fileName,
-                    'file_path' => $targetFile
-                ];
-            } else {
-                return ['success' => false, 'error' => "Erro ao fazer upload da imagem para $targetFile"];
+            if (!move_uploaded_file($file['tmp_name'], $targetFile)) {
+                return ['success' => false, 'error' => 'Falha ao mover arquivo'];
             }
 
-        } catch (\Exception $e) {
-            error_log("UploadImageService exception: " . $e->getMessage());
+            @chmod($targetFile, 0644);
+            return [
+                'success' => true,
+                'file_name' => $fileName,
+                'file_path' => $targetFile
+            ];
+        } catch (\Throwable $e) {
+            error_log('UploadImageService exception: ' . $e->getMessage());
             return ['success' => false, 'error' => $e->getMessage()];
         }
     }

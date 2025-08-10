@@ -1,19 +1,28 @@
 <?php
+declare(strict_types=1);
+
 namespace src\services;
 
 use src\database\dao\UserDAO;
 
-
-
-class SearchService{
-    public UserDAO $userDAO;
+/**
+ * Service para buscas de usuários (apenas orquestra a chamada ao DAO com possíveis validações futuras)
+ */
+class SearchService
+{
+    private UserDAO $userDAO;
 
     public function __construct(UserDAO $userDAO)
     {
         $this->userDAO = $userDAO;
     }
 
-    public function searchUsers($username): array {
-        return $this->userDAO->searchUsers($username);
+    public function searchUsers(string $username): array
+    {
+        $term = trim($username);
+        if ($term === '') {
+            return [];
+        }
+        return $this->userDAO->searchUsers($term);
     }
 }
