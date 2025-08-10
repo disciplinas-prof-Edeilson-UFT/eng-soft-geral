@@ -11,9 +11,7 @@ require_once __DIR__ . "/../dirconfig.php";
                      alt="Foto de Perfil de <?= htmlspecialchars($user->getUsername()) ?>" 
                      class="profile-picture">
             <?php else: ?>
-                <img src="/public/img/profile.svg" 
-                     alt="Foto de Perfil Padrão" 
-                     class="profile-picture">
+                <img src="/public/img/profile.svg" alt="Foto de Perfil Padrão" class="profile-picture">
             <?php endif; ?>
 
             <!-- Botão de edição de perfil (apenas para o próprio usuário) -->

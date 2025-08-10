@@ -27,7 +27,6 @@ class BaseController{
     public function redirect(string $path){
         if (headers_sent($file, $line)) {
             error_log("Headers already sent in $file:$line - Cannot redirect to $path");
-        
             exit;
         }
         
@@ -35,12 +34,19 @@ class BaseController{
         exit;
     }
 
-    public function input(string $input){
-        return Request::input($input);
+    public function input(string $input, $default = null){
+        $value = Request::input($input);
+        return $value !== null ? $value : $default;
     }
 
-    public function query(string $query){
-        return Request::query($query);
+    public function query(string $query, $default = null){
+        $value = Request::query($query);
+        return $value !== null ? $value : $default;
+    }
+
+    public function file(string $key): ?array
+    {
+        return $_FILES[$key] ?? null;
     }
 
     public function method(){

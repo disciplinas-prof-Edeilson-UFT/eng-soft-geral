@@ -111,7 +111,6 @@ class Router{
             if (preg_match('/^\{([a-zA-Z0-9_]+)\}$/', $segment)) {
                 continue;
             }
-            
             if ($segment !== $uriParts[$index]) {
                 return false;
             }

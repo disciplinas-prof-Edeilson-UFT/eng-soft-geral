@@ -47,7 +47,7 @@ require_once __DIR__ . "/../dirconfig.php";
 
                         <div class="post-meta">
                             <time datetime="<?= $post['upload_date'] ?? '' ?>">
-                                Postado em: <?= isset($post['upload_date']) ? date('d/m/Y H:i', strtotime($post['upload_date'])) : '' ?>
+                                Publicado em: <?= isset($post['upload_date']) ? date('d/m/Y H:i', strtotime($post['upload_date'])) : '' ?>
                             </time>
                         </div>
                     </article>

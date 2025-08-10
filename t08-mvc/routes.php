@@ -12,8 +12,8 @@ class Routes{
                 ],
                 'auth' => [
                     'get' => [
-                        '/login' => 'site\AuthController@showLogin',
-                        '/signup' => 'site\AuthController@showSignup',
+                        '/login' => 'site\AuthController@loginForm',
+                        '/signup' => 'site\AuthController@signupForm',
                         '/logout' => 'site\AuthController@logout' 
                     ],
                     'post' => [ 
@@ -22,6 +22,7 @@ class Routes{
                     ]
                 ],
                 'feed' => [
+                    'middleware' => ['auth'],
                     'get' => [
                     ],
                     'post' => [
@@ -29,6 +30,7 @@ class Routes{
                     ]
                 ],
                 'profile'=> [
+                    'middleware' => ['auth'],
                     'get' => [
                         '/{user_id}' => 'site\ProfileController@show',
                         '/{user_id}/edit' => 'site\ProfileController@edit',

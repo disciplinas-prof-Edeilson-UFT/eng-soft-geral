@@ -14,29 +14,36 @@ class FeedController extends BaseController {
         $this->feedService = new FeedService($postDAO); 
     }
 
-    public function show() {
+    public function show(): void
+    {
         try {
-            $loggedUserId = $this->getSession('user_id');
+            $loggedUserId= $this->getSession('user_id');
             $posts= $this->feedService->getAllPostsFeed();
-            $this->view('feed', ['posts' => $posts, 'pageTitle' => 'Feed', 'loggedUserId' => $loggedUserId, 'pageCSS' => 'feed']);
-        } catch (\Exception $e) {
-            $this->view('feed', ['posts' => [], 'error' => $e->getMessage(), 'pageTitle' => 'Feed - error', 'pageCSS' => 'feed']);
+            $this->view('feed', ['posts' => $posts,'pageTitle' => 'Feed','loggedUserId' => $loggedUserId,'pageCSS' => 'feed']);
+        } catch (\Throwable $e) {
+            $this->view('feed', [
+                'posts' => [],
+                'error' => $e->getMessage(),
+                'pageTitle' => 'Feed - erro',
+                'pageCSS' => 'feed'
+            ]);
         }
     }
 
-    public function store($user_id) {
+    public function store(int $userId): void
+    {
         try {
-            if (isset($_FILES['file']) && $_FILES['file']['error'] == UPLOAD_ERR_OK) {
-                $file = $_FILES['file'];
-                $description = $_POST['description'] ?? null;
-                
-                $this->feedService->createPost($user_id, $file, $description);
-                $this->redirect('/profile/' . $user_id . '?success=Imagem enviada com sucesso');
+            $file= $this->file('file');
+            $description = $this->input('description');
+
+            if ($file && ($file['error'] ?? UPLOAD_ERR_NO_FILE) === UPLOAD_ERR_OK) {
+                $this->feedService->createPost($userId, $file, $description);
+                $this->redirect('/profile/' . $userId . '?success=Imagem enviada com sucesso');
             } else {
-                $this->redirect('/profile/' . $user_id . '?error=Falha no upload da imagem');
+                $this->redirect('/profile/' . $userId . '?error=Falha no upload da imagem');
             }
-        } catch (\Exception $e) {
-            $this->redirect('/profile/' . $user_id . '?error=' . urlencode($e->getMessage()));
+        } catch (\Throwable $e) {
+            $this->redirect('/profile/' . $userId . '?error=' . urlencode($e->getMessage()));
         }
     }
 }

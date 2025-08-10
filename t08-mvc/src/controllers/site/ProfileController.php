@@ -23,132 +23,112 @@ class ProfileController extends BaseController {
         $this->followService = new FollowService($followDAO, $userDAO);
     }
 
-    public function show($user_id) {
+    public function show(int $userId): void
+    {
         try {
-            $profile = $this->profileService->getProfileData($user_id);
-            $posts = $this->profileService->getProfileFeed($user_id);
-            
-            $logged_in_user_id = $this->getSession('user_id', 0);
-            $isFollowing = $this->followService->isFollowing($user_id, $logged_in_user_id);
-            
+            $profile = $this->profileService->getProfileData($userId);
+            $posts = $this->profileService->getProfileFeed($userId);
+            $loggedUserId = $this->getSession('user_id', 0);
+            $isFollowing = $this->followService->isFollowing($userId, $loggedUserId);
+
             $this->view('profile', [
-                'user' => $profile,                    
-                'user_id' => $user_id,
-                'logged_in_user_id' => $logged_in_user_id,
+                'user' => $profile,
+                'user_id' => $userId,
+                'logged_in_user_id' => $loggedUserId,
                 'isFollowing' => $isFollowing,
                 'userPosts' => $posts,
                 'profilePhoto' => $profile->getProfilePicUrl(),
                 'pageTitle' => 'Perfil de ' . htmlspecialchars($profile->getUsername()),
-                'pageCSS' => 'profile',
+                'pageCSS' => 'profile'
             ]);
-
-        } catch (\InvalidArgumentException $e) {
-            error_log('InvalidArgumentException: ' . $e->getMessage());
-            $this->view('profile', ['error' => $e->getMessage()]);
-        } catch (\Exception $e) {
-            error_log('Exception: ' . $e->getMessage());
-            $this->view('profile', ['error' => 'Erro ao carregar perfil: ' . $e->getMessage()]);
+        } catch (\Throwable $e) {
+            error_log('Profile show error: ' . $e->getMessage());
+            $this->view('profile', ['error' => 'Erro ao carregar perfil']);
         }
     }
 
-    public function follow($user_id) {
-        $logged_in_user_id = $this->getSession('user_id', 0);
-        
-        if (!$logged_in_user_id) {
+    public function follow(int $userId): void
+    {
+        $loggedUserId = $this->getSession('user_id', 0);
+        if (!$loggedUserId) {
             Flash::error('Você precisa estar logado');
             $this->redirect('/auth/login');
-            exit;
         }
-        
+
         try {
-            $action = $this->input('action');
-            $success = $this->followService->handleFollow($user_id, $logged_in_user_id, $action);
-            
+            $action = (string)$this->input('action');
+            $success = $this->followService->handleFollow($userId, $loggedUserId, $action);
             Flash::success($success ? 'Ação realizada com sucesso' : 'Não foi possível realizar esta ação');
-            $this->redirect('/profile/' . $user_id);
-            
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             Flash::error($e->getMessage());
-            $this->redirect('/profile/' . $user_id);
         }
-        exit;
+        $this->redirect('/profile/' . $userId);
     }
 
-    public function edit($user_id) {
-        $logged_in_user_id = $this->getSession('user_id', 0);
-        
-        if ((int)$user_id !== (int)$logged_in_user_id) {
+    public function edit(int $userId): void
+    {
+        $loggedUserId = $this->getSession('user_id', 0);
+        if ($userId !== (int)$loggedUserId) {
             Flash::error('Você só pode editar seu próprio perfil');
-            $this->redirect('/profile/' . $user_id);
-            exit;
+            $this->redirect('/profile/' . $userId);
         }
-        
         try {
-            $user = $this->profileService->getProfileData($user_id);
+            $user = $this->profileService->getProfileData($userId);
             $this->view('profile-update', [
-                'user_id' => $user_id,
-                'user' => $user  
+                'user_id' => $userId,
+                'user' => $user
             ]);
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             Flash::error($e->getMessage());
-            $this->redirect('/profile/' . $user_id);
+            $this->redirect('/profile/' . $userId);
         }
     }
 
-    public function update($user_id) {
+    public function update(int $userId): void
+    {
+        $loggedUserId = $this->getSession('user_id', 0);
+        if ($userId !== (int)$loggedUserId) {
+            Flash::error('Você só pode editar seu próprio perfil');
+            $this->redirect('/profile/' . $userId);
+        }
         try {
-            $logged_in_user_id = $this->getSession('user_id', 0);
-            
-            if ((int)$user_id !== (int)$logged_in_user_id) {
-                Flash::error('Você só pode editar seu próprio perfil');
-                $this->redirect('/profile/' . $user_id);
-                exit;
-            }
-
-            $action = $this->input('action');
-            
+            $action = (string)$this->input('action');
             switch ($action) {
                 case 'delete':
-                    $this->profileService->deleteProfile($user_id);
+                    $this->profileService->deleteProfile($userId);
                     $this->destroySession();
                     Flash::success('Conta excluída com sucesso');
                     $this->redirect('/auth/login');
-                    break;
-                    
+                    return;
                 case 'logout':
                     $this->destroySession();
                     Flash::success('Logout realizado com sucesso');
                     $this->redirect('/auth/login');
-                    break;
-                    
+                    return;
                 case 'edit':
-                    $phone = $this->input('phone');
-                    $username = $this->input('username');
-                    $email = $this->input('email'); 
-                    $bio = $this->input('bio');
-
-                    $this->profileService->updateProfileData($user_id, $username, $phone, $email, $bio);
-                
-                    if (isset($_FILES['profile_pic_url']) && $_FILES['profile_pic_url']['error'] === UPLOAD_ERR_OK) {
-                        $this->profileService->updateProfilePhoto($user_id, $_FILES['profile_pic_url']);
+                    $this->profileService->updateProfileData(
+                        $userId,
+                        (string)$this->input('username'),
+                        (string)$this->input('phone'),
+                        (string)$this->input('email'),
+                        (string)$this->input('bio')
+                    );
+                    $file = $this->file('profile_pic_url');
+                    if ($file && ($file['error'] ?? UPLOAD_ERR_NO_FILE) === UPLOAD_ERR_OK) {
+                        $this->profileService->updateProfilePhoto($userId, $file);
                     }
-                    
                     Flash::success('Perfil atualizado com sucesso');
                     break;
-                    
                 default:
                     throw new \InvalidArgumentException('Ação inválida');
             }
-
-            $this->redirect('/profile/' . $user_id);
-
+            $this->redirect('/profile/' . $userId);
         } catch (\InvalidArgumentException $e) {
             Flash::error($e->getMessage());
-            $this->redirect('/profile/' . $user_id . '/edit');
-        } catch (\Exception $e) {
+            $this->redirect('/profile/' . $userId . '/edit');
+        } catch (\Throwable $e) {
             Flash::error('Erro interno: ' . $e->getMessage());
-            $this->redirect('/profile/' . $user_id . '/edit');
+            $this->redirect('/profile/' . $userId . '/edit');
         }
-        exit;
     }
 }

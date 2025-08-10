@@ -16,11 +16,9 @@ class AuthController extends BaseController{
         $this->authService = new AuthService($userDAO); 
     }
 
-    public function showLogin(){
-        $this->staticView('login');
-    }
-
-    public function login() {
+    public function loginForm(): void { $this->staticView('login'); }
+    
+    public function login(): void {
 
         $email = $this->input('email');
         $password = $this->input('password');
@@ -38,28 +36,23 @@ class AuthController extends BaseController{
                 error_log("Flash setado com sucesso");
                 
                 $this->redirect('/');
-                exit;
             }
             
             Flash::error('Email ou senha incorretos');
             //error_log("Email ou senha incorretos");
             
-            $this->redirect('/auth/login');
-            
+        $this->redirect('/auth/login');
         } catch (\Exception $e) {
             error_log("Exception: " . $e->getMessage());
             Flash::error('Erro no login: ' . $e->getMessage());
             $this->redirect('/auth/login');
         }
-        exit;
     }
 
-    public function showSignup(){
-        $this->staticView('signup');
-    }
+    public function signupForm(): void { $this->staticView('signup'); }
 
-    public function signup() {
-        try { 
+    public function signup(): void {
+        try {
             $username = $this->input('username');
             $email = $this->input('email');
             $password = $this->input('password');
@@ -68,7 +61,7 @@ class AuthController extends BaseController{
 
             //error_log("username: $username, email: $email, phone: $phone");
 
-            $this->authService->register($username, $email, $password, $confirmPassword, $phone);
+            $this->authService->signup($username, $email, $password, $confirmPassword, $phone);
 
             Flash::success('Cadastro realizado com sucesso!');
             $this->redirect('/auth/login');
@@ -76,21 +69,19 @@ class AuthController extends BaseController{
         } catch (\InvalidArgumentException $e) {
             //error_log("InvalidArgumentException: " . $e->getMessage());
             Flash::error($e->getMessage());
-            $this->redirect('/auth/signup');
+        $this->redirect('/auth/signup');
         } catch (\Exception $e) {
             error_log("Exception no metodo signup: " . $e->getMessage());
             Flash::error('Erro no cadastro: ' . $e->getMessage());
             $this->redirect('/auth/signup');
         }
-        exit;
     }
 
-    public function logout() {
+    public function logout(): void {
         $this->removeSession('user_id');
         $this->removeSession('username');
         
         Flash::success('Logout realizado com sucesso!');
         $this->redirect('/auth/login');
-        exit;
     }
 }

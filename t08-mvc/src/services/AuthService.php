@@ -15,7 +15,7 @@ class AuthService {
         $this->userMapper = new UserMapper();
     }
 
-    public function register($username, $email, $password, $confirm_password, $phone, $bio = null, $profile_pic_url = null): User {
+    public function signup($username, $email, $password, $confirm_password, $phone, $bio = null, $profile_pic_url = null): User {
         if ($this->userDAO->checkEmailExists($email)) {
             throw new \InvalidArgumentException("Email já está em uso");
         }
