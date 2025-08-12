@@ -47,11 +47,7 @@ class FeedService
         if ($userId <= 0) {
             throw new \InvalidArgumentException('User invalido');
         }
-        
-        if (!$file || !isset($file['tmp_name'])) {
-            throw new \InvalidArgumentException('Arquivo invalido');
-        }
- 
+
         $allowedTypes = ['jpg', 'jpeg', 'png', 'gif'];
         $uploadResult = UploadImageService::handleUpload($file, 'feed', $allowedTypes);
         if (!$uploadResult['success']) {
