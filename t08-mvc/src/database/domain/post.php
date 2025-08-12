@@ -1,84 +1,47 @@
 <?php 
+declare(strict_types=1);
 namespace src\database\domain;
 
 class Post{
-    private $id;
-    private $userID;
-    private $photoUrl;
-    private $uploadDate;
-    private $description;
+    private ?int $id = null;
+    private int $userId;
+    private string $photoUrl;
+    private ?string $uploadDate = null;
+    private ?string $description;
 
-    public function __construct($userID, $photoUrl, $description = null) {
-        $this->userID = $userID;
-        $this->photoUrl = $photoUrl;
+    public function __construct(int $userId, string $photoUrl, ?string $description = null) {
+        if($userId <= 0) { throw new \InvalidArgumentException('userId deve ser positivo'); }
+        $this->userId = $userId;
+        $this->setPhotoUrl($photoUrl);
         $this->description = $description;
+        $this->setUploadDate(null); 
+    }
+    
+    public function getId(): ?int { return $this->id; }
+    public function setId(?int $id): self { 
+        if($id !== null && $id <= 0) { 
+            throw new \InvalidArgumentException('ID deve ser int positivo'); 
+        } 
+        $this->id = $id; return $this; 
+    }
+    
+    public function getUserId(): int { return $this->userId; }
+    
+    public function getPhotoUrl(): string { return $this->photoUrl; }
+    public function setPhotoUrl(string $photoUrl): self { 
+        if($photoUrl === '') { 
+            throw new \InvalidArgumentException('PhotoUrl não pode estar vazio'); 
+        } 
+        $this->photoUrl= $photoUrl; return $this; 
+    }
+   
+    public function getUploadDate(): ?string { return $this->uploadDate; }
+    public function setUploadDate(?string $uploadDate): self { 
+        $this->uploadDate = $uploadDate ?? date('Y-m-d H:i:s'); 
+        return $this; 
     }
 
-    public function getId(){
-        return $this->id;
-    }
+    public function getDescription(): ?string { return $this->description; }
+    public function setDescription(?string $description): self { $this->description= $description; return $this; }
 
-    public function setId($id) {
-        if ($id !== null && !is_numeric($id)) {
-            throw new \InvalidArgumentException("ID deve ser int");
-        }
-        $this->id = $id;
-        return $this;
-    }
-
-    public function getUserId(){
-        return $this->userID;
-    }
-
-    public function getPhotoUrl(){
-        return $this->photoUrl;
-    }
-
-    public function setPhotoUrl($photoUrl) {
-        if (empty($photoUrl)) {
-            throw new \InvalidArgumentException("PhotoUrl não pode estar vazio");
-        }
-        $this->photoUrl= $photoUrl;
-        return $this;
-    }
-
-    public function getUploadDate(){
-        return $this->uploadDate;
-    }
-
-    public function setUploadDate($uploadDate) {
-        if (is_numeric($uploadDate)) {
-            $this->uploadDate= date('Y-m-d H:i:s', $uploadDate);
-        }
-        else if ($uploadDate === null) {
-            $this->uploadDate = date('Y-m-d H:i:s');
-        }
-        return $this;
-    }
-
-    public function getDescription(){
-        return $this->description;
-    }
-
-    public function setDescription($description) {
-        $this->description= $description;
-        return $this;
-    }
-
-    public function toArray(): array {
-        $data = [
-            'user_id' => $this->userID,
-            'photo_url' => $this->photoUrl,
-            'description' => $this->description,
-        ];
-        
-        if ($this->id !== null) {
-            $data['id']= $this->id;
-        }
-        if ($this->uploadDate !== null) {
-            $data['upload_date']= $this->uploadDate;
-        }
-        
-        return $data;
-    }
 }

@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 namespace src\database\dao;
 
 use src\database\domain\Post;
@@ -13,33 +15,31 @@ class PostDAO extends BaseDAO {
         $this->mapper = new PostMapper();
     }
 
-    public function insertPost(Post $post): bool {
-        return $this->insert('posts', $post->toArray());
+    public function insertPost(Post $post): bool{
+        return $this->insert('posts', $this->mapper->mapToPersistenceArray($post));
     }
 
-    public function getPostByUserAndPhoto($userId, $photoUrl): ?Post {
+    public function getPostByUserAndPhoto(int $userId, string $photoUrl): ?Post {
         $sql= "SELECT * FROM posts WHERE user_id = ? AND photo_url = ? LIMIT 1";
         $result= $this->executeQuery($sql, [$userId, $photoUrl]);
 
-        if (empty($result)) {
-            return null;
-        }
+        if (!$result) {return null;}
 
         return $this->mapper->mapToPost($result[0]);
     }
 
-    public function getPostsByUserId($userId) {
+    public function getPostsByUserId(int $userId): array {
 
         $sql= "SELECT p.id, p.photo_url, p.upload_date, p.description, u.username, u.profile_pic_url 
-                FROM posts p 
-                JOIN users u ON p.user_id = u.id 
-                WHERE p.user_id = ?
-                ORDER BY p.upload_date DESC";
+               FROM posts p 
+               JOIN users u ON p.user_id = u.id 
+               WHERE p.user_id = ?
+               ORDER BY p.upload_date DESC";
 
         return $this->executeQuery($sql, [$userId]);
     }
 
-    public function getAllPosts() {
+    public function getAllPosts(): array {
         $sql = "SELECT p.id, p.photo_url, p.user_id, p.upload_date, p.description, u.username, u.profile_pic_url 
                 FROM posts p 
                 JOIN users u ON p.user_id = u.id 
@@ -48,8 +48,8 @@ class PostDAO extends BaseDAO {
         return $this->executeQuery($sql); 
     }
 
-    public function deleteAllPostsByUserId($userId): bool {
-        $sql = "DELETE FROM posts WHERE user_id = ?";
+    public function deleteAllPostsByUserId(int $userId): int {
+        $sql= "DELETE FROM posts WHERE user_id = ?";
         $stmt = $this->db->prepare($sql);
         $stmt->execute([$userId]);
         return $stmt->rowCount(); 

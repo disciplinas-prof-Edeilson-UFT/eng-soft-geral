@@ -34,33 +34,23 @@ class ProfileService
 
     public function getProfileFeed(int $userId): array
     {
-        if ($userId <= 0) {
-            return [];
-        }
+        if ($userId <= 0) {return [];}
         return $this->postDAO->getPostsByUserId($userId);
     }
 
     public function updateProfileData(int $userId, string $username, string $phone, string $email, string $bio): bool{
-        $username = trim($username);
-        $email = trim($email);
-        $bio = trim($bio);
-        if ($userId <= 0) {
-            throw new \InvalidArgumentException('Usuário inválido');
-        }
-        if ($username === '' || mb_strlen($username) < 3) {
-            throw new \InvalidArgumentException('Username deve ter pelo menos 3 caracteres');
-        }
-
-        if(!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-            throw new \InvalidArgumentException('Email inválido');
-        }
-
-        if($this->userDAO->checkEmailExists($email, $userId)) {
+        if ($userId <= 0) { throw new \InvalidArgumentException('Usuário inválido'); }
+        
+        $user = new User($username, $email, null, $phone, $bio, null);
+        if($this->userDAO->checkEmailExists($user->getEmail(), $userId)) {
             throw new \InvalidArgumentException('Email já está em uso');
         }
-        return $this->userDAO->updateUser($username, $email, $bio, $phone, $userId);
+        return $this->userDAO->updateUser($user->getUsername(), $user->getEmail(), $bio, $phone, $userId);
     }
 
+    /**
+     * @param array $file Estrutura do arquivo (como em $_FILES['...'])
+     */
     public function updateProfilePhoto(int $userId, array $file): bool
     {
         if ($userId <= 0) {

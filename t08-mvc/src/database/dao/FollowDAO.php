@@ -1,10 +1,12 @@
 <?php
+declare(strict_types=1);
+
 namespace src\database\dao;
 use src\database\domain\Follow;
 use src\database\BaseDAO;
 use src\database\mappers\FollowMapper;
 
-class FollowDAO extends BaseDAO {
+class FollowDAO extends BaseDAO { 
     private FollowMapper $mapper;
 
     public function __construct() {
@@ -12,22 +14,19 @@ class FollowDAO extends BaseDAO {
         $this->mapper = new FollowMapper();
     }
 
-    public function follow(Follow $follow)
-    {
-        return $this->insert('follow', $follow->toArray());
+    public function follow(Follow $follow): bool{ 
+        return $this->insert('follow', $this->mapper->mapToPersistenceArray($follow)); 
     }
 
-    public function isFollowing($followingId, $followerId): ?Follow {
+    public function isFollowing(int $followingId, int $followerId): ?Follow {
         $sql = "SELECT * FROM follow WHERE following_id = :following_id AND follower_id = :follower_id";
         $result= $this->executeQuery($sql, [":following_id" => $followingId, ":follower_id" => $followerId]);
 
-        if (empty($result)) {
-            return null;
-        }
+        if (!$result) {return null;}
         return $this->mapper->mapToFollow($result[0]);
     }
 
-    public function unfollow($followingId, $followerId)
+    public function unfollow(int $followingId, int $followerId): bool
     {
         $query = "DELETE FROM follow WHERE following_id = :following_id AND follower_id = :follower_id";
         $stmt = $this->db->prepare($query);

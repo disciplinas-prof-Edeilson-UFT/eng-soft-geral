@@ -53,7 +53,7 @@ class FollowService
         }
         $this->userDAO->beginTransaction();
         try {
-            $result = $this->followDAO->unfollow($currentUserId, $targetUserId);
+            $result = $this->followDAO->unfollow($targetUserId, $currentUserId);
             if (!$result) {
                 throw new \RuntimeException('Erro ao deixar de seguir');
             }

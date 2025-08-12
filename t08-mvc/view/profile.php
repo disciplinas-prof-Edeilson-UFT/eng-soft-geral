@@ -82,8 +82,10 @@ require_once __DIR__ . "/../dirconfig.php";
                 <?php foreach ($userPosts as $post): ?>
                     <article class="post-item">
                         <div class="post-image-container">
-                            <?php if (!empty($post['photo_url'])): ?>
-                                <img src="/public/uploads/feed/<?= htmlspecialchars($post['photo_url']) ?>" 
+                            <?php 
+                            $photoUrl = is_array($post) ? ($post['photo_url'] ?? null) : (method_exists($post, 'getPhotoUrl') ? $post->getPhotoUrl() : null);
+                            if (!empty($photoUrl)): ?>
+                                <img src="/public/uploads/feed/<?= htmlspecialchars($photoUrl) ?>" 
                                      alt="Post de <?= htmlspecialchars($user->getUsername()) ?>" 
                                      class="post-image">
                             <?php else: ?>
@@ -94,18 +96,22 @@ require_once __DIR__ . "/../dirconfig.php";
                             
                             <div class="post-overlay">
                                 <div class="post-info">
-                                    <?php if (!empty($post['description'])): ?>
-                                        <p class="post-description"><?= htmlspecialchars($post['description']) ?></p>
+                                    <?php 
+                                    $description = is_array($post) ? ($post['description'] ?? null) : (method_exists($post, 'getDescription') ? $post->getDescription() : null);
+                                    if (!empty($description)): ?>
+                                        <p class="post-description"><?= htmlspecialchars($description) ?></p>
                                     <?php endif; ?>
-                                    <time class="post-date" datetime="<?= $post['created_at'] ?? '' ?>">
-                                        <?= isset($post['created_at']) ? date('d/m/Y H:i', strtotime($post['created_at'])) : '' ?>
+                                    <?php $uploadDate = is_array($post) ? ($post['upload_date'] ?? $post['created_at'] ?? null) : (method_exists($post,'getUploadDate') ? $post->getUploadDate() : null); ?>
+                                    <time class="post-date" datetime="<?= $uploadDate ?? '' ?>">
+                                        <?= $uploadDate ? date('d/m/Y H:i', strtotime($uploadDate)) : '' ?>
                                     </time>
                                 </div>
                             </div>
                         </div>
 
                         <?php if ((int)$user_id === (int)$logged_in_user_id): ?>
-                            <form method="POST" action="/feed/<?= $post['id'] ?>/delete" class="delete-form" onsubmit="return confirm('Tem certeza que deseja deletar este post?')">
+                            <?php $postId = is_array($post) ? ($post['id'] ?? '') : (method_exists($post,'getId') ? $post->getId() : ''); ?>
+                            <form method="POST" action="/feed/<?= $postId ?>/delete" class="delete-form" onsubmit="return confirm('Tem certeza que deseja deletar este post?')">
                                 <button type="submit" class="btn-delete" title="Deletar post">
                                     x
                                 </button>

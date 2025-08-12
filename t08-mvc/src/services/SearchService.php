@@ -5,9 +5,7 @@ namespace src\services;
 
 use src\database\dao\UserDAO;
 
-/**
- * Service para buscas de usuários (apenas orquestra a chamada ao DAO com possíveis validações futuras)
- */
+
 class SearchService
 {
     private UserDAO $userDAO;

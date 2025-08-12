@@ -5,7 +5,7 @@ namespace src\services;
 
 class UploadImageService
 {
-    private const MAX_SIZE_BYTES = 5_000_000; // 5MB
+    private const MAX_SIZE_BYTES = 5_000_000; //5MB
 
     /**
      * Manipula upload de imagem com validações básicas
