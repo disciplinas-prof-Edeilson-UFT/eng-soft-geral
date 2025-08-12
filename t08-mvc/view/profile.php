@@ -79,12 +79,17 @@ require_once __DIR__ . "/../dirconfig.php";
             </div>
             
             <div class="posts-grid">
-                <?php foreach ($userPosts as $post): ?>
+                <?php foreach ($userPosts as $item): ?>
+                    <?php 
+                        $post = $item->getPost();
+                        $photoUrl = $post->getPhotoUrl();
+                        $description = $post->getDescription();
+                        $uploadDate = $post->getUploadDate();
+                        $postId = $post->getId();
+                    ?>
                     <article class="post-item">
                         <div class="post-image-container">
-                            <?php 
-                            $photoUrl = is_array($post) ? ($post['photo_url'] ?? null) : (method_exists($post, 'getPhotoUrl') ? $post->getPhotoUrl() : null);
-                            if (!empty($photoUrl)): ?>
+                            <?php if (!empty($photoUrl)): ?>
                                 <img src="/public/uploads/feed/<?= htmlspecialchars($photoUrl) ?>" 
                                      alt="Post de <?= htmlspecialchars($user->getUsername()) ?>" 
                                      class="post-image">
@@ -93,28 +98,20 @@ require_once __DIR__ . "/../dirconfig.php";
                                     <img src="/public/img/add-photo.svg" alt="Sem imagem">
                                 </div>
                             <?php endif; ?>
-                            
                             <div class="post-overlay">
                                 <div class="post-info">
-                                    <?php 
-                                    $description = is_array($post) ? ($post['description'] ?? null) : (method_exists($post, 'getDescription') ? $post->getDescription() : null);
-                                    if (!empty($description)): ?>
+                                    <?php if (!empty($description)): ?>
                                         <p class="post-description"><?= htmlspecialchars($description) ?></p>
                                     <?php endif; ?>
-                                    <?php $uploadDate = is_array($post) ? ($post['upload_date'] ?? $post['created_at'] ?? null) : (method_exists($post,'getUploadDate') ? $post->getUploadDate() : null); ?>
                                     <time class="post-date" datetime="<?= $uploadDate ?? '' ?>">
                                         <?= $uploadDate ? date('d/m/Y H:i', strtotime($uploadDate)) : '' ?>
                                     </time>
                                 </div>
                             </div>
                         </div>
-
                         <?php if ((int)$user_id === (int)$logged_in_user_id): ?>
-                            <?php $postId = is_array($post) ? ($post['id'] ?? '') : (method_exists($post,'getId') ? $post->getId() : ''); ?>
                             <form method="POST" action="/feed/<?= $postId ?>/delete" class="delete-form" onsubmit="return confirm('Tem certeza que deseja deletar este post?')">
-                                <button type="submit" class="btn-delete" title="Deletar post">
-                                    x
-                                </button>
+                                <button type="submit" class="btn-delete" title="Deletar post">x</button>
                             </form>
                         <?php endif; ?>
                     </article>

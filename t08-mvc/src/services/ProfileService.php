@@ -7,17 +7,21 @@ use src\database\dao\UserDAO;
 use src\database\dao\PostDAO;
 use src\database\domain\User;
 use src\database\mappers\UserMapper;
+use src\database\mappers\PostMapper;
+use src\viewmodels\PostFeedItem;
 
 class ProfileService
 {
     private UserDAO $userDAO;
     private PostDAO $postDAO;
     private UserMapper $userMapper;
+    private PostMapper $postMapper;
 
     public function __construct(UserDAO $userDAO, PostDAO $postDAO){
         $this->userDAO = $userDAO;
         $this->postDAO = $postDAO;
         $this->userMapper = new UserMapper();
+        $this->postMapper = new PostMapper();
     }
 
     public function getProfileData(int $userId): User {
@@ -32,10 +36,30 @@ class ProfileService
         return $this->userMapper->mapToUserProfile($userData);
     }
 
+    /**
+     * Retorna posts do perfil como PostFeedItem[] (mesma abordagem do feed principal)
+     * @return PostFeedItem[]
+     */
     public function getProfileFeed(int $userId): array
     {
-        if ($userId <= 0) {return [];}
-        return $this->postDAO->getPostsByUserId($userId);
+        if ($userId <= 0) { return []; }
+        $rows = $this->postDAO->getPostsByUserId($userId); 
+        $items = [];
+        foreach ($rows as $r) {
+            $post = $this->postMapper->mapToPost([
+                'id' => $r['id'],
+                'user_id' => $userId,
+                'photo_url' => $r['photo_url'],
+                'upload_date' => $r['upload_date'] ?? null,
+                'description' => $r['description'] ?? null,
+            ]);
+            $items[] = new PostFeedItem(
+                $post,
+                (string)($r['username'] ?? 'Usuário'),
+                $r['profile_pic_url'] ?? null
+            );
+        }
+        return $items;
     }
 
     public function updateProfileData(int $userId, string $username, string $phone, string $email, string $bio): bool{

@@ -5,19 +5,37 @@ namespace src\services;
 
 use src\database\dao\PostDAO;
 use src\database\domain\Post;
+use src\viewmodels\PostFeedItem;
+use src\database\mappers\PostMapper;
 
 
 class FeedService
 {
     private PostDAO $postDAO;
+    private PostMapper $postMapper;
 
     public function __construct(PostDAO $postDAO)
     {
         $this->postDAO = $postDAO;
+        $this->postMapper = new PostMapper();
     }
 
+    /**
+     * @return PostFeedItem[]
+     * (Post domain + dados do autor)
+     */
     public function getAllPostsFeed(): array {
-        return $this->postDAO->getAllPosts();
+        $rows = $this->postDAO->getAllPosts();
+        $items = [];
+        foreach ($rows as $r) {
+            $post = $this->postMapper->mapToPost($r);
+            $items[] = new PostFeedItem(
+                $post,
+                (string)($r['username'] ?? 'Usuário'),
+                $r['profile_pic_url'] ?? null
+            );
+        }
+        return $items;
     }
 
     /**
@@ -29,6 +47,7 @@ class FeedService
         if ($userId <= 0) {
             throw new \InvalidArgumentException('User invalido');
         }
+        
         if (!$file || !isset($file['tmp_name'])) {
             throw new \InvalidArgumentException('Arquivo invalido');
         }

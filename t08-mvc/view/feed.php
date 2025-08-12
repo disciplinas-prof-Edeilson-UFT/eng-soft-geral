@@ -12,42 +12,49 @@ require_once __DIR__ . "/../dirconfig.php";
         <section class="feed">
             <?php if ($posts): ?>
                 <!-- Itera sobre cada post -->
-                <?php foreach ($posts as $post): ?>
+                <?php foreach ($posts as $item): ?>
+                    <?php 
+                        $post = $item->getPost();
+                        $username = htmlspecialchars($item->getUsername());
+                        $profilePicUrl = $item->getProfilePicUrl();
+                        $profilePhoto = $profilePicUrl 
+                            ? '/public/uploads/avatars/' . htmlspecialchars($profilePicUrl)
+                            : '/public/img/profile.svg';
+                        $photoUrl = $post->getPhotoUrl();
+                        $description = $post->getDescription();
+                        $uploadDate = $post->getUploadDate();
+                        $userId = $post->getUserId();
+                    ?>
                     <article class="post">
                         <!-- Cabeçalho do Post: Informações do Usuário -->
                         <header class="user-info">
                             <!-- Container da Foto de Perfil -->
                             <div class="avatar" aria-label="Foto do Usuário">
-                                <?php
-                                $profilePhoto = !empty($post['profile_pic_url'])
-                                    ? '/public/uploads/avatars/' . htmlspecialchars($post['profile_pic_url'])
-                                    : '/public/img/profile.svg';
-                                ?>
-                                <img src="<?= $profilePhoto; ?>" alt="Foto de Perfil de <?= htmlspecialchars($post['username'] ?? '') ?>" class="profile-picture">
+                                <img src="<?= $profilePhoto; ?>" alt="Foto de Perfil de <?= $username ?>" class="profile-picture">
                             </div>
 
-                            <a href="/profile/<?= htmlspecialchars($post['user_id'] ?? '') ?>" class="username">
-                                <?= htmlspecialchars($post['username'] ?? 'Usuário') ?>
+                            <a href="/profile/<?= htmlspecialchars((string)$userId) ?>" class="username">
+                                <?= $username ?>
                             </a>
                         </header>
 
                         <div class="image-container" aria-label="Imagem do Post">
-                            <?php if (!empty($post['photo_url'])): ?>
-                                <img src="/public/uploads/feed/<?= htmlspecialchars($post['photo_url']) ?>" 
-                                     alt="Post de <?= htmlspecialchars($post['username'] ?? '') ?>"
+                            <?php if (!empty($photoUrl)): ?>
+                                <img src="/public/uploads/feed/<?= htmlspecialchars($photoUrl) ?>" 
+                                     alt="Post de <?= $username ?>"
                                      class="post-image">
                             <?php endif; ?>
                         </div>
 
-                        <?php if (!empty($post['description'])): ?>
+                        <?php if (!empty($description)): ?>
                             <div class="post-description">
-                                <p><?= htmlspecialchars($post['description']) ?></p>
+                                <p><?= htmlspecialchars($description) ?></p>
                             </div>
                         <?php endif; ?>
 
                         <div class="post-meta">
-                            <time datetime="<?= $post['upload_date'] ?? '' ?>">
-                                Publicado em: <?= isset($post['upload_date']) ? date('d/m/Y H:i', strtotime($post['upload_date'])) : '' ?>
+                            <time datetime="<?= $uploadDate ?? '' ?>">
+                                Publicado em: <?= $uploadDate ? date('d/m/Y H:i', strtotime($uploadDate)) : '' ?>
                             </time>
                         </div>
                     </article>
