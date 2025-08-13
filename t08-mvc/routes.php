@@ -26,7 +26,8 @@ class Routes{
                     'get' => [
                     ],
                     'post' => [
-                        '/{user_id}/store' => 'site\FeedController@store'
+                        '/{user_id}/store' => 'site\FeedController@store',
+                        '/{post_id}/delete' => 'site\FeedController@delete'
                     ]
                 ],
                 'profile'=> [

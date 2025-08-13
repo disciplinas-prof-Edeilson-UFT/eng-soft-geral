@@ -55,4 +55,11 @@ class PostDAO extends BaseDAO {
         return $stmt->rowCount(); 
     }
 
+    public function deletePost(int $postId): bool {
+        $sql = "DELETE FROM posts WHERE id = ?";
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute([$postId]);
+        return $stmt->rowCount() > 0;
+    }
+
 }

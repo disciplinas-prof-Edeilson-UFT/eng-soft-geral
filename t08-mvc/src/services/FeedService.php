@@ -70,4 +70,22 @@ class FeedService
         }
         return $createdPost;
     }
+
+    public function deletePost(int $postId): bool
+    {
+        if ($postId <= 0) {
+            throw new \InvalidArgumentException('Post invalido');
+        }
+
+        try {
+            $this->postDAO->beginTransaction();
+            $result = $this->postDAO->deletePost($postId);
+            $this->postDAO->commit();
+
+            return $result;
+        } catch (\Throwable $e) {
+            $this->postDAO->rollback();
+            throw $e;
+        }
+    }
 }

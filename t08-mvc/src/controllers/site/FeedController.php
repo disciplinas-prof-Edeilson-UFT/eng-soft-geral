@@ -48,4 +48,15 @@ class FeedController extends BaseController {
         }
         $this->redirect('/profile/' . $userId);
     }
+
+    public function delete(int $postId): void
+    {
+        try {
+            $this->feedService->deletePost($postId);
+            Flash::success('Postagem deletada com sucesso');
+        } catch (\Throwable $e) {
+            Flash::error('Erro ao deletar post: ' . $e->getMessage());
+        }
+        $this->redirect('/');
+    }
 }
