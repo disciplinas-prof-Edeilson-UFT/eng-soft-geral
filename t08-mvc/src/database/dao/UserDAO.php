@@ -24,9 +24,14 @@ class UserDAO extends BaseDAO {
         return $this->executeQuery($sql, ["%{$username}%"]);
     }
 
-    public function checkEmailExists(string $email): bool {
-        $sql = "SELECT 1 FROM users WHERE email = ? LIMIT 1";
-        $result = $this->executeQuery($sql, [$email]);
+    public function checkEmailExists(string $email, ?int $excludeUserId = null): bool {
+        if ($excludeUserId !== null) {
+            $sql = "SELECT 1 FROM users WHERE email = ? AND id <> ? LIMIT 1";
+            $result = $this->executeQuery($sql, [$email, $excludeUserId]);
+        } else {
+            $sql = "SELECT 1 FROM users WHERE email = ? LIMIT 1";
+            $result = $this->executeQuery($sql, [$email]);
+        }
         return !empty($result);
     }
 

@@ -4,6 +4,7 @@ namespace src\controllers\site;
 use src\controllers\BaseController;
 use src\services\FeedService;
 use src\database\dao\PostDAO;
+use Conex\MiniFramework\utils\Flash;
 
 class FeedController extends BaseController {
     private FeedService $feedService;
@@ -38,12 +39,13 @@ class FeedController extends BaseController {
 
             if ($file && ($file['error'] ?? UPLOAD_ERR_NO_FILE) === UPLOAD_ERR_OK) {
                 $this->feedService->createPost($userId, $file, $description);
-                $this->redirect('/profile/' . $userId . '?success=Imagem enviada com sucesso');
+                Flash::success('Postagem criada com sucesso');
             } else {
-                $this->redirect('/profile/' . $userId . '?error=Falha no upload da imagem');
+                Flash::error('Falha no upload da imagem');
             }
         } catch (\Throwable $e) {
-            $this->redirect('/profile/' . $userId . '?error=' . urlencode($e->getMessage()));
+            Flash::error('Erro ao criar post: ' . $e->getMessage());
         }
+        $this->redirect('/profile/' . $userId);
     }
 }

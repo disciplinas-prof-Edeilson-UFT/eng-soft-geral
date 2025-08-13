@@ -76,7 +76,8 @@ class ProfileController extends BaseController {
             $user = $this->profileService->getProfileData($userId);
             $this->view('profile-update', [
                 'user_id' => $userId,
-                'user' => $user
+                'user' => $user,
+                'pageCSS' => 'profile-update'
             ]);
         } catch (\Throwable $e) {
             Flash::error($e->getMessage());
