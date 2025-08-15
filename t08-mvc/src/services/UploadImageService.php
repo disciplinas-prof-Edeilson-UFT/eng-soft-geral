@@ -5,12 +5,8 @@ namespace src\services;
 
 class UploadImageService
 {
-    private const MAX_SIZE_BYTES = 5_000_000; //5MB
+    private const MAX_SIZE_BYTES = 5_000_000; 
 
-    /**
-     * Manipula upload de imagem com validações básicas
-     * Retorna array: success(bool), file_name?, file_path?, error?
-     */
     public static function handleUpload(array $file, string $uploadDir, array $allowedTypes): array
     {
         try {

@@ -5,10 +5,6 @@ namespace src\viewmodels;
 
 use src\database\domain\Post;
 
-/**
- * View Model para exibir item de feed com dados do Post e do autor
- * mantem o domain (Post) limpo de atributos de usuário
- */
 class PostFeedItem
 {
     public function __construct(

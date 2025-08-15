@@ -36,10 +36,6 @@ class ProfileService
         return $this->userMapper->mapToUserProfile($userData);
     }
 
-    /**
-     * Retorna posts do perfil como PostFeedItem[] (mesma abordagem do feed principal)
-     * @return PostFeedItem[]
-     */
     public function getProfileFeed(int $userId): array
     {
         if ($userId <= 0) { return []; }
@@ -72,9 +68,6 @@ class ProfileService
         return $this->userDAO->updateUser($user->getUsername(), $user->getEmail(), $bio, $phone, $userId);
     }
 
-    /**
-     * @param array $file Estrutura do arquivo (como em $_FILES['...'])
-     */
     public function updateProfilePhoto(int $userId, array $file): bool
     {
         if ($userId <= 0) {

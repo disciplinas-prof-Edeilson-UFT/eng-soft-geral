@@ -18,16 +18,12 @@ class FeedController extends BaseController {
     public function show(): void
     {
         try {
-            $loggedUserId= $this->getSession('user_id');
             $posts= $this->feedService->getAllPostsFeed();
-            $this->view('feed', ['posts' => $posts,'pageTitle' => 'Feed','loggedUserId' => $loggedUserId,'pageCSS' => 'feed']);
+            $preparedPosts= $this->prepareFeedData($posts);
+    
+            $this->view('feed', ['posts' => $preparedPosts,'pageTitle' => 'Feed','pageCSS' => 'feed']);
         } catch (\Throwable $e) {
-            $this->view('feed', [
-                'posts' => [],
-                'error' => $e->getMessage(),
-                'pageTitle' => 'Feed - erro',
-                'pageCSS' => 'feed'
-            ]);
+            $this->view('feed', ['posts' => [],'error' => $e->getMessage(),'pageTitle' => 'Feed - erro','pageCSS' => 'feed']);
         }
     }
 
@@ -58,5 +54,37 @@ class FeedController extends BaseController {
             Flash::error('Erro ao deletar post: ' . $e->getMessage());
         }
         $this->redirect('/');
+    }
+
+    private function prepareFeedData(array $posts): array{
+        $preparedPosts = [];
+        
+        foreach ($posts as $item) {
+            $post = $item->getPost();
+            $profilePicUrl = $item->getProfilePicUrl();
+            
+            $preparedPosts[] = [
+                'username' => htmlspecialchars($item->getUsername()),
+                'profilePhoto' => $profilePicUrl 
+                    ? '/public/uploads/avatars/' . htmlspecialchars($profilePicUrl)
+                    : '/public/img/profile.svg',
+                'profileUrl' => '/profile/' . htmlspecialchars((string)$post->getUserId()),
+                'postImageUrl' => $post->getPhotoUrl() 
+                    ? '/public/uploads/feed/' . htmlspecialchars($post->getPhotoUrl())
+                    : null,
+                'description' => htmlspecialchars($post->getDescription() ?? ''),
+                'formattedDate' => $this->formatPostDate($post->getUploadDate()),
+                'uploadDate' => $post->getUploadDate() ?? '',
+                'hasImage' => !empty($post->getPhotoUrl()),
+                'hasDescription' => !empty($post->getDescription()),
+                'userId' => $post->getUserId()
+            ];
+        }
+        
+        return $preparedPosts;
+    }
+
+    private function formatPostDate(?string $uploadDate): string{
+        return $uploadDate ? 'Publicado em: ' . date('d/m/Y H:i', strtotime($uploadDate)) : '';
     }
 }

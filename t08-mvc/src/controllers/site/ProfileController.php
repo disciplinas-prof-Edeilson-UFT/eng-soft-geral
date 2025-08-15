@@ -29,18 +29,17 @@ class ProfileController extends BaseController {
             $profile = $this->profileService->getProfileData($userId);
             $posts = $this->profileService->getProfileFeed($userId);
             $loggedUserId = $this->getSession('user_id', 0);
-            $isFollowing = $this->followService->isFollowing($userId, $loggedUserId);
+            $isFollowing= $this->followService->isFollowing($userId, $loggedUserId);
 
-            $this->view('profile', [
-                'user' => $profile,
-                'user_id' => $userId,
-                'logged_in_user_id' => $loggedUserId,
-                'isFollowing' => $isFollowing,
-                'userPosts' => $posts,
-                'profilePhoto' => $profile->getProfilePicUrl(),
+            $profileData= $this->prepareProfileData($profile, $userId, $loggedUserId, $isFollowing);
+            $postsData= $this->preparePostsData($posts, $profile->getUsername(), $userId, $loggedUserId); 
+
+            $viewData = array_merge($profileData, $postsData, [ 
                 'pageTitle' => 'Perfil de ' . htmlspecialchars($profile->getUsername()),
                 'pageCSS' => 'profile'
             ]);
+
+            $this->view('profile', $viewData);
         } catch (\Throwable $e) {
             error_log('Profile show error: ' . $e->getMessage());
             $this->view('profile', ['error' => 'Erro ao carregar perfil']);
@@ -131,5 +130,60 @@ class ProfileController extends BaseController {
             Flash::error('Erro interno: ' . $e->getMessage());
             $this->redirect('/profile/' . $userId . '/edit');
         }
+    }
+
+    private function prepareProfileData($profile, int $userId, int $loggedUserId, bool $isFollowing): array{
+        return [
+            'user' => $profile,
+            'user_id' => $userId,
+            'loggedUserId' => $loggedUserId,
+            'isOwnProfile' => $userId === $loggedUserId,
+            'profilePhoto' => $this->getProfilePhotoUrl($profile),
+            'username' => htmlspecialchars($profile->getUsername()),
+            'bio' => htmlspecialchars($profile->getBio() ?? 'Sem biografia'),
+            'followingCount' => htmlspecialchars($profile->getCountFollowing()),
+            'followersCount' => htmlspecialchars($profile->getCountFollowers()),
+            'isFollowing' => $isFollowing,
+            'followButtonText' => $isFollowing ? 'Deixar de seguir' : 'Seguir',
+            'followAction' => $isFollowing ? 'unfollow' : 'follow'
+        ];
+    }
+
+    private function preparePostsData(array $posts, string $username, int $userId, int $loggedUserId): array{
+        $preparedPosts = [];
+        
+        foreach ($posts as $item) {
+            $post = $item->getPost();
+            $preparedPosts[] = [
+                'id' => $post->getId(),
+                'photoUrl'=> htmlspecialchars($post->getPhotoUrl() ?? ''),
+                'description' => htmlspecialchars($post->getDescription() ?? ''),
+                'uploadDate' => $post->getUploadDate(),
+                'formattedDate' => $this->formatPostDate($post->getUploadDate()),
+                'hasImage' => !empty($post->getPhotoUrl())
+            ];
+        }
+
+        return [
+            'userPosts' => $preparedPosts,
+            'hasUserPosts' => !empty($preparedPosts),
+            'postsCount' => count($preparedPosts),
+            'postsCountText' => count($preparedPosts) . ' post' . (count($preparedPosts) !== 1 ? 's' : ''),
+            'uploadText' => empty($preparedPosts) ? 'Adicionar primeira foto' : 'Adicionar nova foto',
+            'noPostsTitle' => $userId === $loggedUserId ? 'Você ainda não tem posts' : htmlspecialchars($username) . ' ainda não tem posts',
+            'noPostsMessage' => $userId === $loggedUserId ? 'Comece compartilhando sua primeira foto!' : 'Quando ' . htmlspecialchars($username) . ' compartilhar algo, aparecerá aqui.'
+        ];
+    }
+
+    private function getProfilePhotoUrl($profile): string
+    {
+        return $profile->getProfilePicUrl() ? 
+            '/public/uploads/avatars/' . htmlspecialchars($profile->getProfilePicUrl()) : 
+            '/public/img/profile.svg';
+    }
+
+    private function formatPostDate(?string $date): string
+    {
+        return $date ? date('d/m/Y H:i', strtotime($date)) : '';
     }
 }

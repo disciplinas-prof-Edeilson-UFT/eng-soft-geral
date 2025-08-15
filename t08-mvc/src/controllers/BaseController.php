@@ -70,12 +70,12 @@ class BaseController{
     }
 
     private function getGlobalViewData(): array {
-        $userID = Session::get('user_id');
+        $userId = Session::get('user_id');
         $username = Session::get('username');
         $isAuth = Session::has('user_id');
         
         $data = [
-            'loggedInUserID' => $userID,
+            'loggedUserId' => $userId,
             'username' => $username,
             'isAuthenticated' => $isAuth,
             'currentURL' => $_SERVER['REQUEST_URI'] ?? '/',

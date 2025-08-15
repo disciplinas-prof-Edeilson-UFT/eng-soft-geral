@@ -20,10 +20,6 @@ class FeedService
         $this->postMapper = new PostMapper();
     }
 
-    /**
-     * @return PostFeedItem[]
-     * (Post domain + dados do autor)
-     */
     public function getAllPostsFeed(): array {
         $rows = $this->postDAO->getAllPosts();
         $items = [];
@@ -38,10 +34,6 @@ class FeedService
         return $items;
     }
 
-    /**
-     * Cria um novo post: valida upload, persiste e retorna o Domain Post criado
-     * @param array $file Estrutura do arquivo (como em $_FILES['...'])
-     */
     public function createPost(int $userId, array $file, ?string $description = null): Post
     {
         if ($userId <= 0) {
