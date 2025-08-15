@@ -15,7 +15,7 @@ class SearchController extends BaseController {
     }
 
     public function search() {
-        $query = $_GET['query'] ?? '';
+        $query = $this->query('query', '');
         $response = ['users' => []];
         
         if (!empty($query)) {

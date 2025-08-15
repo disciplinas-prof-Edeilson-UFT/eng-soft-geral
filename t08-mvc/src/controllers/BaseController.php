@@ -4,6 +4,7 @@ namespace src\controllers;
 
 use Conex\MiniFramework\utils\Session;
 use Conex\MiniFramework\http\Request;
+use Conex\MiniFramework\http\Response;
 use Conex\MiniFramework\mvc\View;
 
 
@@ -24,14 +25,10 @@ class BaseController{
         echo View::renderOnlyView($view, $data);
     }
 
-    public function redirect(string $path){
-        if (headers_sent($file, $line)) {
-            error_log("Headers already sent in $file:$line - Cannot redirect to $path");
-            exit;
-        }
-        
-        header("Location: {$path}");
-        exit;
+    
+    public function redirect(string $path): never
+    {
+        Response::redirect($path);
     }
 
     public function input(string $input, $default = null){
