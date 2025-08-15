@@ -10,51 +10,39 @@ require_once __DIR__ . "/../dirconfig.php";
 
     <main class="feed-content">
         <section class="feed">
-            <?php if ($posts): ?>
-                <!-- Itera sobre cada post -->
-                <?php foreach ($posts as $item): ?>
-                    <?php 
-                        $post = $item->getPost();
-                        $username = htmlspecialchars($item->getUsername());
-                        $profilePicUrl = $item->getProfilePicUrl();
-                        $profilePhoto = $profilePicUrl 
-                            ? '/public/uploads/avatars/' . htmlspecialchars($profilePicUrl)
-                            : '/public/img/profile.svg';
-                        $photoUrl = $post->getPhotoUrl();
-                        $description = $post->getDescription();
-                        $uploadDate = $post->getUploadDate();
-                        $userId = $post->getUserId();
-                    ?>
+            <?php if (!empty($posts)): ?>
+                <?php foreach ($posts as $post): ?>
                     <article class="post">
                         <!-- Cabeçalho do Post: Informações do Usuário -->
                         <header class="user-info">
-                            <!-- Container da Foto de Perfil -->
                             <div class="avatar" aria-label="Foto do Usuário">
-                                <img src="<?= $profilePhoto; ?>" alt="Foto de Perfil de <?= $username ?>" class="profile-picture">
+                                <img src="<?= $post['profilePhoto'] ?>" 
+                                     alt="Foto de Perfil de <?= $post['username'] ?>" 
+                                     class="profile-picture">
                             </div>
 
-                            <a href="/profile/<?= htmlspecialchars((string)$userId) ?>" class="username">
-                                <?= $username ?>
+                            <a href="<?= $post['profileUrl'] ?>" class="username">
+                                <?= $post['username'] ?>
                             </a>
                         </header>
 
-                        <div class="image-container" aria-label="Imagem do Post">
-                            <?php if (!empty($photoUrl)): ?>
-                                <img src="/public/uploads/feed/<?= htmlspecialchars($photoUrl) ?>" 
-                                     alt="Post de <?= $username ?>"
+                        <?php if ($post['hasImage']): ?>
+                            <div class="image-container" aria-label="Imagem do Post">
+                                <img src="<?= $post['postImageUrl'] ?>" 
+                                     alt="Post de <?= $post['username'] ?>"
                                      class="post-image">
-                            <?php endif; ?>
-                        </div>
+                            </div>
+                        <?php endif; ?>
 
-                        <?php if (!empty($description)): ?>
+                        <?php if ($post['hasDescription']): ?>
                             <div class="post-description">
-                                <p><?= htmlspecialchars($description) ?></p>
+                                <p><?= $post['description'] ?></p>
                             </div>
                         <?php endif; ?>
 
                         <div class="post-meta">
-                            <time datetime="<?= $uploadDate ?? '' ?>">
-                                Publicado em: <?= $uploadDate ? date('d/m/Y H:i', strtotime($uploadDate)) : '' ?>
+                            <time datetime="<?= $post['uploadDate'] ?>">
+                                <?= $post['formattedDate'] ?>
                             </time>
                         </div>
                     </article>
@@ -65,7 +53,7 @@ require_once __DIR__ . "/../dirconfig.php";
                     <h3>Nenhum post encontrado</h3>
                     <p>Seja o primeiro a compartilhar algo!</p>
                     <?php if ($isAuthenticated ?? false): ?>
-                        <a href="/profile/<?= $loggedInUserID ?? '' ?>" class="btn-create-post">
+                        <a href="/profile/<?= $loggedUserId ?? '' ?>" class="btn-create-post">
                             Criar primeiro post
                         </a>
                     <?php endif; ?>

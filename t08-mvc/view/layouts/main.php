@@ -27,7 +27,7 @@
             </button>
 
             <?php if ($isAuthenticated ?? false): ?>
-                <a href="/profile/<?= $loggedInUserID; ?>">
+                <a href="/profile/<?= $loggedUserId; ?>">
                     <img src="/public/img/profile.svg" class="icon">
                     Perfil
                 </a>
