@@ -7,7 +7,7 @@ use Conex\MiniFramework\http\Response;
 use Conex\MiniFramework\mvc\Controller;
 
 /**
- * Classe Router - Sistema de roteamento do Mini-Framework MVC
+ * Class Router - Sistema de roteamento do Mini-Framework MVC
  * 
  * Responsável por mapear requisições HTTP para controllers específicos,
  * processar middleware, extrair parâmetros de URL e gerenciar o fluxo
@@ -59,7 +59,7 @@ class Router{
      * // Para URI /profile/123 e método GET:
      * // Retorna: ['controller' => 'site\ProfileController@show', 'middlewares' => ['auth']]
      */
-    private function processAllRoutes($routes, $method, $uri)
+    private function processAllRoutes(array $routes, string $method, string $uri): ?array
     {
         if (!isset($routes['groups'])) {
             return null;
@@ -86,7 +86,7 @@ class Router{
             
             if (isset($groupRoutes[$method])) {
                 foreach ($groupRoutes[$method] as $route => $controller) {
-                    if ($this->matchRoute($route, $routeWithoutPrefix)) {
+                    if (self::matchRoute($route, $routeWithoutPrefix)) {
                         return [
                             'controller' => $controller,
                             'middlewares' => $groupRoutes['middleware'] ?? []
@@ -116,7 +116,8 @@ class Router{
      * // Para middlewares ['auth', 'admin']:
      * // Executa checkAuth() e depois checkAdmin()
      */
-    private function applyMiddlewares($middlewares){
+    private function applyMiddlewares(array $middlewares): void
+    {
         foreach ($middlewares as $middleware) {
             switch ($middleware) {
                 case 'auth':
@@ -129,11 +130,11 @@ class Router{
     }
 
     /**
-     * Verifica autenticação do usuário através de sessão
+     * Verifica autenticação do user através de sessão
      * 
-     * Middleware de autenticação que valida se existe um usuário logado
-     * verificando a existência e validade do user_id na sessão PHP.
-     * Se o usuário não estiver autenticado, redireciona para página de login.
+     * Middleware de autenticação que valida se existe um user logado
+     * verificando a existência e validade do user_id na sessão PHP
+     * Se o user não estiver autenticado, redireciona para página de login
      * 
      * Validações realizadas:
      * - Inicia sessão PHP se não estiver ativa
@@ -147,7 +148,7 @@ class Router{
      * // Se $_SESSION['user_id'] = 123: Permite continuar
      * // Se $_SESSION['user_id'] não existe: Redireciona para /auth/login
      */
-    private function checkAuth(){
+    private function checkAuth(): void{
         session_start();
         if (!isset($_SESSION['user_id']) || empty($_SESSION['user_id'])) {
             header('Location: /auth/login');
@@ -160,26 +161,26 @@ class Router{
      * 
      * Algoritmo de matching que compara um padrão de rota (que pode conter
      * parâmetros dinâmicos entre chaves) com uma URI específica. Suporta
-     * parâmetros dinâmicos no formato {nome_parametro}.
+     * parâmetros dinâmicos no formato {nome_parametro}
      * 
      * Algoritmo de correspondência:
      * 1. Divide padrão e URI em segmentos por '/'
      * 2. Verifica se número de segmentos é igual
      * 3. Para cada segmento:
-     *    - Se é parâmetro {nome}: aceita qualquer valor
+     *    - Se é parâmetro {nome_parametro}: aceita qualquer valor
      *    - Se é texto: deve corresponder exatamente
      * 
      * @param string $routePattern Padrão da rota (ex: /user/{id}/posts/{post_id})
-     * @param string $uri          URI a ser testada (ex: /user/123/posts/456)
+     * @param string $uri URI a ser testada (ex: /user/123/posts/456)
      * 
      * @return bool true se URI corresponde ao padrão, false caso contrário
      * 
      * @example
-     * matchRoute('/user/{id}', '/user/123')     // retorna true
+     * matchRoute('/user/{id}', '/user/123') // retorna true
      * matchRoute('/user/{id}', '/user/123/abc') // retorna false
-     * matchRoute('/admin', '/admin')            // retorna true
+     * matchRoute('/admin', '/admin') // retorna true
      */
-    private function matchRoute($routePattern, $uri)
+    public static function matchRoute(string $routePattern, string $uri): bool
     {
         $routeParts = explode('/', trim($routePattern, '/'));
         $uriParts = explode('/', trim($uri, '/'));
@@ -201,11 +202,43 @@ class Router{
     }
 
     /**
+     * Extrai parâmetros de uma rota dinâmica
+     * 
+     * @param string $routePattern Padrão da rota (ex: /user/{id}/posts/{post_id})
+     * @param string $uri          URI real (ex: /user/123/posts/456)
+     * 
+     * @return array Array com valores dos parâmetros extraídos
+     * 
+     * @example
+     * // routePattern: "/user/{id}/posts/{post_id}"
+     * // uri: "/user/123/posts/456"
+     * // Retorna: ["123", "456"]
+     */
+    public static function extractRouteParams(string $routePattern, string $uri): array
+    {
+        $routeParts = explode('/', trim($routePattern, '/'));
+        $uriParts = explode('/', trim($uri, '/'));
+        $params = [];
+        
+        if (count($routeParts) !== count($uriParts)) {
+            return [];
+        }
+        
+        foreach ($routeParts as $index => $segment) {
+            if (preg_match('/^\{([a-zA-Z0-9_]+)\}$/', $segment)) {
+                $params[] = $uriParts[$index];
+            }
+        }
+        
+        return $params;
+    }
+
+    /**
      * Obtém URI limpa da requisição HTTP
      * 
      * Processa a REQUEST_URI removendo query strings e normalizando
      * a barra final. Garante que a URI esteja em formato consistente
-     * para processamento pelo sistema de roteamento.
+     * para processamento pelo sistema de roteamento
      * 
      * Processamento realizado:
      * - Extrai apenas o path da URI (remove query strings)
@@ -224,9 +257,18 @@ class Router{
      * // $_SERVER['REQUEST_URI'] = '/'
      * // Retorna: '/'
      */
-    private function getCleanUri(){
+    public static function getCleanUri(): string{
         $uri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
         return rtrim($uri, '/') ?: '/';
+    }
+
+    /**
+     * Obtém URI original sem normalização para extração de parâmetros
+     * 
+     * @return string URI path limpa (ex: "/user/123/posts")
+     */
+    public static function getUri(): string {
+        return parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
     }
 
     /**
@@ -235,7 +277,7 @@ class Router{
      * Ponto de entrada principal do sistema de roteamento que coordena
      * todo o fluxo de processamento de uma requisição HTTP. Gerencia
      * a sequência completa desde análise da requisição até execução
-     * do controller ou tratamento de erros.
+     * do controller ou tratamento de erros
      * 
      * Fluxo de execução:
      * 1. Obtém método HTTP da requisição (GET, POST, etc.)
@@ -255,10 +297,10 @@ class Router{
      * // 3. Executa checkAuth()
      * // 4. Executa ProfileController->show()
      */
-    public function dispatch()
+    public function dispatch(): void
     {
         $method = Request::getMethod();
-        $uri = $this->getCleanUri();
+        $uri = self::getCleanUri();
         $result = $this->processAllRoutes($this->routes, $method, $uri);
         
         if ($result === null) {

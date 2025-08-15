@@ -5,7 +5,7 @@ use Exception;
 use Conex\MiniFramework\mvc\helpers\Parameters;
 
 /**
- * Classe Controller - Sistema de despacho e execução de controllers
+ * Class Controller - Sistema execução de controllers
  * 
  * Responsável por receber informações de roteamento do Router e executar
  * o controller e método correspondentes. Gerencia a instanciação de classes,
@@ -25,7 +25,7 @@ class Controller
      * 
      * Método principal que coordena todo o processo de execução de um controller.
      * Recebe uma string no formato "Controller@method" do sistema de roteamento
-     * e executa o fluxo completo de validação, instanciação e invocação.
+     * e executa o fluxo completo de validação, instanciação e invocação
      * 
      * Fluxo de execução:
      * 1. Valida formato da string de rota (deve conter '@')
@@ -51,7 +51,7 @@ class Controller
      * // 4. Instancia ProfileController
      * // 5. Executa ProfileController->show($params)
      */
-    public static function execute(string $router)
+    public static function execute(string $router): void
     {
         self::validateRouteFormat($router);
         
@@ -74,18 +74,18 @@ class Controller
      * 
      * Verifica se a string de rota fornecida pelo sistema de roteamento
      * está no formato correto "Controller@method". O delimitador '@' é
-     * obrigatório para separar o nome do controller do nome do método.
-     * 
+     * obrigatório para separar o nome do controller do nome do método 
+     *  
      * @param string $router String de rota a ser validada
      * 
      * @throws Exception Se a string não contiver o delimitador '@'
      * 
      * @example
-     * validateRouteFormat("UserController@show")     // Válido
-     * validateRouteFormat("UserController.show")     // Exception
-     * validateRouteFormat("UserController")          // Exception
+     * validateRouteFormat("UserController@show")     //Válido
+     * validateRouteFormat("UserController.show")     //Exception
+     * validateRouteFormat("UserController")          //Exception
      */
-    private static function validateRouteFormat(string $router)
+    private static function validateRouteFormat(string $router): void
     {
         if (!str_contains($router, '@')) {
             throw new Exception("Formato de rota inválido!  correto: Controller@method");
@@ -97,7 +97,7 @@ class Controller
      * 
      * Valida se a classe especificada existe e pode ser instanciada.
      * Utiliza a função nativa class_exists() do PHP para verificar
-     * se a classe foi carregada corretamente através do autoloader.
+     * se a classe foi carregada corretamente através do autoloader
      * 
      * @param string $classe Nome completo da classe incluindo namespace
      *                      (ex: "src\controllers\site\UserController")
@@ -108,7 +108,7 @@ class Controller
      * classExists("src\controllers\site\UserController")  // Se classe existir
      * classExists("src\controllers\NonExistent")          // Exception
      */
-    private static function classExists(string $classe)
+    private static function classExists(string $classe): void
     {
         if (!class_exists($classe)) {
             throw new Exception("Controller {$classe} não encontrado");
@@ -119,9 +119,9 @@ class Controller
     /**
      * Verifica se o método existe na instância do controller
      * 
-     * Valida se o método especificado existe na instância do controller
+     * Valida se o metodo especificado existe na instância do controller
      * e pode ser invocado. Utiliza method_exists() para verificar a
-     * disponibilidade do método na classe instanciada.
+     * disponibilidade do método na classe instanciada
      * 
      * Esta validação é crucial para evitar erros fatais durante a
      * execução dinâmica de métodos via call_user_func_array().
@@ -134,10 +134,10 @@ class Controller
      * 
      * @example
      * // $userController = new UserController();
-     * methodExists($userController, "show", "UserController")     // ✅ Se método existir
-     * methodExists($userController, "nonExistent", "UserController") // ❌ Exception
+     * methodExists($userController, "show", "UserController")     // Se método existir
+     * methodExists($userController, "nonExistent", "UserController") // Exception
      */
-    private static function methodExists($controller, string $method, string $classe)
+    private static function methodExists($controller, string $method, string $classe): void
     {
         if (!method_exists($controller, $method)) {
             throw new Exception("Metodo {$method} não existe em {$classe}");

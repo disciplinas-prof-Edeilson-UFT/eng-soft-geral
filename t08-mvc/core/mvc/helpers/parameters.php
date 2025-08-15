@@ -4,85 +4,70 @@ namespace Conex\MiniFramework\mvc\helpers;
 use Routes;
 use Exception;  
 use Conex\MiniFramework\http\Request;
+use Conex\MiniFramework\mvc\Router;
 
+/**
+ * Class Parameters - Sistema de extração de parâmetros de rota
+ * 
+ * Um Helper responsável por extrair e processar parâmetros dinâmicos de URLs
+ * baseados em padrões de rota definidos. Utiliza funcionalidades do Router
+ * para evitar duplicação de código e manter consistência
+ * 
+ * @package Conex\MiniFramework\mvc\helpers
+ * @version 1.0
+ */
 class Parameters
 {
-    //recupera os parametros da rota como um array para serem passados para o controller   
-    
-    public static function getUri(){
-        return parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
-    }
-
-    //recebe uma URI e retorna seus parametros
-    private static function filterRoute(string $router)
-    {
-        $requiredUri = self::getUri();
-        $uriParts = explode('/', $requiredUri);
-        $routeParts = explode('/', $router); 
-
-        //echo 'routeParts: ' . implode(', ', $routeParts) . '<br>';
-
-        if(count($uriParts) !== count($routeParts)){
-            throw new Exception("Rota {$router} não compatível com a URI: {$requiredUri}");
-        }
-        $params = self::matchRoutes($routeParts, $uriParts);
-
-        /*foreach ($params as $param) {
-            echo 'Parâmetros: ' . $param . '<br>';
-        }*/
-        return $params;
-
-    }
-
-    public static function matchRoutes(array $routeParts, array $uriParts)
-    {
-        $params = [];
-
-        foreach ($routeParts as $index => $segment) {
-            if (preg_match('/^\{([a-zA-Z0-9_]+)\}$/', $segment)) {
-                $params[] = $uriParts[$index];
-            }else if ($segment !== $uriParts[$index]) {
-                throw new Exception("Parametro não corresponde a URI");
-            }
-
-            //echo 'Índice: ' . $index . '<br>';
-            //echo 'Segmento: ' . $segment . '<br>';
-            //echo 'Segmento referente ao índice: ' . $uriParts[$index]  . '<br>';
-            //echo 'Route Parts: ' . implode(', ', $routeParts) . '<br>';
-        }
-
-        return $params;
-    }
-
-    //localiza o router, aplica o filterRoutes e retorna os parametros ex: /users/{id} é /users/1 retorna ['1']
-    public static function getRouterParams(string $controllerMethodPath)
+    /**
+     * Localiza rota e extrai parâmetros para controller específico
+     * 
+     * Método principal que coordena todo o processo de extração de parâmetros.
+     * Busca nas configurações de rota pelo controller especificado,
+     * reconstrói padrão completo com prefixos de grupo e executa
+     * extração de parâmetros reutilizando métodos do Router
+     * 
+     * @param string $controllerMethodPath Path completo "Controller@method"
+     * 
+     * @return array Array indexado com valores dos parâmetros extraídos
+     */
+    public static function getRouterParams(string $controllerMethodPath): array
     {
         $routes = Routes::getRouter();
         $method = Request::getMethod(); 
-        $params = [];
+        $currentUri= Router::getUri();
+        $params= [];
 
-        if(isset($routes['groups'])){
-            foreach($routes['groups'] as $groupPrefix => $group){
-                if(isset($group[$method])){
-                    foreach($group[$method] as $route => $controller){
-                        if ($controller === $controllerMethodPath){
-                            // Se groupPrefix é vazio, não adiciona prefixo
-                            if ($groupPrefix === '') {
-                                $routeFormatted = $route;
-                            } else {
-                                $routeFormatted = '/' . trim($groupPrefix, '/') . '/' . trim($route, '/');
+        if (isset($routes['groups'])) {
+            foreach ($routes['groups'] as $groupPrefix => $group) {
+                if (isset($group[$method])) {
+                    foreach ($group[$method] as $route => $controller) {
+                        if ($controller === $controllerMethodPath) {
+                            $fullRoutePattern = self::buildFullRoute($groupPrefix, $route);
+                            
+                            if (Router::matchRoute($fullRoutePattern, $currentUri)) {
+                                $params = Router::extractRouteParams($fullRoutePattern, $currentUri);
+                                break 2; 
                             }
-
-                            $params = self::filterRoute($routeFormatted);
                         }
                     }
                 } 
             }
         }
-        /*foreach ($params as $param) {
-            echo 'Parâmetros: ' . $param . '<br>';
-        }*/
 
         return array_values($params);
+    }
+
+    /**
+     * Constrói rota completa com prefixo do grupo
+     * 
+     * @param string $groupPrefix Prefixo do grupo de rotas
+     * @param string $route Rota específica
+     * 
+     * @return string Rota completa formatada
+     */
+    private static function buildFullRoute(string $groupPrefix, string $route): string{
+        if ($groupPrefix === '') {return $route;}
+        
+        return '/' . trim($groupPrefix, '/') . '/' . trim($route, '/');
     }
 }
