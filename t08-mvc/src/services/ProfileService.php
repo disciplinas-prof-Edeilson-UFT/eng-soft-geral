@@ -8,7 +8,7 @@ use src\database\dao\PostDAO;
 use src\database\domain\User;
 use src\database\mappers\UserMapper;
 use src\database\mappers\PostMapper;
-use src\viewmodels\PostFeedItem;
+use src\viewmodels\ProfilePostItem;
 
 class ProfileService
 {
@@ -49,11 +49,7 @@ class ProfileService
                 'upload_date' => $r['upload_date'] ?? null,
                 'description' => $r['description'] ?? null,
             ]);
-            $items[] = new PostFeedItem(
-                $post,
-                (string)($r['username'] ?? 'Usuário'),
-                $r['profile_pic_url'] ?? null
-            );
+            $items[] = new ProfilePostItem($post);
         }
         return $items;
     }
