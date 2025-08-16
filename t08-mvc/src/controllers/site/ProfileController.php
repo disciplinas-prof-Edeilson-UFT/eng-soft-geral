@@ -55,10 +55,6 @@ class ProfileController extends BaseController {
     public function follow(int $userId): void
     {
         $loggedUserId = $this->getSession('user_id', 0);
-        if (!$loggedUserId) {
-            Flash::error('Você precisa estar logado');
-            $this->redirect('/auth/login');
-        }
 
         try {
             $action = (string)$this->input('action');
