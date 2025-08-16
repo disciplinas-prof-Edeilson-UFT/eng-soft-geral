@@ -1,0 +1,541 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Router: de URL para Controller e Middlewares</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="highlight.css">
+        <link rel="stylesheet" href="tomorrow-night.css">
+        <link rel="stylesheet" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="toc.js"></script>
+    </head>
+    <body>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title"></h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="capítulo-8---mvc-model-view-controller"><a class="header" href="#capítulo-8---mvc-model-view-controller">Capítulo 8 - MVC (Model-View-Controller)</a></h1>
+<h2 id="821-router-de-url-para-controller-e-middlewares"><a class="header" href="#821-router-de-url-para-controller-e-middlewares">8.2.1. Router: de URL para Controller e Middlewares</a></h2>
+<h3 id="fundamentos-do-roteamento-na-web"><a class="header" href="#fundamentos-do-roteamento-na-web">Fundamentos do Roteamento na web</a></h3>
+<p>O roteamento em aplicações web é o mecanismo responsável por mapear URLs para métodos específicas no código. Em um framework MVC, o router atua como o primeiro ponto de contato com requisições HTTP, determinando qual controller deve processar cada solicitação e extraindo parâmetros relevantes da URL.</p>
+<blockquote>
+<p>Objetivos de aprendizagem</p>
+<ul>
+<li>Mapear URLs para controllers/métodos de forma declarativa</li>
+<li>Entender grupos de rotas, middlewares e extração de parâmetros</li>
+<li>Preparar base para controllers enxutos na próxima seção (8.3)</li>
+</ul>
+</blockquote>
+<blockquote>
+<p>Pré‑requisitos</p>
+<ul>
+<li>Conceitos de HTTP (métodos, paths, status codes)</li>
+<li>Recapitulação do roteamento manual do t07 (switch no index.php)</li>
+</ul>
+</blockquote>
+<h3 id="sistema-de-roteamento"><a class="header" href="#sistema-de-roteamento">Sistema de Roteamento</a></h3>
+<div class="table-wrapper"><table><thead><tr><th>Vantagem</th><th>Descrição</th></tr></thead><tbody>
+<tr><td>Organização</td><td>Rotas agrupadas por funcionalidade</td></tr>
+<tr><td>Flexibilidade</td><td>Suporte a parâmetros dinâmicos</td></tr>
+<tr><td>Segurança</td><td>Middleware de autenticação</td></tr>
+<tr><td>Performance</td><td>Matching eficiente de rotas</td></tr>
+<tr><td>Manutenibilidade</td><td>Fácil adicionar/remover rotas</td></tr>
+</tbody></table>
+</div>
+<h3 id="anatomia-de-uma-rota"><a class="header" href="#anatomia-de-uma-rota">Anatomia de uma Rota</a></h3>
+<p>Antes de implementar, vamos entender os componentes de uma rota:</p>
+<pre><code class="language-php">// Estrutura básica de rotas
+'groups' =&gt; [
+    'profile' =&gt; [  // ← Grupo (prefixo)
+        'middleware' =&gt; ['auth'], // ← Middleware
+        'get' =&gt; [
+            '/{user_id}' =&gt; 'site\ProfileController@show'  // ← Rota → Controller@Método
+        ]
+    ]
+]
+</code></pre>
+<p><strong>Componentes:</strong></p>
+<ul>
+<li><strong>Grupo</strong>: Organiza rotas relacionadas (<code>admin</code>, <code>api</code>, <code>profile</code>)</li>
+<li><strong>Método HTTP</strong>: <code>GET</code>, <code>POST</code>, <code>PUT</code>, <code>DELETE</code></li>
+<li><strong>Padrão da URL</strong>: <code>/profile/{user_id}</code> (com parâmetros dinâmicos)</li>
+<li><strong>Controller</strong>: Classe que processará a requisição</li>
+<li><strong>Método</strong>: Função específica no controller</li>
+<li><strong>Middleware</strong>: Filtros aplicados antes do controller</li>
+</ul>
+<h3 id="processamento-de-rotas"><a class="header" href="#processamento-de-rotas">Processamento de Rotas</a></h3>
+<p>O processamento de rotas transforma uma requisição HTTP simples em uma resposta estruturada através de uma sequência bem definida de operações. Este mecanismo funciona como uma linha de produção onde cada etapa tem uma responsabilidade específica.</p>
+<div align="center">
+<img src="./imgs/profile_page_request_flow.svg" alt="Component Architecture Diagram" width="400">
+</div>
+<h4 id="etapa-1-recepção-da-requisição"><a class="header" href="#etapa-1-recepção-da-requisição">Etapa 1: Recepção da Requisição</a></h4>
+<p>Quando um usuário clica em "Ver Perfil", o browser envia uma requisição <code>GET /profile/123</code>. Esta requisição chega ao arquivo <code>index.php</code>, que funciona como porteiro da aplicação:</p>
+<pre><code class="language-php">// t08-mvc/index.php (simplificado)
+require_once 'vendor/autoload.php';
+
+$router = new \Conex\MiniFramework\mvc\Router();
+$router-&gt;dispatch();
+</code></pre>
+<p>O construtor do Router carrega todas as rotas configuradas no "Routes.php" através do método estático <code>Routes::getRouter()</code>:</p>
+<pre><code class="language-php">// t08-mvc/core/mvc/Router.php (construtor)
+public function __construct()
+{
+    $this-&gt;routes = Routes::getRouter(); // Carrega configuração completa
+}
+</code></pre>
+<p>O método <code>dispatch()</code> inicia todo o processo de análise. Primeiramente coletando informações básicas sobre a requisição:</p>
+<pre><code class="language-php">// t08-mvc/core/mvc/Router.php (método dispatch)
+public function dispatch(): void
+{
+    $method = Request::getMethod(); // Retorna 'get'
+    $uri = self::getCleanUri(); // Retorna '/profile/123'
+    
+    $result = $this-&gt;processAllRoutes($this-&gt;routes, $method, $uri);
+    // ... resto do processamento
+}
+</code></pre>
+<p>O método "getCleanUri()" normaliza a URI removendo query strings e padronizando barras finais:</p>
+<pre><code class="language-php">// t08-mvc/core/mvc/Router.php
+public static function getCleanUri(): string
+{
+    $uri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
+    return rtrim($uri, '/') ?: '/';  // Remove barra final, exceto para '/'
+}
+</code></pre>
+<h4 id="etapa-2-busca-da-rota-correspondente"><a class="header" href="#etapa-2-busca-da-rota-correspondente">Etapa 2: Busca da Rota Correspondente</a></h4>
+<p>Com o método HTTP (<code>get</code>) e a URI (<code>/profile/123</code>) em mãos, o sistema executa o coração do roteamento: o método <code>processAllRoutes()</code>. Este método é responsável por encontrar qual controller deve processar a requisição:</p>
+<pre><code class="language-php">// t08-mvc/core/mvc/Router.php
+private function processAllRoutes(array $routes, string $method, string $uri): ?array
+{
+    if (!isset($routes['groups'])) {
+        return null; // Sem grupos configurados
+    }
+    
+    foreach ($routes['groups'] as $prefix =&gt; $groupRoutes) {
+        // Calcula o caminho do prefixo
+        if ($prefix === '') {
+            $prefixPath = '';                    // Grupo raiz
+            $routeWithoutPrefix = $uri;
+        } else {
+            $prefixPath = '/' . trim($prefix, '/'); // /profile, /admin
+            if (strpos($uri, $prefixPath) !== 0) {
+                continue; // URI não pertence a este grupo
+            }
+            $routeWithoutPrefix = substr($uri, strlen($prefixPath)); // Remove prefixo
+        }
+        
+        // Busca correspondência exata primeiro
+        if (isset($groupRoutes[$method][$routeWithoutPrefix])) {
+            return [
+                'controller' =&gt; $groupRoutes[$method][$routeWithoutPrefix],
+                'middlewares' =&gt; $groupRoutes['middleware'] ?? []
+            ];
+        }
+        
+        // Busca correspondência com parâmetros dinâmicos
+        if (isset($groupRoutes[$method])) {
+            foreach ($groupRoutes[$method] as $route =&gt; $controller) {
+                if (self::matchRoute($route, $routeWithoutPrefix)) {
+                    return [
+                        'controller' =&gt; $controller,
+                        'middlewares' =&gt; $groupRoutes['middleware'] ?? []
+                    ];
+                }
+            }
+        }
+    }
+    
+    return null; // Nenhuma rota encontrada
+}
+</code></pre>
+<p>Para nosso exemplo <code>GET /profile/123</code>, o processamento funciona assim:</p>
+<ol>
+<li><strong>Itera pelos grupos</strong>: encontra o grupo <code>profile</code></li>
+<li><strong>Remove prefixo</strong>: <code>/profile/123</code> → <code>/123</code> (após remover <code>/profile</code>)</li>
+<li><strong>Busca correspondência</strong>: <code>/123</code> não existe exato, mas <code>/{user_id}</code> corresponde via <code>matchRoute()</code> que utiliza expressões regulares para verificar padrões dinâmicos</li>
+<li><strong>Retorna resultado</strong>: <code>['controller' =&gt; 'site\ProfileController@show', 'middlewares' =&gt; ['auth']]</code></li>
+</ol>
+<p>O método <code>matchRoute()</code> implementa o algoritmo de correspondência de padrões:</p>
+<pre><code class="language-php">// t08-mvc/core/mvc/Router.php
+public static function matchRoute(string $routePattern, string $uri): bool
+{
+    $routeParts = explode('/', trim($routePattern, '/')); // ['', '{user_id}']
+    $uriParts = explode('/', trim($uri, '/')); // ['', '123']
+    
+    if (count($routeParts) !== count($uriParts)) {
+        return false; // Número de segmentos diferente
+    }
+    
+    foreach ($routeParts as $index =&gt; $segment) {
+        // Se é um parâmetro {user_id}, aceita qualquer valor
+        if (preg_match('/^\{([a-zA-Z0-9_]+)\}$/', $segment)) {
+            continue;
+        }
+        
+        // Se não é parâmetro, deve corresponder exatamente
+        if ($segment !== $uriParts[$index]) {
+            return false;
+        }
+    }
+    
+    return true;
+}
+</code></pre>
+<p>Este método retorna um booleano indicando se a rota corresponde à URI ou não.</p>
+<h4 id="etapa-3-aplicação-de-middleware"><a class="header" href="#etapa-3-aplicação-de-middleware">Etapa 3: Aplicação de Middleware</a></h4>
+<p>Antes de executar o controller, o sistema verifica se existem middleware configurados para aquele grupo de rotas em específico. No nosso exemplo, a rota possui middleware "auth":</p>
+<pre><code class="language-php">// t08-mvc/core/mvc/Router.php (dentro do dispatch)
+if (isset($result['middlewares'])) {
+    $this-&gt;applyMiddlewares($result['middlewares']);
+}
+</code></pre>
+<p>O método <code>applyMiddlewares()</code> processa cada middleware sequencialmente:</p>
+<pre><code class="language-php">// t08-mvc/core/mvc/Router.php
+private function applyMiddlewares(array $middlewares): void
+{
+    foreach ($middlewares as $middleware) {
+        switch ($middleware) {
+            case 'auth':
+                $this-&gt;checkAuth(); // Verifica autenticação
+                break;
+            default:
+                throw new Exception("Middleware não reconhecido: {$middleware}");
+        }
+    }
+}
+</code></pre>
+<p>O middleware de autenticação implementa verificação de sessão:</p>
+<pre><code class="language-php">// t08-mvc/core/mvc/Router.php
+private function checkAuth(): void
+{
+    session_start();
+    
+    if (!isset($_SESSION['user_id']) || empty($_SESSION['user_id'])) {
+        header('Location: /auth/login');
+        exit; // Termina execução se não autenticado
+    }
+}
+</code></pre>
+<p>Este processo é crucial porque garante que apenas usuários logados acessem rotas protegidas. O middleware intercepta a requisição, antes de chegar ao controller e executa o "checkAuth()". Se o usuário não estiver autenticado, ele é redirecionado para <code>/auth/login</code> e a execução é interrompida.</p>
+<p>Caso não haja middleware configurado, a execução do controller prossegue normalmente, sem execução de métodos para verificações adicionais.</p>
+<h4 id="etapa-4-extração-de-parâmetros"><a class="header" href="#etapa-4-extração-de-parâmetros">Etapa 4: Extração de Parâmetros</a></h4>
+<p>O sistema precisa extrair o valor <code>123</code> do padrão <code>/{user_id}</code>. Esta tarefa é realizada pela classe <code>Parameters</code> que utiliza métodos do Router para evitar duplicação de código:</p>
+<pre><code class="language-php">// t08-mvc/core/mvc/helpers/Parameters.php
+public static function getRouterParams(string $controllerMethodPath): array
+{
+    $routes = Routes::getRouter();
+    $method = Request::getMethod(); 
+    $currentUri = Router::getUri(); // '/profile/123'
+    
+    foreach ($routes['groups'] as $groupPrefix =&gt; $group) {
+        if (isset($group[$method])) {
+            foreach ($group[$method] as $route =&gt; $controller) {
+                if ($controller === $controllerMethodPath) {
+                    $fullRoutePattern = self::buildFullRoute($groupPrefix, $route);
+                    
+                    if (Router::matchRoute($fullRoutePattern, $currentUri)) {
+                        return Router::extractRouteParams($fullRoutePattern, $currentUri);
+                    }
+                }
+            }
+        } 
+    }
+    
+    return [];
+}
+</code></pre>
+<p>O método "extractRouteParams()" extrai os valores dos parâmetros dinâmicos:</p>
+<pre><code class="language-php">// t08-mvc/core/mvc/Router.php
+public static function extractRouteParams(string $routePattern, string $uri): array
+{
+    $routeParts = explode('/', trim($routePattern, '/'));
+    $uriParts = explode('/', trim($uri, '/'));
+    $params = [];
+    
+    foreach ($routeParts as $index =&gt; $segment) {
+        if (preg_match('/^\{([a-zA-Z0-9_]+)\}$/', $segment)) {
+            $params[] = $uriParts[$index]; // Coleta valor do parâmetro
+        }
+    }
+    
+    return $params; // ['123'] para nosso exemplo
+}
+</code></pre>
+<p>Desta forma, a classe <code>Parameters</code> centraliza a lógica de extração de parâmetros dinâmicos, evitando duplicação de código em diferentes controllers. O método <code>getRouterParams()</code> é responsável por orquestrar essa extração, ele retorna os parâmetros extraídos.</p>
+<h4 id="etapa-5-execução-do-controller"><a class="header" href="#etapa-5-execução-do-controller">Etapa 5: Execução do Controller</a></h4>
+<p>Com a rota encontrada, middleware aplicado e parâmetros extraídos, o sistema executa o controller através do método <code>Controller::execute()</code>:</p>
+<pre><code class="language-php">// t08-mvc/core/mvc/Controller.php
+public static function execute(string $router): void
+{
+    $params = Parameters::getRouterParams($router);  // ['123']
+    
+    // Instancia ProfileController
+    $controller = new $className();
+    
+    // Chama show(123)
+    $controller-&gt;$methodName(...$params);
+}
+</code></pre>
+<p>O controller "ProfileController" é instanciado e seu método "show($userId)" é chamado com o parâmetro "123".</p>
+<h4 id="etapa-6-geração-da-resposta"><a class="header" href="#etapa-6-geração-da-resposta">Etapa 6: Geração da Resposta</a></h4>
+<p>O controller processa a lógica de negócio e gera a resposta apropriada. No caso do ProfileController:</p>
+<pre><code class="language-php">// t08-mvc/src/controllers/site/ProfileController.php
+public function show(int $userId): void
+{
+    try {
+        // Busca dados do perfil usando service
+        $profile = $this-&gt;profileService-&gt;getProfileData($userId);
+        $posts = $this-&gt;profileService-&gt;getProfileFeed($userId);
+        
+        // Prepara dados para a view
+        $profileData = $this-&gt;prepareProfileData($profile, $userId, $loggedUserId, $isFollowing);
+        $postsData = $this-&gt;preparePostsData($posts, $profile-&gt;getUsername(), $userId, $loggedUserId);
+        
+        // Mescla dados e renderiza view
+        $viewData = array_merge($profileData, $postsData, [
+            'pageTitle' =&gt; 'Perfil de ' . htmlspecialchars($profile-&gt;getUsername()),
+            'pageCSS' =&gt; 'profile'
+        ]);
+        
+        $this-&gt;view('profile', $viewData);
+        
+    } catch (\Throwable $e) {
+        error_log('Profile show error: ' . $e-&gt;getMessage());
+        $this-&gt;view('profile', ['error' =&gt; 'Erro ao carregar perfil']);
+    }
+}
+</code></pre>
+<p>O método "view()" herdado do "BaseController" processa o template:</p>
+<pre><code class="language-php">// t08-mvc/src/controllers/BaseController.php
+public function view(string $view, $data = [])
+{
+    $globalData = $this-&gt;getGlobalViewData(); 
+    $viewData = array_merge($globalData, $data); 
+    
+    echo View::render($view, $viewData); // Renderiza template com dados
+}
+</code></pre>
+<h4 id="o-fluxo-completo-em-ação"><a class="header" href="#o-fluxo-completo-em-ação">O Fluxo Completo em Ação</a></h4>
+<p>Vamos acompanhar uma requisição real passo a passo com todos os detalhes:</p>
+<ol>
+<li><strong>Usuário acessa</strong>: <code>GET /profile/123</code></li>
+<li><strong>Router carrega</strong>: <code>Routes::getRouter()</code> - todas as configurações</li>
+<li><strong>Router identifica</strong>: <code>Request::getMethod()</code> = <code>get</code>, <code>getCleanUri()</code> = <code>/profile/123</code></li>
+<li><strong>processAllRoutes() busca</strong>: grupo <code>profile</code>, padrão <code>/{user_id}</code> → <code>ProfileController@show</code></li>
+<li><strong>applyMiddlewares() verifica</strong>: middleware <code>auth</code> → <code>checkAuth()</code> valida sessão</li>
+<li><strong>Parameters extrai</strong>: <code>{user_id}</code> = <code>123</code> via <code>extractRouteParams()</code></li>
+<li><strong>Controller::execute() instancia</strong>: <code>ProfileController</code> e chama <code>show(123)</code></li>
+<li><strong>Controller processa</strong>: busca dados, prepara view, renderiza template</li>
+<li><strong>Resposta enviada</strong>: HTML final chega ao browser do usuário</li>
+</ol>
+<p>Este processo acontece de forma transparente e eficiente, com cada componente tendo uma responsabilidade específica e bem definida, permitindo que desenvolvedores se concentrem na lógica de negócio enquanto o framework cuida de todo o roteamento.</p>
+<h2 id="fluxo-completo-visual-de-uma-requisição"><a class="header" href="#fluxo-completo-visual-de-uma-requisição">Fluxo Completo Visual de uma Requisição</a></h2>
+<p><img src="./imgs/profile_view_request.svg" alt="Fluxo Completo de uma Requisição" /></p>
+<h2 id="próximos-passos"><a class="header" href="#próximos-passos">Próximos Passos</a></h2>
+<p>Na próxima seção, vamos ver como o Controller recebe essas informações do Router e processa a lógica de negócio.</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="t08-8.1-mini-framework-mvc.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="t08-8.3-mini-framework-mvc.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="t08-8.1-mini-framework-mvc.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="t08-8.3-mini-framework-mvc.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+        <!-- Livereload script (if served using the cli tool) -->
+        <script>
+            const wsProtocol = location.protocol === 'https:' ? 'wss:' : 'ws:';
+            const wsAddress = wsProtocol + "//" + location.host + "/" + "__livereload";
+            const socket = new WebSocket(wsAddress);
+            socket.onmessage = function (event) {
+                if (event.data === "reload") {
+                    socket.close();
+                    location.reload();
+                }
+            };
+
+            window.onbeforeunload = function() {
+                socket.close();
+            }
+        </script>
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>

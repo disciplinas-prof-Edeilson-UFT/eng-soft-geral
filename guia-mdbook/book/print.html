@@ -446,7 +446,6 @@ git stash pop    # recupera a alteração
 <p>Na próxima seção, vamos ver como submeter um Pull Request no GitHub.</p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="capítulo-2--code-review-e-pull-request-no-github-2"><a class="header" href="#capítulo-2--code-review-e-pull-request-no-github-2">Capítulo 2 – Code Review e Pull Request no GitHub</a></h1>
 <h2 id="22-criando-um-pull-request-no-github"><a class="header" href="#22-criando-um-pull-request-no-github">2.2. Criando um Pull Request no GitHub</a></h2>
-<h2 id="220-passos-a-seguir"><a class="header" href="#220-passos-a-seguir">2.2.0. Passos a seguir</a></h2>
 <p>Caso você tenha concluído as alterações necessárias em uma branch separada, siga os passos abaixo para criar seu Pull Request:</p>
 <h3 id="1-push-das-alterações"><a class="header" href="#1-push-das-alterações">1. Push das alterações:</a></h3>
 <p>No seu terminal, certifique-se de que tudo está salvo e testado, e depois:</p>
@@ -474,7 +473,7 @@ $ git push origin &lt;nome-da-sua-branch&gt;
 <em>Após verificar as alterações feitas em cada commit do PR adicione seus comentários</em></p>
 <p><img src="imgs/confirm-merge.png" alt="confirme-merge" />
 <em>Caso tenha passado no Code Review e esteja "Able to merge" confime o merge</em></p>
-<h2 id="221-boas-práticas"><a class="header" href="#221-boas-práticas">2.2.1. Boas práticas</a></h2>
+<h2 id="220-boas-práticas"><a class="header" href="#220-boas-práticas">2.2.0. Boas práticas</a></h2>
 <ul>
 <li>
 <p>Testes Automatizados:</p>
@@ -489,7 +488,7 @@ $ git push origin &lt;nome-da-sua-branch&gt;
 <p>Caso o PR seja a resolução de uma issue, destaque que há esta relação no titulo do PR, ex.: Resolves #123</p>
 </li>
 </ul>
-<h2 id="222-dicas-para-evitar-conflitos-de-merge"><a class="header" href="#222-dicas-para-evitar-conflitos-de-merge">2.2.2. Dicas para evitar conflitos de merge</a></h2>
+<h2 id="221-dicas-para-evitar-conflitos-de-merge"><a class="header" href="#221-dicas-para-evitar-conflitos-de-merge">2.2.1. Dicas para evitar conflitos de merge</a></h2>
 <ul>
 <li>Antes de criar um PR, certifique-se de que sua branch está atualizada com a branch de destino</li>
 </ul>
@@ -498,7 +497,7 @@ $ git push origin &lt;nome-da-sua-branch&gt;
 <ul>
 <li>Se houver conflitos de merge, resolva-os em sua máquina antes de enviar o PR. Use ferramentas como git mergetool para facilitar o processo.</li>
 </ul>
-<h2 id="223-conclusão"><a class="header" href="#223-conclusão">2.2.3. Conclusão</a></h2>
+<h2 id="222-conclusão"><a class="header" href="#222-conclusão">2.2.2. Conclusão</a></h2>
 <p>Com esses passos você mantém o fluxo de colaboração limpo, organizado e todo mundo sai ganhando. Bom PR!</p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="capítulo-2--code-review-e-pull-request-no-github-3"><a class="header" href="#capítulo-2--code-review-e-pull-request-no-github-3">Capítulo 2 – Code Review e Pull Request no GitHub</a></h1>
 <h2 id="23-code-review"><a class="header" href="#23-code-review">2.3. Code Review</a></h2>
@@ -2620,11 +2619,11 @@ require_once __DIR__ . "/../src/controllers/users/update-user.php";
 session_start();
 
 require_once __DIR__ . "/../../../dir-config.php";
-require_once __DIR__ . "/../../dao/user-dao.php";
+require_once __DIR__ . "/../../dao/UserDAO.php";
 require_once __DIR__ . "/../../../database.php";
-require_once __DIR__ . "/../../utils/upload-handler.php";
+require_once __DIR__ . "/../../utils/UploadHandler.php";
 
-$userDao = new UserDao();
+$userDAO = new UserDAO();
 
 if (!isset($_GET["id"])) {
     die("Parâmetro user_id não informado.");
@@ -2632,7 +2631,7 @@ if (!isset($_GET["id"])) {
 
 $id = $_GET["id"];
 
-$user = $userDao-&gt;getUserProfileById($id);
+$user = $userDAO-&gt;getUserProfileById($id);
 
 if (!$user) {
     die("Usuário não encontrado.");
@@ -2649,8 +2648,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $uploadDir = __DIR__ . "/../../../uploads/avatars/";
             $allowedTypes = ['jpg', 'jpeg', 'png', 'gif'];
 
-            $dbUpdateCallback = function ($photoUrl) use ($id, $userDao) {
-                return $userDao-&gt;updateProfilePic($photoUrl, $id);
+            $dbUpdateCallback = function ($photoUrl) use ($id, $userDAO) {
+                return $userDAO-&gt;updateProfilePic($photoUrl, $id);
             };
 
             $uploadResult = UploadHandler::handleUpload($_FILES['profile_pic_url'], $uploadDir, $allowedTypes, $dbUpdateCallback);
@@ -2661,7 +2660,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
 
         try {
-            $userDao-&gt;updateUser($name, $email, $bio, $phone, $id);
+            $userDAO-&gt;updateUser($name, $email, $bio, $phone, $id);
             $_SESSION['user_name'] = $name;
             header("Location: " . BASE_URL . "view/profile.php?id=$id");
             exit;
@@ -2670,7 +2669,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     } else if(isset($_POST['delete'])) {
         try {
-            $userDao-&gt;deleteUser($id);
+            $userDAO-&gt;deleteUser($id);
             session_destroy();
             header("Location: " . BASE_URL . "view/login.php");
             exit;
@@ -3282,6 +3281,1261 @@ $userProfileData = [
 <p>A view renderiza as postagens do usuário em uma seção específica do perfil.</p>
 </li>
 </ol>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="capítulo-8---mvc-model-view-controller"><a class="header" href="#capítulo-8---mvc-model-view-controller">Capítulo 8 - MVC (Model-View-Controller)</a></h1>
+<p>Neste capítulo, vamos explorar o padrão de arquitetura MVC (Model-View-Controller) enquanto construímos um mini-framework que usaremos ao longo deste módulo. A ideia é entender as responsabilidades de cada camada e como elas colaboram do request até a resposta.</p>
+<blockquote>
+<p>Objetivos de aprendizagem</p>
+<ul>
+<li>Entender, de forma prática, o que são Models, Views e Controllers e onde cada um atua</li>
+<li>Reconhecer limites de responsabilidade e evitar mistura de preocupações</li>
+<li>Visualizar o fluxo: HTTP request (client) -&gt; controller -&gt; service -&gt; model -&gt; view</li>
+<li>Conectar os conceitos ao que implementaremos no nosso mini-framework</li>
+<li>Compreender a importância da separação de preocupações e como isso impacta na manutenibilidade do código</li>
+</ul>
+</blockquote>
+<blockquote>
+<p>Pré-requisitos</p>
+<ul>
+<li>Noções básicas de PHP e HTTP (rotas, métodos, status)</li>
+<li>Revisão do t07 (organização com Composer, DAOs e controllers)</li>
+</ul>
+</blockquote>
+<h2 id="o-que-é-mvc"><a class="header" href="#o-que-é-mvc">O que é MVC?</a></h2>
+<p>Resumidamente, MVC é uma arquitetura que separa a aplicação em três camadas: Model (Modelo); View (Visão); e Controller (Controlador).</p>
+<p>É uma arquitetura comumente associada e implementada com o uso de frameworks PHP como o Laravel e o Symfony, mas o conceito não depende de nenhum framework específico.</p>
+<blockquote>
+<p>Importante: MVC não exige que o projeto tenha exatamente três pastas chamadas “model”, “view” e “controller”. O que importa é a separação de responsabilidades, não os nomes de diretórios.</p>
+</blockquote>
+<h2 id="porque-criar-o-mini-framework"><a class="header" href="#porque-criar-o-mini-framework">Porque criar o mini-framework?</a></h2>
+<p>A criação de um mini-framework MVC nos permite entender na prática como cada um dos componentes da arquitetura interage e se comunica. Além disso, nos proporciona uma base sólida para desenvolver aplicações web de forma organizada e escalável.</p>
+<p>Com o mini-framework, entenderemos conceitos como, roteamento, controllers, views e models de forma integrada.</p>
+<h2 id="overview-teórico-das-responsabilidades-por-camada-na-arquitetura-mvc"><a class="header" href="#overview-teórico-das-responsabilidades-por-camada-na-arquitetura-mvc">Overview teórico das responsabilidades por camada na arquitetura MVC</a></h2>
+<p>Resumidamente, MVC é uma arquitetura que separa a aplicação em três camadas: Model (Modelo); View (Visão); e Controller (Controlador).</p>
+<p>O <strong>Model (Modelo)</strong> é responsável pelas regras de negócio e dados da aplicação. Esta camada interage diretamente com o banco de dados, seja diretamente ou através de DAOs (Data Access Objects).</p>
+<p>A <strong>View (Visão)</strong> cuida exclusivamente da apresentação da informação. Ela recebe dados já processados do Controller e os formata adequadamente para exibição.</p>
+<p>Por fim, o <strong>Controller (Controlador)</strong> atua como coordenador do fluxo da aplicação. É ele quem recebe as requisições HTTP, valida as entradas, decide qual ação tomar, orquestra as chamadas necessárias para as outras camadas da aplicação.</p>
+<p>Na seção 8.2. deste capítulo falaremos de maneira mais aprofundada sobre cada uma dessas camadas e suas interações.</p>
+<h2 id="fluxo-simplificado-request---response"><a class="header" href="#fluxo-simplificado-request---response">Fluxo simplificado (request -&gt; response)</a></h2>
+<p>O fluxo simplificado da arquitetura MVC pode ser descrito em 4 etapas:</p>
+<ol>
+<li>Chega uma requisição HTTP (método + path)
+ex.: GET /produtos</li>
+<li>O roteador direciona para um Controller e método
+ex.: ProdutosController@index</li>
+<li>O Controller chama a regra (service/model), obtém dados prontos
+ex.: $this-&gt;productService-&gt;listar();</li>
+<li>A View renderiza a resposta (HTML/JSON) e retorna ao cliente
+ex.: $this-&gt;view-&gt;render($produtos);</li>
+</ol>
+<p>Não se preocupe com a complexidade do fluxo neste momento. Neste primeiro contato o objetivo é entender de maneira geral as responsabilidades de cada camada. Em breve, veremos como implementar isso de maneira completa na prática.</p>
+<h2 id="papéis-adicionais-que-usaremos-neste-tópico"><a class="header" href="#papéis-adicionais-que-usaremos-neste-tópico">Papéis adicionais que usaremos neste tópico</a></h2>
+<p>Para tornar o MVC mais robusto neste projeto, vamos usar algumas camadas adicionais na nossa arquitetura:</p>
+<ul>
+<li>Service: orquestra as regras de negócio, sem  acesso direto ao banco com SQL</li>
+<li>DAO: acesso a dados (consultas, joins, paginação), sem regra de negócio, apenas SQL e mapeamento de dados em alguns casos.</li>
+<li>Domain Entities: objetos que expressam invariantes do domínio, ou seja, regras e comportamentos que são fundamentais para o negócio. Nesta camada, vamos garantir que as regras de negócio sejam respeitadas, com validações e invariantes.</li>
+<li>Mapper: conversão entre linhas do banco e objetos de domínio.</li>
+<li>ViewModel: estrutura voltada à apresentação (dados agregados para a View)</li>
+</ul>
+<p>Esses papéis complementam o MVC e serão detalhados nos próximos sub-módulos.</p>
+<h2 id="próximos-passos"><a class="header" href="#próximos-passos">Próximos passos</a></h2>
+<p>Agora que tivemos um overview geral do capítulo e de como uma arquitetura MVC funciona, o nosso próximo passo será entender de fato como cada componente do mini-framework se encaixa e interage com a nossa aplicação, além de entender o que motivou cada decisão de design.</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="capítulo-8---mvc-model-view-controller-1"><a class="header" href="#capítulo-8---mvc-model-view-controller-1">Capítulo 8 - MVC (Model-View-Controller)</a></h1>
+<h2 id="81-visão-geral-do-mini-framework-objetivos-e-arquitetura"><a class="header" href="#81-visão-geral-do-mini-framework-objetivos-e-arquitetura">8.1. Visão Geral do Mini-Framework (Objetivos e Arquitetura)</a></h2>
+<p>Como dito anteriormente, vamos explorar o padrão de arquitetura MVC (Model-View-Controller) criando nosso próprio mini-framework MVC, que será utilizado para evoluir alguns conceitos que aprendemos nos capítulos anteriores.</p>
+<h3 id="motivação-e-objetivos"><a class="header" href="#motivação-e-objetivos">Motivação e Objetivos</a></h3>
+<p>O desenvolvimento de software moderno raramente acontece sem o uso de frameworks. Estes abstraem complexidades técnicas e oferecem estruturas organizacionais que aceleram o desenvolvimento. No entanto, muitos desenvolvedores utilizam frameworks como "caixas pretas", sem compreender seus mecanismos internos. Esta abordagem limita a capacidade de, diagnosticar e resolver problemas complexos, otimizar performance em cenários específicos, adaptar soluções para necessidades particulares.</p>
+<p>Construir um mini-framework "from scratch" oferece insights valiosos sobre padrões de design, arquitetura de software e boas práticas de desenvolvimento.</p>
+<blockquote>
+<p>Obs.: antes de começarmos, definimos que o objetivo pedagógico do mini-framework não é “reinventar o Laravel”, mas isolar os blocos mínimos que ajudam a entender por que frameworks fazem o que fazem. Cada escolha apresentada a seguir responde a uma pergunta: “Qual dor real essa ferramenta resolve?”</p>
+</blockquote>
+<h3 id="arquitetura-geral"><a class="header" href="#arquitetura-geral">Arquitetura Geral</a></h3>
+<p>Representamos a arquitetura do mini-framework da seguinte forma:</p>
+<ul>
+<li>Core (núcleo): contém os componentes essenciais que implementam o mini-framework, incluindo o sistema de roteamento, controladores, sistema de renderização e manipulação de requisições.</li>
+<li>Application Logic (aplicação): contém a lógica específica da aplicação, como serviços, controladores, DAOs, Mappers e entidades de domínio.</li>
+<li>Presentation Layer (View): contém a lógica de apresentação, como templates, layouts e componentes de interface do usuário.</li>
+</ul>
+<p><img src="./imgs/mvc-project-structure.svg" alt="" /></p>
+<h4 id="como-chegamos-a-esse-diagrama-recapitulando-a-jornada-do-t07-ao-t08"><a class="header" href="#como-chegamos-a-esse-diagrama-recapitulando-a-jornada-do-t07-ao-t08">Como chegamos a esse diagrama? (Recapitulando a jornada do t07 ao t08)</a></h4>
+<p>Para entender o diagrama final é útil relembrar de onde viemos no módulo anterior (<code>t07-composer</code>). Lá tínhamos:</p>
+<ol>
+<li>Um único "index.php" atuando como roteador manual (switch gigante em cima da URL)</li>
+<li>Controllers responsáveis por upload, redirecionamento e mensagens de sessão mas também por com SQL indireto via DAOs (múltiplas responsabilidades)</li>
+<li>Ausência de camada Service: a orquestração da lógica de negócio (ex.: upload de post) morava direto no Controller</li>
+<li>Retornos mistos (arrays associativos + inclusão direta de "view/*.php")</li>
+<li>Validações espalhadas e repetidas (ex.: checagens de sessão / permissões em vários pontos)</li>
+</ol>
+<p>Evoluímos para <code>t08</code> em passos incrementais, cada um motivado por um problema real:</p>
+<ol>
+<li>Router dedicado: substitui o <code>switch</code> do <code>index.php</code> por um componente focado em mapear método + path → ação. Motivo: reduzir duplicação e permitir middlewares.</li>
+<li>Controllers emagrecidos: tudo que não era controle de fluxo (regra, validação, upload) começou a migrar.</li>
+<li>Services: criados quando percebemos que a lógica de criar post envolvia múltiplas operações (validar → salvar arquivo → persistir → recuperar feed). Centralizamos para reutilização e testes (falaremos sobre testes nos próximos capítulos).</li>
+<li>DAOs isolados: já existiam no t07, mas refinamos para que não retornassem arrays arbitrários misturando semântica, mantendo foco exclusivo em persistência.</li>
+<li>Domain Entities: adicionadas para encapsular invariantes, ou seja, regras de negócio (ex.: <code>Follow</code> não pode permitir self-follow; <code>Post</code> gera <code>uploadDate</code> no construtor), evitando espalhar ifs pela aplicação.</li>
+<li>Mappers: apareceram quando o enriquecimento (JOIN com username/ avatar de usuário) não cabia nem no domínio puro nem em arrays anônimos, desse modo, formalizamos conversões. Os Mappers atuam como intermediários, transformando dados entre diferentes camadas, para garantir que cada camada receba a estrutura de dados que espera. Por exemplo: um Mapper pode converter um array de dados brutos em uma entidade de domínio rica, que contém regras de negócio e validações necessárias.</li>
+<li>ViewModels: criados após notar que a view precisava de dados agregados (domain Post + username + foto) mas não fazia sentido “poluir” a entidade <code>Post</code> com campos de apresentação.</li>
+<li>Templates / Layouts / Components: Criados quando percebemos que cabeçalhos, navegação e mensagens flash divergiam entre páginas devido a cópia/cola, com isso, conseguimos reutilizar código e manter a consistência visual.</li>
+</ol>
+<p>Cada adição só aconteceu após um problema concreto no estágio anterior (duplicação, ambiguidade ou dificuldade de teste). Assim o diagrama é a fotografia de uma evolução incremental.</p>
+<h3 id="por-que-não-apenas-model-genérico"><a class="header" href="#por-que-não-apenas-model-genérico">Por que não apenas "Model" genérico?</a></h3>
+<p>Em muitos tutoriais sobre MVC, o componente "Model" acaba se transformando em um verdadeiro "canivete suíço", concentrando responsabilidades que deveriam estar separadas: manipulação de SQL, validação de dados, regras de negócio e formatação para apresentação. Essa abordagem monolítica torna o código difícil de testar, manter e evoluir, pois qualquer mudança em uma dessas responsabilidades pode impactar todas as outras.</p>
+<p>Reconhecendo esses problemas, optamos por uma decomposição consciente do "Model" tradicional em componentes menores e mais focados. As Domain Entities (Entidades Ricas) ficam responsáveis exclusivamente pelas regras de negócio e invariantes do domínio, como garantir que um usuário não possa seguir a si mesmo ou que todo Post tenha uma data de criação automaticamente definida. Os DAOs (Data Access Objects) concentram-se na leitura e gravação otimizada de dados, incluindo joins, filtros e paginação, mas sem conter qualquer lógica de negócio.</p>
+<p>Os Mappers atuam como pontes de conversão, transformando resultados de consultas em objetos de domínio estruturados, enquanto os Services coordenam casos de uso que envolvem múltiplas entidades e operações, como criar um post junto com o upload da imagem correspondente. Quando necessário, utilizamos ViewModels para adaptar dados ricos do domínio com atributos específicos de apresentação, como o "PostFeedItem" que combina informações do Post com username e avatar do autor, sem "contaminar" a entidade original com dados de exibição, que fogem do escopo do domínio.</p>
+<p>Essa decomposição emergiu naturalmente após observar problemas recorrentes no desenvolvimento: validações duplicadas espalhadas pelo código, controllers sobrecarregados com múltiplas responsabilidades e retornos inconsistentes que ora eram arrays, ora objetos. A refatoração sequencial nos levou a mover validações para o domínio, enriquecimento visual para ViewModels, operações de persistência para DAOs e transformações de dados para Mappers, resultando em um código mais limpo, testável e manutenível.</p>
+<h3 id="estrutura-geral-do-diretório"><a class="header" href="#estrutura-geral-do-diretório">Estrutura geral do diretório</a></h3>
+<p><img src="./imgs/mvc-dir.svg" alt="" /></p>
+<p>Note que existe uma separação "core/" e "src/", isso permite que a aplicação evolua sem alterar o núcleo, facilitando a manutenção e a escalabilidade. Desse modo, podemos adicionar novas funcionalidades ou modificar as existentes sem impactar o funcionamento básico do framework.</p>
+<h3 id="estrutura-geral-deste-capítulo"><a class="header" href="#estrutura-geral-deste-capítulo">Estrutura geral deste capítulo</a></h3>
+<p>Para facilitar a compreensão, este capítulo está dividido em duas partes principais:</p>
+<p><strong>Parte I — Fundamentos do mini-framework (core)</strong>
+Explora os componentes centrais, localizados em "core/":</p>
+<ul>
+<li>Sistema de Roteamento (Router)</li>
+<li>Controlador de Execução (Controller)</li>
+<li>Sistema de Renderização (View)</li>
+<li>Manipulação de Requisições (Request/Response)</li>
+</ul>
+<p><strong>Parte II - Aplicação Prática</strong>
+Demonstra como utilizar o framework na construção de uma aplicação real, incluindo:</p>
+<ul>
+<li>Configuração de rotas</li>
+<li>Implementação de controllers</li>
+<li>Criação de views e layouts</li>
+<li>Organização da lógica de negócio</li>
+</ul>
+<h2 id="próximos-passos-1"><a class="header" href="#próximos-passos-1">Próximos passos</a></h2>
+<p>Agora podemos explorar a parte I, onde abordaremos o core da nossa aplicação MVC. Mas antes, vamos revisar/aprofundar nos conceitos que fundamentais que já discutimos anteriormente de maneira breve.</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="capítulo-8---mvc-model-view-controller-2"><a class="header" href="#capítulo-8---mvc-model-view-controller-2">Capítulo 8 - MVC (Model-View-Controller)</a></h1>
+<h2 id="82-parte-i---fundamentos-do-framework"><a class="header" href="#82-parte-i---fundamentos-do-framework">8.2. Parte I - Fundamentos do Framework</a></h2>
+<p>A construção de um framework MVC representa uma jornada de compreensão profunda dos princípios fundamentais que regem a arquitetura de software moderna. Nesta primeira parte, estabeleceremos os alicerces conceituais e técnicos necessários para implementar um sistema robusto, escalável e manutenível.</p>
+<h3 id="objetivos-desta-parte"><a class="header" href="#objetivos-desta-parte">Objetivos desta parte</a></h3>
+<p>Ao final da Parte I, você terá desenvolvido o mini-framework MVC com e compreendido os seguintes componentes:</p>
+<ul>
+<li><strong>Sistema de Roteamento Avançado (Router Groups + Middlewares)</strong>: Um mecanismo sofisticado para mapear requisições HTTP para controladores específicos, incluindo suporte a parâmetros dinâmicos, grupos de rotas e middlewares</li>
+<li><strong>Arquitetura de Controladores</strong>: Um sistema de dispatch que facilita a separação de responsabilidades e promove código limpo e testável</li>
+<li><strong>Engine de Renderização</strong>: Um mecanismo flexível para geração de respostas (HTML, JSON, etc.), suportando templates, layouts e componentes reutilizáveis</li>
+<li><strong>Abstração HTTP (Request e Response)</strong>: Interfaces consistentes para manipulação de requisições e respostas, abstraindo complexidades do protocolo HTTP</li>
+<li><strong>Flash Messages</strong>: Um sistema para armazenar mensagens temporárias entre requisições, útil para feedback ao usuário</li>
+<li><strong>Gerenciamento completo de Sessões</strong>: Um sistema para gerenciar o estado do usuário entre requisições, permitindo a persistência de dados temporários</li>
+</ul>
+<p>Esta base teórica sólida servirá como fundamento para a implementação prática que desenvolveremos na Parte II, onde aplicaremos estes conceitos na construção de uma aplicação web completa.</p>
+<blockquote>
+<p><strong>Navegação e sequência de estudo</strong></p>
+<p>Este capítulo foi estruturado para fornecer uma progressão lógica do conhecimento. Recomenda-se seguir a sequência proposta, pois cada seção constrói sobre conceitos apresentados anteriormente. Após concluir os fundamentos teóricos aqui apresentados, você estará preparado para mergulhar na implementação prática iniciando pela seção 8.2 (Sistema de Roteamento), onde veremos o primeiro componente em ação.</p>
+</blockquote>
+<h3 id="arquitetura-model-view-controller-fundamentos-e-filosofia"><a class="header" href="#arquitetura-model-view-controller-fundamentos-e-filosofia">Arquitetura Model-View-Controller: Fundamentos e Filosofia</a></h3>
+<p>Antes de mergulharmos na implementação prática do nosso mini-framework, é crucial entender mais a fundo os fundamentos teóricos que sustentam a arquitetura Model-View-Controller. O padrão MVC representa uma das contribuições mais significativas para a engenharia de software, transcendendo sua origem na década de 1970 para tornar-se um paradigma fundamental no desenvolvimento de aplicações modernas. Sua longevidade e relevância derivam não apenas de sua eficácia técnica, mas de sua capacidade de refletir princípios fundamentais do desenvolvimento de software: modularidade, abstração e separação de preocupações.</p>
+<h3 id="os-três-pilares-do-mvc"><a class="header" href="#os-três-pilares-do-mvc">Os Três Pilares do MVC</a></h3>
+<p>O padrão MVC funciona dividindo sua aplicação em três partes bem definidas, cada uma com sua própria responsabilidade. Pense nisso como uma equipe onde cada membro tem um papel específico:</p>
+<p><strong>A Dimensão dos Dados e Regras de Negócio (Model)</strong>: Esta camada encapsula não apenas a representação dos dados, mas a semântica e as invariantes (regras de negócio) que definem o domínio da aplicação. O Model funciona como um guardião da integridade dos dados, assegurando que todas as operações respeitem as regras fundamentais que governam o sistema.</p>
+<p>A responsabilidade do Model vai além do simples armazenamento de dados, feitos por comandos SQL diretos ou abstrações fornecidas por ORMs. Para incluir a modelagem de processos de negócio complexos, validação de invariantes de domínio, e a manutenção de consistência transacional se fazem necessários. Esta camada deve ser agnóstica em relação aos mecanismos de apresentação, permitindo que a mesma lógica de negócio seja reutilizada para diferentes clients (web, mobile, APIs, etc.).</p>
+<p><strong>A Dimensão da Apresentação e Interação (View)</strong>: A camada de View náo se restringe somente à renderização de dados para encompassar toda a experiência do usuário. Ela é responsável por traduzir estruturas de dados em representações compreensíveis e interativas, adaptando-se às capacidades e limitações específicas de cada meio de apresentação.</p>
+<p>Desse modo, a View deve manter uma separação rigorosa entre lógica de apresentação e lógica de negócio, funcionando como um intérprete que converte o estado interno da aplicação em linguagens visuais apropriadas. Esta separação permite que mudanças na apresentação sejam implementadas sem afetar a lógica fundamental do sistema, facilitando adaptações para novos formatos de saída (ex.: HTML, JSON) ou paradigmas de interface (ex.: mobile, desktop).</p>
+<p><strong>A Dimensão do Controle e Orquestração (Controller)</strong>: O Controller representa o núcleo organizacional da aplicação, funcionando como um maestro que coordena a interação entre Model e View. Sua responsabilidade principal é interpretar as intenções do usuário, traduzindo-as em operações específicas sobre o Model e determinando as respostas apropriadas através da View.</p>
+<p>Esta camada implementa a lógica de fluxo da aplicação, gerenciando estados transitórios (ex.: sessões de usuário), validando autorizações, fazendo redirecionamentos e exibindo mensagens ao usuário. O Controller deve permanecer focado em sua função de coordenação, delegando responsabilidades específicas para as camadas apropriadas e mantendo-se como uma interface limpa entre o mundo externo e a lógica interna da aplicação.</p>
+<h3 id="dinâmica-de-fluxo-e-comunicação"><a class="header" href="#dinâmica-de-fluxo-e-comunicação">Dinâmica de Fluxo e Comunicação</a></h3>
+<p>Em uma implementação MVC bem estruturada, o fluxo de informações segue um protocolo rigoroso que preserva a integridade arquitetural:</p>
+<p><strong>Fase de Iniciação</strong>: Requisições externas são sempre recebidas pelo Controller, que atua como ponto de entrada único para o sistema. Esta centralização permite implementação consistente de políticas transversais como autenticação, logging e tratamento de erros.</p>
+<p><strong>Fase de Processamento</strong>: O Controller interpreta a requisição, identifica as operações necessárias sobre o Model, e coordena a execução dessas operações. Durante esta fase, o Controller pode realizar validações de entrada, como sanitização do input e aplicar regras de autorização, como verificação de permissões com base na role do usuário (esses dados são mantidos no contexto da sessão).</p>
+<p><strong>Fase de Resposta</strong>: Com base nos resultados obtidos do Service/model, o Controller seleciona a View apropriada e fornece os dados necessários para serem renderizados. A View processa estes dados de acordo com templates e regras de apresentação específicas, gerando a resposta final.</p>
+<p>Este fluxo unidirecional e bem definido garante que responsabilidades permaneçam apropriadamente distribuídas e que o sistema mantenha comportamento mais previsível para os devs, mesmo em cenários complexos.</p>
+<h3 id="variações-evolutivas-do-padrão-mvc"><a class="header" href="#variações-evolutivas-do-padrão-mvc">Variações Evolutivas do Padrão MVC</a></h3>
+<p>O padrão MVC, ao longo de suas décadas de evolução, deu origem a diversas variações que respondem a necessidades específicas de diferentes paradigmas de desenvolvimento e contextos tecnológicos. Cada variação representa uma adaptação fundamental dos princípios originais para atender demandas particulares:</p>
+<div align="center">
+<img src="./imgs/mvc_architecture.svg" alt="MVC Architecture Diagram" width="180">
+</div>
+<p><strong>Model-View-Presenter (MVP)</strong>: Esta variação emerge como resposta à necessidade de maior testabilidade em interfaces de usuário complexas. No MVP, o Presenter assume responsabilidades expandidas, tornando-se um intermediário mais ativo que remove praticamente toda a lógica da View. Esta abordagem resulta em Views quase completamente passivas, que funcionam principalmente como receptores de comandos do Presenter. A principal vantagem desta arquitetura reside na capacidade de testar completamente a lógica de apresentação sem depender de componentes de interface gráfica, facilitando desenvolvimento orientado por testes (TDD) em aplicações com interfaces complexas.</p>
+<div align="center">
+<img src="./imgs/mvp_pattern.svg" alt="MVP Architecture Diagram" width="180">
+</div>
+<p><strong>Model-View-ViewModel (MVVM)</strong>: Desenvolvido especificamente para aproveitar capacidades de data binding bidirecional (dados que fluem em ambas as direções), presentes em frameworks modernos, o MVVM introduz o conceito de ViewModel como uma abstração da View que expõe propriedades e comandos bindáveis. Esta arquitetura permite sincronização automática entre estado da interface e dados subjacentes, reduzindo significativamente o código boilerplate necessário para manter consistência entre apresentação e dados. O ViewModel funciona como uma representação orientada à apresentação do Model, transformando dados de domínio em formatos otimizados para consumo pela interface.</p>
+<div align="center">
+<img src="./imgs/mvvm_architecture.svg" alt="MVVM Architecture Diagram" width="180">
+</div>
+<blockquote>
+<p>Obs.: Usar ViewModel em algumas circunstâncias de desenvolvimento de uma aplicação MVC não necessariamente indica que a arquitetura MVVM está sendo adotada. Em vez disso, pode ser uma estratégia para melhorar a separação de preocupações e facilitar a testabilidade, mantendo a estrutura básica do MVC. Para ser de fato MVVM, a aplicação deve adotar o data binding bidirecional e a comunicação entre View e ViewModel deve ser feita através de propriedades e comandos bindáveis, ou seja, é necessário que a View se conecte ao ViewModel de forma mais direta, sem intermediários.</p>
+</blockquote>
+<p><strong>Component-Based Architecture</strong>: Esta evolução reconhece que aplicações modernas frequentemente beneficiam-se de decomposição em componentes autocontidos que encapsulam suas próprias responsabilidades de Model, View e Controller. Cada componente mantém um ciclo de vida independente e comunica-se com outros componentes através de interfaces bem definidas. Esta abordagem facilita reutilização, manutenção e desenvolvimento paralelo por equipes distribuídas.</p>
+<div align="center">
+<img src="./imgs/component_architecture.svg" alt="Component Architecture Diagram" width="180">
+</div>
+<h3 id="desafios-arquiteturais-e-considerações-práticas"><a class="header" href="#desafios-arquiteturais-e-considerações-práticas">Desafios Arquiteturais e Considerações Práticas</a></h3>
+<p>A implementação eficaz do padrão MVC requer navegação cuidadosa através de diversos desafios inerentes à sua natureza modular:</p>
+<p><strong>Gestão da Complexidade Inicial</strong>: Aplicações simples podem parecer desnecessariamente complexas quando submetidas à estrutura completa do MVC. Este paradoxo surge porque o padrão foi concebido para gerenciar complexidade emergente, não simplificar aplicações inerentemente simples. A decisão de quando aplicar MVC completo versus abordagens mais diretas requer julgamento arquitetural baseado em projeções realistas sobre a evolução futura da aplicação.</p>
+<p><strong>Coordenação Inter-Camadas</strong>: A comunicação inadequada entre componentes pode resultar em acoplamento implícito que mina os benefícios da separação de responsabilidades. Design Patterns como Observer, Mediator e Event Sourcing frequentemente são necessários para manter comunicação limpa entre camadas. A implementação destes padrões de design deve ser considerada parte integral da arquitetura MVC, não adições posteriores.</p>
+<p><strong>Considerações de Performance</strong>: A introdução de múltiplas camadas inevitavelmente adiciona overhead computacional através de indireções adicionais. Este overhead deve ser balanceado contra benefícios de manutenibilidade e escalabilidade. Em sistemas de alta performance, técnicas como lazy loading, caching inteligente e otimizações específicas de cada camada tornam-se essenciais.</p>
+<h3 id="aplicação-específica-no-desenvolvimento-web"><a class="header" href="#aplicação-específica-no-desenvolvimento-web">Aplicação Específica no Desenvolvimento Web</a></h3>
+<p>O domínio web apresenta características que tornam o padrão MVC particularmente adequado, porém também impõem a necessidade de adaptações específicas:</p>
+<p><strong>Roteamento como Abstração Fundamental</strong>: No contexto web, o sistema de roteamento funciona como uma camada adicional que mapeia URLs para Controllers específicos. Esta abstração permite que URLs sejam tratadas como uma DSL (Domain Specific Language) que expressa intenções do usuário em termos de operações sobre recursos da aplicação. Roteamento avançado inclui capacidades como rotas com parâmetros dinâmicos, constraints de validação (ex.: regex), agrupamento hierárquico de rotas e aplicação de middlewares.</p>
+<p><strong>Estado e Sessões</strong>: A natureza stateless (sem estado) do HTTP requer mecanismos especiais para manutenção de estado entre requisições. Sessions, cookies e tokens devem ser integrados ao fluxo MVC de forma que preserve o fluxo de autenticação e autorização. O Model deve ser capaz de reconstituir estado necessário a partir de informações de sessão, enquanto o Controller gerencia ciclo de vida de sessões e o View adapta apresentação baseada em estado de autenticação e autorização.</p>
+<p><strong>Middlewares</strong>: Aplicações web frequentemente requerem funcionalidades transversais como autenticação, logging, rate limiting e transformação de dados. Estas preocupações devem ser implementadas como middleware, permitindo que sejam aplicadas de forma consistente em todas as rotas e controladores, sem a necessidade de duplicação de código. Os middlewares interceptam requisições e respostas, permitindo a aplicação de lógica adicional antes ou depois do processamento principal.</p>
+<p>Essas camadas adicionais de abstração são fundamentais para a construção de aplicações robustas e escaláveis para a web, tanto em MVC quanto em outras arquiteturas.</p>
+<h3 id="preparando-o-terreno"><a class="header" href="#preparando-o-terreno">Preparando o Terreno</a></h3>
+<p>A compreensão profunda destes fundamentos teóricos prepara o terreno para a implementação prática que desenvolveremos nas seções subsequentes. Cada componente que construiremos, Router, Controller, View, Request/Response, será fundamentado nestes princípios.</p>
+<p>Na próxima seção, vamos começar a construir nosso mini-framework implementando o componente mais importante: o <strong>Router</strong>. Ele será responsável por receber todas as requisições e direcioná-las para o controller correto.</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="capítulo-8---mvc-model-view-controller-3"><a class="header" href="#capítulo-8---mvc-model-view-controller-3">Capítulo 8 - MVC (Model-View-Controller)</a></h1>
+<h2 id="821-router-de-url-para-controller-e-middlewares"><a class="header" href="#821-router-de-url-para-controller-e-middlewares">8.2.1. Router: de URL para Controller e Middlewares</a></h2>
+<h3 id="fundamentos-do-roteamento-na-web"><a class="header" href="#fundamentos-do-roteamento-na-web">Fundamentos do Roteamento na web</a></h3>
+<p>O roteamento em aplicações web é o mecanismo responsável por mapear URLs para métodos específicas no código. Em um framework MVC, o router atua como o primeiro ponto de contato com requisições HTTP, determinando qual controller deve processar cada solicitação e extraindo parâmetros relevantes da URL.</p>
+<blockquote>
+<p>Objetivos de aprendizagem</p>
+<ul>
+<li>Mapear URLs para controllers/métodos de forma declarativa</li>
+<li>Entender grupos de rotas, middlewares e extração de parâmetros</li>
+<li>Preparar base para controllers enxutos na próxima seção (8.3)</li>
+</ul>
+</blockquote>
+<blockquote>
+<p>Pré‑requisitos</p>
+<ul>
+<li>Conceitos de HTTP (métodos, paths, status codes)</li>
+<li>Recapitulação do roteamento manual do t07 (switch no index.php)</li>
+</ul>
+</blockquote>
+<h3 id="sistema-de-roteamento"><a class="header" href="#sistema-de-roteamento">Sistema de Roteamento</a></h3>
+<div class="table-wrapper"><table><thead><tr><th>Vantagem</th><th>Descrição</th></tr></thead><tbody>
+<tr><td>Organização</td><td>Rotas agrupadas por funcionalidade</td></tr>
+<tr><td>Flexibilidade</td><td>Suporte a parâmetros dinâmicos</td></tr>
+<tr><td>Segurança</td><td>Middleware de autenticação</td></tr>
+<tr><td>Performance</td><td>Matching eficiente de rotas</td></tr>
+<tr><td>Manutenibilidade</td><td>Fácil adicionar/remover rotas</td></tr>
+</tbody></table>
+</div>
+<h3 id="anatomia-de-uma-rota"><a class="header" href="#anatomia-de-uma-rota">Anatomia de uma Rota</a></h3>
+<p>Antes de implementar, vamos entender os componentes de uma rota:</p>
+<pre><code class="language-php">// Estrutura básica de rotas
+'groups' =&gt; [
+    'profile' =&gt; [  // ← Grupo (prefixo)
+        'middleware' =&gt; ['auth'], // ← Middleware
+        'get' =&gt; [
+            '/{user_id}' =&gt; 'site\ProfileController@show'  // ← Rota → Controller@Método
+        ]
+    ]
+]
+</code></pre>
+<p><strong>Componentes:</strong></p>
+<ul>
+<li><strong>Grupo</strong>: Organiza rotas relacionadas (<code>admin</code>, <code>api</code>, <code>profile</code>)</li>
+<li><strong>Método HTTP</strong>: <code>GET</code>, <code>POST</code>, <code>PUT</code>, <code>DELETE</code></li>
+<li><strong>Padrão da URL</strong>: <code>/profile/{user_id}</code> (com parâmetros dinâmicos)</li>
+<li><strong>Controller</strong>: Classe que processará a requisição</li>
+<li><strong>Método</strong>: Função específica no controller</li>
+<li><strong>Middleware</strong>: Filtros aplicados antes do controller</li>
+</ul>
+<h3 id="processamento-de-rotas"><a class="header" href="#processamento-de-rotas">Processamento de Rotas</a></h3>
+<p>O processamento de rotas transforma uma requisição HTTP simples em uma resposta estruturada através de uma sequência bem definida de operações. Este mecanismo funciona como uma linha de produção onde cada etapa tem uma responsabilidade específica.</p>
+<div align="center">
+<img src="./imgs/profile_page_request_flow.svg" alt="Component Architecture Diagram" width="400">
+</div>
+<h4 id="etapa-1-recepção-da-requisição"><a class="header" href="#etapa-1-recepção-da-requisição">Etapa 1: Recepção da Requisição</a></h4>
+<p>Quando um usuário clica em "Ver Perfil", o browser envia uma requisição <code>GET /profile/123</code>. Esta requisição chega ao arquivo <code>index.php</code>, que funciona como porteiro da aplicação:</p>
+<pre><code class="language-php">// t08-mvc/index.php (simplificado)
+require_once 'vendor/autoload.php';
+
+$router = new \Conex\MiniFramework\mvc\Router();
+$router-&gt;dispatch();
+</code></pre>
+<p>O construtor do Router carrega todas as rotas configuradas no "Routes.php" através do método estático <code>Routes::getRouter()</code>:</p>
+<pre><code class="language-php">// t08-mvc/core/mvc/Router.php (construtor)
+public function __construct()
+{
+    $this-&gt;routes = Routes::getRouter(); // Carrega configuração completa
+}
+</code></pre>
+<p>O método <code>dispatch()</code> inicia todo o processo de análise. Primeiramente coletando informações básicas sobre a requisição:</p>
+<pre><code class="language-php">// t08-mvc/core/mvc/Router.php (método dispatch)
+public function dispatch(): void
+{
+    $method = Request::getMethod(); // Retorna 'get'
+    $uri = self::getCleanUri(); // Retorna '/profile/123'
+    
+    $result = $this-&gt;processAllRoutes($this-&gt;routes, $method, $uri);
+    // ... resto do processamento
+}
+</code></pre>
+<p>O método "getCleanUri()" normaliza a URI removendo query strings e padronizando barras finais:</p>
+<pre><code class="language-php">// t08-mvc/core/mvc/Router.php
+public static function getCleanUri(): string
+{
+    $uri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
+    return rtrim($uri, '/') ?: '/';  // Remove barra final, exceto para '/'
+}
+</code></pre>
+<h4 id="etapa-2-busca-da-rota-correspondente"><a class="header" href="#etapa-2-busca-da-rota-correspondente">Etapa 2: Busca da Rota Correspondente</a></h4>
+<p>Com o método HTTP (<code>get</code>) e a URI (<code>/profile/123</code>) em mãos, o sistema executa o coração do roteamento: o método <code>processAllRoutes()</code>. Este método é responsável por encontrar qual controller deve processar a requisição:</p>
+<pre><code class="language-php">// t08-mvc/core/mvc/Router.php
+private function processAllRoutes(array $routes, string $method, string $uri): ?array
+{
+    if (!isset($routes['groups'])) {
+        return null; // Sem grupos configurados
+    }
+    
+    foreach ($routes['groups'] as $prefix =&gt; $groupRoutes) {
+        // Calcula o caminho do prefixo
+        if ($prefix === '') {
+            $prefixPath = '';                    // Grupo raiz
+            $routeWithoutPrefix = $uri;
+        } else {
+            $prefixPath = '/' . trim($prefix, '/'); // /profile, /admin
+            if (strpos($uri, $prefixPath) !== 0) {
+                continue; // URI não pertence a este grupo
+            }
+            $routeWithoutPrefix = substr($uri, strlen($prefixPath)); // Remove prefixo
+        }
+        
+        // Busca correspondência exata primeiro
+        if (isset($groupRoutes[$method][$routeWithoutPrefix])) {
+            return [
+                'controller' =&gt; $groupRoutes[$method][$routeWithoutPrefix],
+                'middlewares' =&gt; $groupRoutes['middleware'] ?? []
+            ];
+        }
+        
+        // Busca correspondência com parâmetros dinâmicos
+        if (isset($groupRoutes[$method])) {
+            foreach ($groupRoutes[$method] as $route =&gt; $controller) {
+                if (self::matchRoute($route, $routeWithoutPrefix)) {
+                    return [
+                        'controller' =&gt; $controller,
+                        'middlewares' =&gt; $groupRoutes['middleware'] ?? []
+                    ];
+                }
+            }
+        }
+    }
+    
+    return null; // Nenhuma rota encontrada
+}
+</code></pre>
+<p>Para nosso exemplo <code>GET /profile/123</code>, o processamento funciona assim:</p>
+<ol>
+<li><strong>Itera pelos grupos</strong>: encontra o grupo <code>profile</code></li>
+<li><strong>Remove prefixo</strong>: <code>/profile/123</code> → <code>/123</code> (após remover <code>/profile</code>)</li>
+<li><strong>Busca correspondência</strong>: <code>/123</code> não existe exato, mas <code>/{user_id}</code> corresponde via <code>matchRoute()</code> que utiliza expressões regulares para verificar padrões dinâmicos</li>
+<li><strong>Retorna resultado</strong>: <code>['controller' =&gt; 'site\ProfileController@show', 'middlewares' =&gt; ['auth']]</code></li>
+</ol>
+<p>O método <code>matchRoute()</code> implementa o algoritmo de correspondência de padrões:</p>
+<pre><code class="language-php">// t08-mvc/core/mvc/Router.php
+public static function matchRoute(string $routePattern, string $uri): bool
+{
+    $routeParts = explode('/', trim($routePattern, '/')); // ['', '{user_id}']
+    $uriParts = explode('/', trim($uri, '/')); // ['', '123']
+    
+    if (count($routeParts) !== count($uriParts)) {
+        return false; // Número de segmentos diferente
+    }
+    
+    foreach ($routeParts as $index =&gt; $segment) {
+        // Se é um parâmetro {user_id}, aceita qualquer valor
+        if (preg_match('/^\{([a-zA-Z0-9_]+)\}$/', $segment)) {
+            continue;
+        }
+        
+        // Se não é parâmetro, deve corresponder exatamente
+        if ($segment !== $uriParts[$index]) {
+            return false;
+        }
+    }
+    
+    return true;
+}
+</code></pre>
+<p>Este método retorna um booleano indicando se a rota corresponde à URI ou não.</p>
+<h4 id="etapa-3-aplicação-de-middleware"><a class="header" href="#etapa-3-aplicação-de-middleware">Etapa 3: Aplicação de Middleware</a></h4>
+<p>Antes de executar o controller, o sistema verifica se existem middleware configurados para aquele grupo de rotas em específico. No nosso exemplo, a rota possui middleware "auth":</p>
+<pre><code class="language-php">// t08-mvc/core/mvc/Router.php (dentro do dispatch)
+if (isset($result['middlewares'])) {
+    $this-&gt;applyMiddlewares($result['middlewares']);
+}
+</code></pre>
+<p>O método <code>applyMiddlewares()</code> processa cada middleware sequencialmente:</p>
+<pre><code class="language-php">// t08-mvc/core/mvc/Router.php
+private function applyMiddlewares(array $middlewares): void
+{
+    foreach ($middlewares as $middleware) {
+        switch ($middleware) {
+            case 'auth':
+                $this-&gt;checkAuth(); // Verifica autenticação
+                break;
+            default:
+                throw new Exception("Middleware não reconhecido: {$middleware}");
+        }
+    }
+}
+</code></pre>
+<p>O middleware de autenticação implementa verificação de sessão:</p>
+<pre><code class="language-php">// t08-mvc/core/mvc/Router.php
+private function checkAuth(): void
+{
+    session_start();
+    
+    if (!isset($_SESSION['user_id']) || empty($_SESSION['user_id'])) {
+        header('Location: /auth/login');
+        exit; // Termina execução se não autenticado
+    }
+}
+</code></pre>
+<p>Este processo é crucial porque garante que apenas usuários logados acessem rotas protegidas. O middleware intercepta a requisição, antes de chegar ao controller e executa o "checkAuth()". Se o usuário não estiver autenticado, ele é redirecionado para <code>/auth/login</code> e a execução é interrompida.</p>
+<p>Caso não haja middleware configurado, a execução do controller prossegue normalmente, sem execução de métodos para verificações adicionais.</p>
+<h4 id="etapa-4-extração-de-parâmetros"><a class="header" href="#etapa-4-extração-de-parâmetros">Etapa 4: Extração de Parâmetros</a></h4>
+<p>O sistema precisa extrair o valor <code>123</code> do padrão <code>/{user_id}</code>. Esta tarefa é realizada pela classe <code>Parameters</code> que utiliza métodos do Router para evitar duplicação de código:</p>
+<pre><code class="language-php">// t08-mvc/core/mvc/helpers/Parameters.php
+public static function getRouterParams(string $controllerMethodPath): array
+{
+    $routes = Routes::getRouter();
+    $method = Request::getMethod(); 
+    $currentUri = Router::getUri(); // '/profile/123'
+    
+    foreach ($routes['groups'] as $groupPrefix =&gt; $group) {
+        if (isset($group[$method])) {
+            foreach ($group[$method] as $route =&gt; $controller) {
+                if ($controller === $controllerMethodPath) {
+                    $fullRoutePattern = self::buildFullRoute($groupPrefix, $route);
+                    
+                    if (Router::matchRoute($fullRoutePattern, $currentUri)) {
+                        return Router::extractRouteParams($fullRoutePattern, $currentUri);
+                    }
+                }
+            }
+        } 
+    }
+    
+    return [];
+}
+</code></pre>
+<p>O método "extractRouteParams()" extrai os valores dos parâmetros dinâmicos:</p>
+<pre><code class="language-php">// t08-mvc/core/mvc/Router.php
+public static function extractRouteParams(string $routePattern, string $uri): array
+{
+    $routeParts = explode('/', trim($routePattern, '/'));
+    $uriParts = explode('/', trim($uri, '/'));
+    $params = [];
+    
+    foreach ($routeParts as $index =&gt; $segment) {
+        if (preg_match('/^\{([a-zA-Z0-9_]+)\}$/', $segment)) {
+            $params[] = $uriParts[$index]; // Coleta valor do parâmetro
+        }
+    }
+    
+    return $params; // ['123'] para nosso exemplo
+}
+</code></pre>
+<p>Desta forma, a classe <code>Parameters</code> centraliza a lógica de extração de parâmetros dinâmicos, evitando duplicação de código em diferentes controllers. O método <code>getRouterParams()</code> é responsável por orquestrar essa extração, ele retorna os parâmetros extraídos.</p>
+<h4 id="etapa-5-execução-do-controller"><a class="header" href="#etapa-5-execução-do-controller">Etapa 5: Execução do Controller</a></h4>
+<p>Com a rota encontrada, middleware aplicado e parâmetros extraídos, o sistema executa o controller através do método <code>Controller::execute()</code>:</p>
+<pre><code class="language-php">// t08-mvc/core/mvc/Controller.php
+public static function execute(string $router): void
+{
+    $params = Parameters::getRouterParams($router);  // ['123']
+    
+    // Instancia ProfileController
+    $controller = new $className();
+    
+    // Chama show(123)
+    $controller-&gt;$methodName(...$params);
+}
+</code></pre>
+<p>O controller "ProfileController" é instanciado e seu método "show($userId)" é chamado com o parâmetro "123".</p>
+<h4 id="etapa-6-geração-da-resposta"><a class="header" href="#etapa-6-geração-da-resposta">Etapa 6: Geração da Resposta</a></h4>
+<p>O controller processa a lógica de negócio e gera a resposta apropriada. No caso do ProfileController:</p>
+<pre><code class="language-php">// t08-mvc/src/controllers/site/ProfileController.php
+public function show(int $userId): void
+{
+    try {
+        // Busca dados do perfil usando service
+        $profile = $this-&gt;profileService-&gt;getProfileData($userId);
+        $posts = $this-&gt;profileService-&gt;getProfileFeed($userId);
+        
+        // Prepara dados para a view
+        $profileData = $this-&gt;prepareProfileData($profile, $userId, $loggedUserId, $isFollowing);
+        $postsData = $this-&gt;preparePostsData($posts, $profile-&gt;getUsername(), $userId, $loggedUserId);
+        
+        // Mescla dados e renderiza view
+        $viewData = array_merge($profileData, $postsData, [
+            'pageTitle' =&gt; 'Perfil de ' . htmlspecialchars($profile-&gt;getUsername()),
+            'pageCSS' =&gt; 'profile'
+        ]);
+        
+        $this-&gt;view('profile', $viewData);
+        
+    } catch (\Throwable $e) {
+        error_log('Profile show error: ' . $e-&gt;getMessage());
+        $this-&gt;view('profile', ['error' =&gt; 'Erro ao carregar perfil']);
+    }
+}
+</code></pre>
+<p>O método "view()" herdado do "BaseController" processa o template:</p>
+<pre><code class="language-php">// t08-mvc/src/controllers/BaseController.php
+public function view(string $view, $data = [])
+{
+    $globalData = $this-&gt;getGlobalViewData(); 
+    $viewData = array_merge($globalData, $data); 
+    
+    echo View::render($view, $viewData); // Renderiza template com dados
+}
+</code></pre>
+<h4 id="o-fluxo-completo-em-ação"><a class="header" href="#o-fluxo-completo-em-ação">O Fluxo Completo em Ação</a></h4>
+<p>Vamos acompanhar uma requisição real passo a passo com todos os detalhes:</p>
+<ol>
+<li><strong>Usuário acessa</strong>: <code>GET /profile/123</code></li>
+<li><strong>Router carrega</strong>: <code>Routes::getRouter()</code> - todas as configurações</li>
+<li><strong>Router identifica</strong>: <code>Request::getMethod()</code> = <code>get</code>, <code>getCleanUri()</code> = <code>/profile/123</code></li>
+<li><strong>processAllRoutes() busca</strong>: grupo <code>profile</code>, padrão <code>/{user_id}</code> → <code>ProfileController@show</code></li>
+<li><strong>applyMiddlewares() verifica</strong>: middleware <code>auth</code> → <code>checkAuth()</code> valida sessão</li>
+<li><strong>Parameters extrai</strong>: <code>{user_id}</code> = <code>123</code> via <code>extractRouteParams()</code></li>
+<li><strong>Controller::execute() instancia</strong>: <code>ProfileController</code> e chama <code>show(123)</code></li>
+<li><strong>Controller processa</strong>: busca dados, prepara view, renderiza template</li>
+<li><strong>Resposta enviada</strong>: HTML final chega ao browser do usuário</li>
+</ol>
+<p>Este processo acontece de forma transparente e eficiente, com cada componente tendo uma responsabilidade específica e bem definida, permitindo que desenvolvedores se concentrem na lógica de negócio enquanto o framework cuida de todo o roteamento.</p>
+<h2 id="fluxo-completo-visual-de-uma-requisição"><a class="header" href="#fluxo-completo-visual-de-uma-requisição">Fluxo Completo Visual de uma Requisição</a></h2>
+<p><img src="./imgs/profile_view_request.svg" alt="Fluxo Completo de uma Requisição" /></p>
+<h2 id="próximos-passos-2"><a class="header" href="#próximos-passos-2">Próximos Passos</a></h2>
+<p>Na próxima seção, vamos ver como o Controller recebe essas informações do Router e processa a lógica de negócio.</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="capítulo-8---mvc-model-view-controller-4"><a class="header" href="#capítulo-8---mvc-model-view-controller-4">Capítulo 8 - MVC (Model-View-Controller)</a></h1>
+<h2 id="822-controllers-coordenação-e-orquestração"><a class="header" href="#822-controllers-coordenação-e-orquestração">8.2.2. Controllers: Coordenação e Orquestração</a></h2>
+<p>No capítulo anterior (8.2), vimos como o sistema de roteamento analisa URLs, aplica middlewares e identifica qual controller deve ser executado. Agora vamos entender como o Controller atua como orquestrador central, coordenando a interação entre requisições HTTP, lógica de negócio e apresentação de dados.</p>
+<blockquote>
+<p>Objetivos de aprendizagem</p>
+<ul>
+<li>Entender o fluxo "Controller::execute()" e como parâmetros da rota chegam ao método</li>
+<li>Escrever controllers enxutos que apenas orquestram o fluxo de dados</li>
+<li>Aplicar padrões de organização e boas práticas em controllers</li>
+</ul>
+</blockquote>
+<blockquote>
+<p>Pré‑requisitos</p>
+<ul>
+<li>Entender o roteamento (8.2) e como ele seleciona "controller@method"</li>
+<li>Familiaridade com a ideia de Services (aprofundaremos em 8.5)</li>
+</ul>
+</blockquote>
+<h2 id="do-roteamento-à-execução"><a class="header" href="#do-roteamento-à-execução">Do Roteamento à Execução</a></h2>
+<p>Recapitulando o fluxo do capítulo anterior: após o Router processar "GET /profile/123", ele identifica que deve executar "site\ProfileController@show" com parâmetro "[123]".</p>
+<p>Agora veremos como o sistema executa essa informação através da classe "Controller":</p>
+<pre><code class="language-php">// t08-mvc/core/mvc/Router.php (final do dispatch)
+try {
+    Controller::execute($result['controller']); // "site\ProfileController@show"
+} catch (Exception $e) {
+    Response::errorView(500);
+}
+</code></pre>
+<h3 id="anatomia-do-controllerexecute"><a class="header" href="#anatomia-do-controllerexecute">Anatomia do Controller::execute()</a></h3>
+<p>O método "Controller::execute()" é responsável por transformar a string "site\ProfileController@show" em uma chamada de método real:</p>
+<pre><code class="language-php">// t08-mvc/core/mvc/Controller.php
+public static function execute(string $router): void
+{
+    // 1. Valida formato da rota
+    self::validateRouteFormat($router); // Deve conter '@'
+    
+    // 2. Separa controller e método
+    list($controller, $method) = explode('@', $router);
+    // $controller = "site\ProfileController"
+    // $method = "show"
+    
+    // 3. Constrói namespace completo
+    $className = "src\\controllers\\" . $controller;
+    // $className = "src\controllers\site\ProfileController"
+    
+    // 4. Valida se classe existe
+    self::classExists($className);
+    
+    // 5. Instancia o controller
+    $controllerInstance = new $className();
+    
+    // 6. Valida se método existe
+    self::methodExists($controllerInstance, $method, $className);
+    
+    // 7. Extrai parâmetros da rota
+    $params = Parameters::getRouterParams($router); // [123]
+    
+    // 8. Executa método com parâmetros
+    call_user_func_array([$controllerInstance, $method], $params);
+    // ProfileController-&gt;show(123)
+}
+</code></pre>
+<h3 id="fluxo-detalhado-de-execução"><a class="header" href="#fluxo-detalhado-de-execução">Fluxo Detalhado de Execução</a></h3>
+<p>Vamos acompanhar cada etapa do processo usando nosso exemplo <code>GET /profile/123</code>:</p>
+<h4 id="etapa-1-validação-do-formato"><a class="header" href="#etapa-1-validação-do-formato"><strong>Etapa 1: Validação do Formato</strong></a></h4>
+<pre><code class="language-php">// t08-mvc/core/mvc/Controller.php
+private static function validateRouteFormat(string $router): void
+{
+    if (!str_contains($router, '@')) {
+        throw new Exception("Formato de rota inválido! Correto: Controller@method");
+    }
+}
+</code></pre>
+<p>O sistema verifica se a string contém o delimitador <code>@</code> que separa controller do método.</p>
+<h4 id="etapa-2-construção-do-namespace"><a class="header" href="#etapa-2-construção-do-namespace"><strong>Etapa 2: Construção do Namespace</strong></a></h4>
+<pre><code class="language-php">// De: "site\ProfileController"
+// Para: "src\controllers\site\ProfileController"
+$className = "src\\controllers\\" . $controller;
+</code></pre>
+<p>O framework adiciona o namespace base <code>src\controllers\</code> para localizar a classe correta.</p>
+<h4 id="etapa-3-instanciação-segura"><a class="header" href="#etapa-3-instanciação-segura"><strong>Etapa 3: Instanciação Segura</strong></a></h4>
+<pre><code class="language-php">// t08-mvc/core/mvc/Controller.php
+private static function classExists(string $className): void
+{
+    if (!class_exists($className)) {
+        throw new Exception("Controller {$className} não encontrado");
+    }
+}
+</code></pre>
+<p>Antes de instanciar, valida se a classe existe para evitar erros fatais.</p>
+<h4 id="etapa-4-extração-de-parâmetros-1"><a class="header" href="#etapa-4-extração-de-parâmetros-1"><strong>Etapa 4: Extração de Parâmetros</strong></a></h4>
+<pre><code class="language-php">// t08-mvc/core/mvc/helpers/Parameters.php
+$params = Parameters::getRouterParams($router);
+// Retorna: [123] para rota /profile/{user_id}
+</code></pre>
+<p>A classe <code>Parameters</code> usa o mesmo algoritmo de matching do Router para extrair valores dos parâmetros dinâmicos.</p>
+<h4 id="etapa-5-invocação-dinâmica"><a class="header" href="#etapa-5-invocação-dinâmica"><strong>Etapa 5: Invocação Dinâmica</strong></a></h4>
+<pre><code class="language-php">// Equivale a: $profileController-&gt;show(123)
+call_user_func_array([$controllerInstance, $method], $params);
+</code></pre>
+<p>O PHP executa dinamicamente o método com os parâmetros extraídos da URL.</p>
+<h2 id="controllers-na-prática"><a class="header" href="#controllers-na-prática">Controllers na Prática</a></h2>
+<p>Agora que entendemos o mecanismo de execução, vamos ver como escrever controllers eficazes:</p>
+<h3 id="estrutura-de-um-controller"><a class="header" href="#estrutura-de-um-controller">Estrutura de um Controller</a></h3>
+<pre><code class="language-php">// t08-mvc/src/controllers/site/ProfileController.php
+class ProfileController extends BaseController 
+{
+    private ProfileService $profileService;
+    private FollowService $followService;
+
+    public function __construct() {
+        parent::__construct(); // Inicializa sessão
+        
+        // Injeção de dependências
+        $this-&gt;profileService = new ProfileService($userDAO, $postDAO);
+        $this-&gt;followService = new FollowService($followDAO, $userDAO);
+    }
+
+    public function show(int $userId): void // ← Parâmetro da rota
+    {
+        try {
+            // 1. Busca dados através de services
+            $profile = $this-&gt;profileService-&gt;getProfileData($userId);
+            $posts = $this-&gt;profileService-&gt;getProfileFeed($userId);
+            
+            // 2. Obtém contexto da sessão
+            $loggedUserId = $this-&gt;getSession('user_id', 0);
+            $isFollowing = $this-&gt;followService-&gt;isFollowing($userId, $loggedUserId);
+            
+            // 3. Prepara dados para apresentação (ViewModels)
+            $profileViewModel = new ProfileData($profile, $userId, $loggedUserId, $isFollowing);
+            $postsViewModel = new ProfilePostsData($posts, $profile-&gt;getUsername(), $userId, $loggedUserId);
+            
+            // 4. Renderiza view com dados combinados
+            $this-&gt;view('profile', array_merge(
+                $profileViewModel-&gt;getFormattedData(),
+                $postsViewModel-&gt;getFormattedData(),
+                ['pageTitle' =&gt; 'Perfil de ' . $profile-&gt;getUsername()]
+            ));
+            
+        } catch (\Throwable $e) {
+            error_log('Profile error: ' . $e-&gt;getMessage());
+            $this-&gt;view('profile', ['error' =&gt; 'Erro ao carregar perfil']);
+        }
+    }
+}
+</code></pre>
+<h3 id="basecontroller-funcionalidades-compartilhadas"><a class="header" href="#basecontroller-funcionalidades-compartilhadas">BaseController: Funcionalidades Compartilhadas</a></h3>
+<p>O BaseController fornece funcionalidades comuns para todos os controllers, como renderização de views e acesso a dados de sessão. Seus métodos são genéricos e reutilizáveis, permitindo que os controllers se concentrem na lógica de negócio. É a aplicação do princípio DRY (Don't Repeat Yourself) na arquitetura do sistema.</p>
+<pre><code class="language-php">// t08-mvc/src/controllers/BaseController.php
+abstract class BaseController 
+{
+    public function __construct() {
+        Session::start(); // Garante sessão ativa
+    }
+
+    // Renderização de views
+    public function view(string $view, $data = []) {
+        $globalData = $this-&gt;getGlobalViewData(); 
+        echo View::render($view, array_merge($globalData, $data));
+    }
+    
+    // Dados globais para todas as views
+    private function getGlobalViewData(): array {
+        return [
+            'isAuthenticated' =&gt; Session::has('user_id'),
+            'loggedUserId' =&gt; Session::get('user_id', 0),
+            'loggedUsername' =&gt; Session::get('username', '')
+        ];
+    }
+    
+    // Redirecionamentos seguros
+    public function redirect(string $path): void {
+        Response::redirect($path);
+    }
+    
+    // Acesso a dados de entrada
+    protected function input(string $key, $default = null) {
+        return Request::input($key, $default);
+    }
+}
+</code></pre>
+<h3 id="padrão-de-organização-controller-enxuto"><a class="header" href="#padrão-de-organização-controller-enxuto">Padrão de Organização: Controller Enxuto</a></h3>
+<p><strong>Controller "spaghetti" (violando boas práticas):</strong></p>
+<pre><code class="language-php">public function show(int $userId): void {
+    // Lógica de negócio no controller
+    $sql = "SELECT * FROM users WHERE id = ?";
+    $user = $this-&gt;db-&gt;query($sql, [$userId]);
+    
+    // Formatação de dados no controller
+    $userFormatted = [
+        'name' =&gt; htmlspecialchars($user['name']),
+        'photo' =&gt; $user['photo'] ? '/uploads/' . $user['photo'] : '/default.jpg'
+    ];
+    
+    // Validação complexa no controller (deve ser feita em um Service)
+    if ($user['status'] === 'active' &amp;&amp; $user['verified'] === 1) {
+        // lógica complexa...
+    }
+}
+</code></pre>
+<p><strong>Controller "enxuto" (seguindo boas práticas):</strong></p>
+<pre><code class="language-php">public function show(int $userId): void {
+    try {
+        // Service faz lógica de negócio
+        $profile = $this-&gt;profileService-&gt;getProfileData($userId);
+        
+        // ViewModel faz formatação  
+        $profileData = new ProfileData($profile, $userId, $loggedUserId);
+        
+        // Controller apenas orquestra
+        $this-&gt;view('profile', $profileData-&gt;getFormattedData());
+        
+    } catch (\Throwable $e) {
+        // Tratamento simples de erros
+        $this-&gt;handleError($e, 'profile');
+    }
+}
+</code></pre>
+<h2 id="tratamento-de-erros-e-segurança"><a class="header" href="#tratamento-de-erros-e-segurança">Tratamento de Erros e Segurança</a></h2>
+<h3 id="validação-de-parâmetros"><a class="header" href="#validação-de-parâmetros">Validação de Parâmetros</a></h3>
+<pre><code class="language-php">public function show(int $userId): void {
+    // PHP valida tipo automaticamente
+    if ($userId &lt;= 0) {
+        Response::errorView(400); // Bad Request
+        return;
+    }
+    
+    try {
+        $profile = $this-&gt;profileService-&gt;getProfileData($userId);
+        // ... resto da lógica
+    } catch (UserNotFoundException $e) {
+        Response::errorView(404); // Not Found
+    }
+}
+</code></pre>
+<h3 id="lidando-com-autenticação-no-controller"><a class="header" href="#lidando-com-autenticação-no-controller">Lidando com Autenticação no Controller</a></h3>
+<p>Com o uso de middlewares não precisamos nos preocupar em verificar a autenticação em cada controller, pois, como vimos no módulo anterior, ele intercepta as requisições antes de chegarem ao controller.</p>
+<pre><code class="language-php">// Aplicado pelo Router antes de chegar ao controller
+'profile' =&gt; [
+    'middleware' =&gt; ['auth'], // Verifica autenticação
+    'get' =&gt; [
+        '/{user_id}' =&gt; 'site\ProfileController@show'
+    ]
+]
+</code></pre>
+<h2 id="boas-práticas-para-controllers"><a class="header" href="#boas-práticas-para-controllers">Boas Práticas para Controllers</a></h2>
+<div class="table-wrapper"><table><thead><tr><th><strong>FAÇA</strong></th><th><strong>NÃO FAÇA</strong></th></tr></thead><tbody>
+<tr><td>Mantenha controllers enxutos</td><td>Lógica de negócio no controller</td></tr>
+<tr><td>Use Services para operações complexas</td><td>Acesso direto ao banco de dados</td></tr>
+<tr><td>Aplique ViewModels para formatação</td><td>Preparação de dados no controller</td></tr>
+<tr><td>Trate erros de forma consistente</td><td>Ignore exceções silenciosamente</td></tr>
+<tr><td>Valide tipos de parâmetros</td><td>Confie cegamente nos dados de entrada</td></tr>
+<tr><td>Use injeção de dependência</td><td>Instancie classes com <code>new</code> hardcoded</td></tr>
+</tbody></table>
+</div>
+<h3 id="próximos-passos-3"><a class="header" href="#próximos-passos-3">Próximos Passos</a></h3>
+<p>Com essa base sólida de controllers enxutos e bem organizados, estamos prontos para explorar o sistema de Views (8.4), que renderiza as páginas HTML de forma reutilizável.</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="capítulo-8---mvc-model-view-controller-5"><a class="header" href="#capítulo-8---mvc-model-view-controller-5">Capítulo 8 - MVC (Model-View-Controller)</a></h1>
+<h2 id="823-views-templates-layouts-e-components"><a class="header" href="#823-views-templates-layouts-e-components">8.2.3. Views: Templates, Layouts e Components</a></h2>
+<p>No capítulo anterior (8.3), vimos como controllers orquestram o fluxo de dados e chamam "$this-&gt;view('profile', $viewData)" para renderizar a resposta. Agora vamos entender como o <strong>Sistema de Views</strong> transforma esses dados estruturados em interfaces HTML finais, mantendo a separação clara entre lógica de apresentação e lógica de negócio.</p>
+<blockquote>
+<p>Objetivos de aprendizagem</p>
+<ul>
+<li>Compreender layouts, views e components e quando usar cada um</li>
+<li>Entender o fluxo de renderização "View::render()" e output buffering</li>
+<li>Renderizar dados sem "vazar" regras de negócio para a view</li>
+</ul>
+</blockquote>
+<blockquote>
+<p>Pré‑requisitos</p>
+<ul>
+<li>Sistema de Controllers (8.3) e como controllers chamam views</li>
+<li>Conceitos de HTML, CSS e separação de responsabilidades</li>
+</ul>
+</blockquote>
+<h2 id="do-controller-à-resposta-html"><a class="header" href="#do-controller-à-resposta-html">Do Controller à Resposta HTML</a></h2>
+<p>Recapitulando o fluxo do capítulo anterior: após o controller processar a lógica de negócio, ele chama "$this-&gt;view('profile', $viewData)" para renderizar a resposta.</p>
+<p>Agora veremos como esse processo funciona internamente:</p>
+<pre><code class="language-php">// t08-mvc/src/controllers/BaseController.php (visto em 8.3)
+public function view(string $view, $data = []) {
+    $globalData = $this-&gt;getGlobalViewData(); 
+    $viewData = array_merge($globalData, $data); 
+    
+    echo View::render($view, $viewData); // Aqui acontece a magia
+}
+</code></pre>
+<h3 id="anatomia-do-viewrender"><a class="header" href="#anatomia-do-viewrender">Anatomia do View::render()</a></h3>
+<p>O método <code>View::render()</code> é responsável por transformar dados em HTML usando templates PHP:</p>
+<pre><code class="language-php">// t08-mvc/core/mvc/View.php
+public static function render(string $view, $params = []): string {
+    // 1. Extrai parâmetros como variáveis locais
+    extract($params); // $user, $posts, $pageTitle ficam disponíveis
+    
+    // 2. Renderiza a view específica
+    ob_start(); // Inicia captura de output
+    include __DIR__ . '/../../view/' . $view . '.php'; // profile.php
+    $viewContent = ob_get_clean(); // Captura HTML da view
+    
+    // 3. Renderiza o layout principal
+    ob_start();
+    include __DIR__ . '/../../view/layouts/main.php'; // Layout com {{content}}
+    $layoutContent = ob_get_clean();
+    
+    // 4. Combina view + layout
+    return str_replace('{{content}}', $viewContent, $layoutContent);
+}
+</code></pre>
+<h3 id="fluxo-detalhado-de-renderização"><a class="header" href="#fluxo-detalhado-de-renderização">Fluxo Detalhado de Renderização</a></h3>
+<p>Vamos acompanhar o processo usando <code>$this-&gt;view('profile', $viewData)</code>:</p>
+<h4 id="etapa-1-preparação-de-dados"><a class="header" href="#etapa-1-preparação-de-dados"><strong>Etapa 1: Preparação de Dados</strong></a></h4>
+<pre><code class="language-php">// ViewModel já preparou os dados 
+$viewData = [
+    'user' =&gt; $profileData,
+    'userPosts' =&gt; $postsData,
+    'pageTitle' =&gt; 'Perfil de João',
+    'pageCSS' =&gt; 'profile',
+    'isAuthenticated' =&gt; true,
+    'loggedUserId' =&gt; 123
+];
+</code></pre>
+<h4 id="etapa-2-extração-de-variáveis"><a class="header" href="#etapa-2-extração-de-variáveis"><strong>Etapa 2: Extração de Variáveis</strong></a></h4>
+<pre><code class="language-php">// extract($params) torna disponível na view:
+&lt;?= $pageTitle ?&gt; // "Perfil de João"
+&lt;?= $user['name'] ?&gt;  // Dados do usuário
+&lt;?php if ($isAuthenticated): ?&gt; // Controle de acesso
+</code></pre>
+<h4 id="etapa-3-renderização-da-view"><a class="header" href="#etapa-3-renderização-da-view"><strong>Etapa 3: Renderização da View</strong></a></h4>
+<pre><code class="language-php">// t08-mvc/view/profile.php (simplificado)
+&lt;div class="profile-container"&gt;
+    &lt;div class="profile-header"&gt;
+        &lt;img src="&lt;?= $user['profilePhoto'] ?&gt;" alt="Foto de perfil"&gt;
+        &lt;h1&gt;&lt;?= htmlspecialchars($user['username']) ?&gt;&lt;/h1&gt;
+        &lt;p&gt;&lt;?= htmlspecialchars($user['bio']) ?&gt;&lt;/p&gt;
+    &lt;/div&gt;
+    
+    &lt;div class="profile-posts"&gt;
+        &lt;?php if ($userPosts['hasUserPosts']): ?&gt;
+            &lt;?php foreach ($userPosts['userPosts'] as $post): ?&gt;
+                &lt;div class="post-item"&gt;
+                    &lt;img src="/public/uploads/feed/&lt;?= $post['photoUrl'] ?&gt;" alt="Post"&gt;
+                    &lt;p&gt;&lt;?= htmlspecialchars($post['description']) ?&gt;&lt;/p&gt;
+                &lt;/div&gt;
+            &lt;?php endforeach; ?&gt;
+        &lt;?php else: ?&gt;
+            &lt;p&gt;&lt;?= $userPosts['noPostsMessage'] ?&gt;&lt;/p&gt;
+        &lt;?php endif; ?&gt;
+    &lt;/div&gt;
+&lt;/div&gt;
+</code></pre>
+<h4 id="etapa-4-aplicação-do-layout"><a class="header" href="#etapa-4-aplicação-do-layout"><strong>Etapa 4: Aplicação do Layout</strong></a></h4>
+<pre><code class="language-php">// t08-mvc/view/layouts/main.php
+&lt;!DOCTYPE html&gt;
+&lt;html lang="pt-BR"&gt;
+&lt;head&gt;
+    &lt;meta charset="UTF-8"&gt;
+    &lt;title&gt;&lt;?= $pageTitle ?? 'Conex' ?&gt;&lt;/title&gt;
+    &lt;link rel="stylesheet" href="/public/css/main.css"&gt;
+    &lt;?php if (isset($pageCSS)): ?&gt;
+        &lt;link rel="stylesheet" href="/public/css/&lt;?= $pageCSS ?&gt;.css"&gt;
+    &lt;?php endif; ?&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;?php include __DIR__ . '/../components/flash.php'; ?&gt;
+    
+    &lt;aside class="side-bar"&gt;
+        &lt;!-- Menu lateral da aplicação --&gt;
+        &lt;?php if ($isAuthenticated ?? false): ?&gt;
+            &lt;a href="/profile/&lt;?= $loggedUserId ?&gt;"&gt;Meu Perfil&lt;/a&gt;
+        &lt;?php else: ?&gt;
+            &lt;a href="/auth/login"&gt;Entrar&lt;/a&gt;
+        &lt;?php endif; ?&gt;
+    &lt;/aside&gt;
+    
+    &lt;main class="content"&gt;
+        {{content}} &lt;!-- Substituído pelo conteúdo da view --&gt;
+    &lt;/main&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+</code></pre>
+<h2 id="organização-do-sistema-de-views"><a class="header" href="#organização-do-sistema-de-views">Organização do Sistema de Views</a></h2>
+<h3 id="estrutura-de-diretórios"><a class="header" href="#estrutura-de-diretórios">Estrutura de Diretórios</a></h3>
+<pre><code>view/
+├── layouts/           # Templates base da aplicação
+│   └── main.php      # Layout principal
+├── components/        # Componentes reutilizáveis
+│   └── flash.php    # Mensagens flash
+├── error/          # Views de erro
+│   ├── 404.php       # Página não encontrada
+│   └── 500.php       # Erro interno do servidor
+├── profile.php       # View específica do perfil
+├── feed.php          # View do feed principal
+└── login.php         # View de login
+...                 # Outras views
+</code></pre>
+<h3 id="components-reutilização-de-interface"><a class="header" href="#components-reutilização-de-interface">Components: Reutilização de Interface</a></h3>
+<pre><code class="language-php">// t08-mvc/view/components/flash.php
+&lt;?php
+use Conex\MiniFramework\utils\Flash;
+$flashMessages = Flash::get();
+?&gt;
+
+&lt;?php if (!empty($flashMessages)): ?&gt;
+    &lt;div class="flash-container"&gt;
+        &lt;?php foreach ($flashMessages as $type =&gt; $message): ?&gt;
+            &lt;div class="flash-message &lt;?= $type ?&gt;" data-flash="&lt;?= $type ?&gt;"&gt;
+                &lt;button class="close-btn" onclick="closeFlash(this)"&gt;&amp;times;&lt;/button&gt;
+                &lt;?= htmlspecialchars($message) ?&gt;
+            &lt;/div&gt;
+        &lt;?php endforeach; ?&gt;
+    &lt;/div&gt;
+&lt;?php endif; ?&gt;
+</code></pre>
+<p><strong>Uso em layouts:</strong></p>
+<pre><code class="language-php">// Incluído automaticamente no layout principal
+&lt;?php include __DIR__ . '/../components/flash.php'; ?&gt;
+</code></pre>
+<h3 id="renderização-sem-layout"><a class="header" href="#renderização-sem-layout">Renderização Sem Layout</a></h3>
+<p>O sistema de views permite renderizar uma view sem aplicar o layout padrão. Isso é útil para casos especiais (AJAX, emails, fragmentos):</p>
+<pre><code class="language-php">// t08-mvc/core/mvc/View.php
+public static function renderView(string $view, $params = []): string {
+    extract($params);
+    
+    ob_start();
+    include __DIR__ . '/../../view/' . $view . '.php';
+    return ob_get_clean(); // Retorna apenas a view, sem layout
+}
+</code></pre>
+<h2 id="segurança-e-boas-práticas"><a class="header" href="#segurança-e-boas-práticas">Segurança e Boas Práticas</a></h2>
+<p><strong>Escape de Dados do Usuário</strong></p>
+<pre><code class="language-php">&lt;!-- CORRETO: Sempre escape dados do usuário --&gt;
+&lt;h1&gt;&lt;?= htmlspecialchars($user['name']) ?&gt;&lt;/h1&gt;
+&lt;p&gt;&lt;?= htmlspecialchars($post['description']) ?&gt;&lt;/p&gt;
+
+&lt;!-- PERIGOSO: Output direto (XSS vulnerability) --&gt;
+&lt;h1&gt;&lt;?= $user['name'] ?&gt;&lt;/h1&gt;
+&lt;p&gt;&lt;?= $post['description'] ?&gt;&lt;/p&gt;
+</code></pre>
+<p><strong>Validação de Existência</strong></p>
+<pre><code class="language-php">&lt;!-- CORRETO: Verifica se dados existem --&gt;
+&lt;?php if (isset($user) &amp;&amp; !empty($user['posts'])): ?&gt;
+    &lt;div class="posts-grid"&gt;
+        &lt;?php foreach ($user['posts'] as $post): ?&gt;
+            &lt;div class="post"&gt;&lt;?= htmlspecialchars($post['title']) ?&gt;&lt;/div&gt;
+        &lt;?php endforeach; ?&gt;
+    &lt;/div&gt;
+&lt;?php else: ?&gt;
+    &lt;p&gt;Nenhum post encontrado.&lt;/p&gt;
+&lt;?php endif; ?&gt;
+
+&lt;!-- PERIGOSO: Assume que dados existem --&gt;
+&lt;div class="posts-grid"&gt;
+    &lt;?php foreach ($user['posts'] as $post): ?&gt;
+        &lt;div class="post"&gt;&lt;?= $post['title'] ?&gt;&lt;/div&gt;
+    &lt;?php endforeach; ?&gt;
+&lt;/div&gt;
+</code></pre>
+<h3 id="separação-de-responsabilidades"><a class="header" href="#separação-de-responsabilidades">Separação de Responsabilidades</a></h3>
+<p><strong>Lógica de negócio na view (violando MVC):</strong></p>
+<pre><code class="language-php">&lt;!-- View fazendo lógica de negócio --&gt;
+&lt;?php
+$following = $followDAO-&gt;isFollowing($userId, $loggedUserId); // DAO na view
+$followText = $following ? 'Deixar de seguir' : 'Seguir'; // Lógica na view
+?&gt;
+&lt;button&gt;&lt;?= $followText ?&gt;&lt;/button&gt;
+</code></pre>
+<p><strong>View apenas apresentando dados preparados:</strong></p>
+<pre><code class="language-php">&lt;!-- View apenas exibe dados já preparados pelo controller --&gt;
+&lt;button data-action="&lt;?= $user['followAction'] ?&gt;"&gt;
+    &lt;?= htmlspecialchars($user['followButtonText']) ?&gt;
+&lt;/button&gt;
+</code></pre>
+<h2 id="boas-práticas-para-views"><a class="header" href="#boas-práticas-para-views">Boas Práticas para Views</a></h2>
+<div class="table-wrapper"><table><thead><tr><th><strong>FAÇA</strong></th><th><strong>NÃO FAÇA</strong></th></tr></thead><tbody>
+<tr><td>Sempre escape dados do usuário</td><td>Output direto sem sanitização</td></tr>
+<tr><td>Use layouts para estrutura comum</td><td>Copie HTML entre views</td></tr>
+<tr><td>Componentize elementos reutilizáveis</td><td>Duplique código de UI</td></tr>
+<tr><td>Valide existência de variáveis</td><td>Assuma que dados existem</td></tr>
+<tr><td>Separe lógica de apresentação</td><td>Lógica de negócio na view</td></tr>
+<tr><td>Use output buffering corretamente</td><td>Misture echo com includes</td></tr>
+</tbody></table>
+</div>
+<h2 id="próximos-passos-4"><a class="header" href="#próximos-passos-4">Próximos Passos</a></h2>
+<p>Com essa base sólida de views organizadas e seguras, estamos prontos para explorar como os <strong>Services</strong> (8.5) organizam nossa lógica de negócio de forma limpa e testável!</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="capítulo-8---mvc-model-view-controller-6"><a class="header" href="#capítulo-8---mvc-model-view-controller-6">Capítulo 8 - MVC (Model-View-Controller)</a></h1>
+<h2 id="824-abstração-http-requestresponse"><a class="header" href="#824-abstração-http-requestresponse">8.2.4. Abstração HTTP (Request/Response)</a></h2>
+<p>No capítulo anterior (8.4), vimos como o Sistema de Views renderiza dados em HTML final usando "View::render()". Agora vamos compreender como o framework gerencia a comunicação HTTP entre cliente e servidor através das classes "Request" e "Response", responsáveis por capturar dados de entrada e enviar respostas padronizadas.</p>
+<blockquote>
+<p>Objetivos de aprendizagem</p>
+<ul>
+<li>Compreender como funcionam as superglobais $_GET, $_POST e $_SERVER do PHP</li>
+<li>Entender geração de respostas HTTP e redirecionamentos padronizadas com Response</li>
+<li>Como é feita a aplicação da sanitização e validação de inputs em requisições</li>
+<li>Compreender o padrão Post/Redirect/Get (PRG)</li>
+</ul>
+</blockquote>
+<blockquote>
+<p>Pré‑requisitos</p>
+<ul>
+<li>Sistema de Views (8.4) e como renderização produz output final</li>
+<li>Conceitos básicos de HTTP (métodos, headers, status codes)</li>
+<li>Fundamentos de segurança web (XSS, validação de entrada)</li>
+</ul>
+</blockquote>
+<h2 id="do-http-bruto-às-abstrações-seguras"><a class="header" href="#do-http-bruto-às-abstrações-seguras">Do HTTP Bruto às Abstrações Seguras</a></h2>
+<p>Até agora vimos o fluxo: Roteamento -&gt; Controller -&gt; View -&gt; HTML. Mas como os dados chegam ao controller? E como o HTML chega ao browser? É aqui que entram Request e Response:</p>
+<h3 id="fundamentos-da-arquitetura-cliente-servidor"><a class="header" href="#fundamentos-da-arquitetura-cliente-servidor">Fundamentos da Arquitetura Cliente-Servidor</a></h3>
+<p>Quando você acessa uma página web, está participando de uma arquitetura cliente-servidor onde o browser (cliente) se comunica com o servidor web através do protocolo HTTP. Esta comunicação acontece em um ciclo bem definido que começa quando o cliente faz uma requisição.</p>
+<p>O browser envia uma mensagem HTTP para o servidor, especificando que recurso deseja (URL), que método usar (GET, POST, etc.) e incluindo dados adicionais se necessário. Esta requisição carrega consigo todas as informações que o servidor precisa para entender o que o cliente está solicitando.</p>
+<p>Em seguida, o servidor processa essa requisição. O servidor web recebe a mensagem HTTP, a interpreta e executa a lógica necessária, que pode incluir consultas ao banco de dados, processamento de formulários, validação de dados, ou qualquer outra operação requerida pela aplicação.</p>
+<p>Após o processamento, o servidor responde enviando uma resposta HTTP de volta ao cliente. Esta resposta contém um código de status (como 200 para sucesso, 404 para não encontrado, ou 500 para erro interno) e o conteúdo solicitado, que pode ser HTML, JSON, imagens, ou outros tipos de dados.</p>
+<p>Finalmente, o cliente renderiza o resultado. O browser recebe a resposta do servidor e renderiza o conteúdo para o usuário, exibindo a página web, executando JavaScript, aplicando estilos CSS, e tornando a informação visível e interativa para quem está navegando.</p>
+<h3 id="como-o-php-intercepta-requisições-http"><a class="header" href="#como-o-php-intercepta-requisições-http">Como o PHP Intercepta Requisições HTTP</a></h3>
+<p>O PHP, rodando no servidor web, tem acesso completo às informações da requisição HTTP através de variáveis superglobais. Estas variáveis são arrays associativos que o PHP popula automaticamente quando uma requisição chega:</p>
+<ul>
+<li><strong>$_GET</strong>: Contém parâmetros passados na URL (query string). Exemplo: "www.site.com/busca?termo=php&amp;categoria=web" resulta em "$_GET = ['termo' =&gt; 'php', 'categoria' =&gt; 'web']"</li>
+<li><strong>$_POST</strong>: Contém dados enviados através do corpo da requisição, tipicamente de formulários HTML. É usado para envio de informações sensíveis ou grandes volumes de dados</li>
+<li><strong>$_SERVER</strong>: Contém metadados da requisição como método HTTP, cabeçalhos, IP do cliente, URL completa, etc.</li>
+</ul>
+<h3 id="problemas-do-acesso-direto-às-superglobais"><a class="header" href="#problemas-do-acesso-direto-às-superglobais">Problemas do Acesso Direto às Superglobais</a></h3>
+<p>Embora seja tentador usar "$_GET['nome']" e "$_POST['email']" diretamente nos controllers, esta prática apresenta vários riscos:</p>
+<p><strong>Vulnerabilidades de segurança:</strong></p>
+<pre><code class="language-php">// PERIGOSO - vulnerável a XSS
+echo "Olá " . $_POST['nome']; // Se nome = "&lt;script&gt;alert('hack')&lt;/script&gt;"
+</code></pre>
+<p><strong>Código frágil e verboso:</strong></p>
+<pre><code class="language-php">// RUIM - repetitivo e propenso a erros
+$nome = isset($_POST['nome']) ? trim($_POST['nome']) : '';
+$email = isset($_POST['email']) ? filter_var($_POST['email'], FILTER_VALIDATE_EMAIL) : '';
+if (empty($nome)) {
+    // tratar erro...
+}
+</code></pre>
+<p><strong>Falta de consistência:</strong></p>
+<pre><code class="language-php">// Cada desenvolvedor faz de um jeito diferente
+$id = (int)$_GET['id']; // Um faz cast
+$categoria = htmlspecialchars($_GET['cat']); // Outro sanitiza
+$termo = $_GET['busca']; // Outro não valida nada
+</code></pre>
+<p>Isso torna o código difícil de manter, inseguro e propenso a erros. Para resolver esses problemas, criamos abstrações que centralizam e padronizam o acesso aos dados da requisição.</p>
+<h3 id="as-classes-request-e-response-como-abstração"><a class="header" href="#as-classes-request-e-response-como-abstração">As Classes Request e Response como Abstração</a></h3>
+<p>É aqui que entram nossas classes <strong>Request</strong> e <strong>Response</strong> como uma camada de abstração que:</p>
+<p><strong>1. Padroniza o acesso aos dados:</strong></p>
+<pre><code class="language-php">// Em vez de: $nome = $_POST['nome'] ?? '';
+$nome = Request::input('nome'); // Sempre sanitizado e validado
+</code></pre>
+<p><strong>2. Centraliza a segurança:</strong></p>
+<pre><code class="language-php">// Proteção automática contra XSS em todos os inputs
+$bio = Request::input('bio'); // htmlspecialchars aplicado automaticamente
+</code></pre>
+<p><strong>3. Fornece feedback claro:</strong></p>
+<pre><code class="language-php">// Em vez de verificação manual se campo existe
+try {
+    $email = Request::input('email');
+} catch (Exception $e) {
+    // Campo obrigatório não informado - feedback claro
+}
+</code></pre>
+<p><strong>4. Gerencia respostas de forma consistente:</strong></p>
+<pre><code class="language-php">// Em vez de: header('Location: /'); exit;
+Response::redirect('/'); // Headers verificados, logs de erro automáticos
+</code></pre>
+<p>Esta abstração permite que desenvolvedores se concentrem na lógica de negócio dos controllers, enquanto as preocupações de segurança, validação e padronização ficam encapsuladas nas classes de infraestrutura. O resultado é código mais limpo, seguro e mantível.</p>
+<br/>
+<p><img src="./imgs/web_request_flow.svg" alt="web_request_flow" /></p>
+<h2 id="classe-request-mini-framework-captura-segura-de-dados"><a class="header" href="#classe-request-mini-framework-captura-segura-de-dados">Classe Request (Mini-Framework): Captura Segura de Dados</a></h2>
+<p>A classe <strong>Request</strong> abstrai e sanitiza automaticamente dados vindos de "$_POST", "$_GET" e "$_SERVER":</p>
+<h3 id="detecção-de-método-http"><a class="header" href="#detecção-de-método-http">Detecção de Método HTTP</a></h3>
+<p>Esse método do <strong>Request</strong> permite identificar o tipo de requisição (GET, POST, etc.) feita pelo cliente:</p>
+<pre><code class="language-php">// t08-mvc/core/http/Request.php
+public static function getMethod(): string {
+    return strtolower($_SERVER['REQUEST_METHOD']);
+}
+</code></pre>
+<p>Ele também pode ser usado em controllers, para verificar o método da requisição antes de processá-la, por exemplo:</p>
+<pre><code class="language-php">// Verifica método antes de processar
+if (Request::getMethod() === 'post') {
+    // Processar formulário
+} else {
+    // Exibir formulário
+}
+</code></pre>
+<h3 id="captura-de-dados-post-com-sanitização"><a class="header" href="#captura-de-dados-post-com-sanitização">Captura de Dados POST com Sanitização</a></h3>
+<p>O método "Request::input()" captura dados enviados via POST, aplicando sanitização para evitar ataques XSS:</p>
+<pre><code class="language-php">// t08-mvc/core/http/Request.php
+public static function input(string $input, bool $sanitize = true) {
+    if(self::getMethod() !== 'post') {
+        throw new Exception("Nao e um metodo do tipo POST");
+    }
+    
+    $value = $_POST[$input] ?? null;
+    if ($value === null) {
+        throw new Exception("Campo {$input} nao encontrado");
+    }
+
+    return $sanitize ? filter_var($value, FILTER_SANITIZE_SPECIAL_CHARS) : $value;
+}
+</code></pre>
+<p>Essa proteção é crucial para evitar que scripts maliciosos sejam executados no navegador do usuário.</p>
+<p><strong>Proteção automática contra XSS:</strong></p>
+<pre><code class="language-php">// Entrada perigosa: $_POST['bio'] = '&lt;script&gt;alert("xss")&lt;/script&gt;'
+$bio = Request::input('bio');
+// Resultado: '&amp;lt;script&amp;gt;alert(&amp;quot;xss&amp;quot;)&amp;lt;/script&amp;gt;'
+
+// Ou sem sanitização quando necessário:
+$rawContent = Request::input('content', false); // Para editores HTML
+</code></pre>
+<h3 id="captura-de-parâmetros-get"><a class="header" href="#captura-de-parâmetros-get">Captura de Parâmetros GET</a></h3>
+<p>Funciona de maneira semelhante à captura de dados POST, mas utilizando a superglobal "$_GET" para recuperar parâmetros passados diretamente na URL:</p>
+<pre><code class="language-php">// t08-mvc/core/http/Request.php
+public static function query(string $query, bool $sanitize = true) {
+    if(self::getMethod() !== 'get') {
+        throw new Exception("Nao e um metodo do tipo get");
+    } 
+    
+    $value = $_GET[$query] ?? null;
+    if ($value === null) {
+        throw new Exception("Campo {$query} nao encontrado na URL");
+    }
+
+    return $sanitize ? filter_var($value, FILTER_SANITIZE_SPECIAL_CHARS) : $value;
+}
+</code></pre>
+<p>Exemplo de uso em controller para busca:</p>
+<pre><code class="language-php">// URL: /feed?search=&lt;script&gt;&amp;page=2
+public function index($params) {
+    try {
+        $search = Request::query('search');  // "&amp;lt;script&amp;gt;"
+        $page = Request::query('page'); // "2"
+        
+        $posts = $this-&gt;searchPosts($search, $page);
+        $this-&gt;view('feed/index', ['posts' =&gt; $posts]);
+        
+    } catch (Exception $e) {
+        // Parâmetro não encontrado - usar valores padrão
+        $this-&gt;view('feed/index', ['posts' =&gt; $this-&gt;getAllPosts()]);
+    }
+}
+</code></pre>
+<h3 id="captura-de-path-delegação-ao-router"><a class="header" href="#captura-de-path-delegação-ao-router">Captura de Path (Delegação ao Router)</a></h3>
+<p>Esse método reutiliza a lógica de extração de URI do Router, evitando duplicação de código, centralizando a responsabilidade e mantendo a consistência na extração de URIs.</p>
+<pre><code class="language-php">// t08-mvc/core/http/Request.php
+public static function getPath(): string {
+    return Router::getUri(); // Reutiliza lógica consolidada
+}
+</code></pre>
+<h2 id="classe-response-mini-framework-geração-de-respostas-padronizadas"><a class="header" href="#classe-response-mini-framework-geração-de-respostas-padronizadas">Classe Response (Mini-Framework): Geração de Respostas Padronizadas</a></h2>
+<p>A classe <strong>Response</strong> gerencia todas as saídas da aplicação: páginas de erro, redirecionamentos e controle de status HTTP:</p>
+<h3 id="páginas-de-erro-padronizadas"><a class="header" href="#páginas-de-erro-padronizadas">Páginas de Erro Padronizadas</a></h3>
+<pre><code class="language-php">// t08-mvc/core/http/Response.php
+public static function errorView(int $statusCode): never {
+    http_response_code($statusCode);
+    $params = ['message' =&gt; 'Erro ' . $statusCode];
+
+    $defaultHeaders = [
+        404 =&gt; View::render('error/404', $params),
+        403 =&gt; View::render('error/403', $params),
+        500 =&gt; View::render('error/500', $params),
+    ];
+    
+    echo $defaultHeaders[$statusCode] ?? 'Status code ' . $statusCode . ' não mapeado';
+    exit; // Termina execução
+}
+</code></pre>
+<p><strong>Fluxo de tratamento de erro:</strong></p>
+<pre><code class="language-php">// Controller detecta erro
+public function show($params) {
+    $postId = $params['id'];
+    $post = PostService::findById($postId);
+    
+    if (!$post) {
+        Response::errorView(404); // Renderiza error/404.php e para
+    }
+    
+    $this-&gt;view('posts/show', ['post' =&gt; $post]);
+}
+</code></pre>
+<h3 id="sistema-de-redirecionamento-seguro"><a class="header" href="#sistema-de-redirecionamento-seguro">Sistema de Redirecionamento Seguro</a></h3>
+<p>Esse método do <strong>Response</strong> realiza redirecionamentos HTTP, garantindo que os headers não tenham sido enviados previamente, evitando erros de redirecionamento. Esses erros podem ocorrer, por exemplo, se houver saída de dados antes do redirecionamento, ou seja, se o corpo da resposta já tiver sido modificado.</p>
+<pre><code class="language-php">// t08-mvc/core/http/Response.php
+public static function redirect(string $url): never {
+    if (headers_sent($file, $line)) {
+        error_log("Headers already sent in $file:$line - Cannot redirect to $url");
+        exit;
+    }
+    
+    header('Location: ' . $url);
+    exit; // Termina execução
+}
+</code></pre>
+<p><strong>Casos de uso comuns:</strong></p>
+<pre><code class="language-php">// Após operação bem-sucedida
+public function store($params) {
+    $data = Request::input('title');
+    PostService::create($data);
+    
+    Flash::success('Post criado com sucesso!');
+    Response::redirect('/'); // PRG
+}
+
+// Proteção de acesso
+public function admin($params) {
+    if (!$this-&gt;isAdmin()) {
+        Response::redirect('/login'); // Força autenticação
+    }
+    // Conteúdo admin...
+}
+</code></pre>
+<h2 id="padrões-de-uso-http-no-framework"><a class="header" href="#padrões-de-uso-http-no-framework">Padrões de Uso HTTP no Framework</a></h2>
+<h3 id="padrão-post-redirect-get-prg"><a class="header" href="#padrão-post-redirect-get-prg">Padrão POST-Redirect-GET (PRG)</a></h3>
+<p>O uso do padrão PRG evita reenvio de formulários ao atualizar página:</p>
+<pre><code class="language-php">public function createPost($params) {
+    if (Request::getMethod() === 'get') {
+        // Exibe formulário
+        $this-&gt;view('posts/create');
+        return;
+    }
+    
+    // POST - processa dados
+    $title = Request::input('title');
+    $content = Request::input('content');
+    
+    try {
+        PostService::create(['title' =&gt; $title, 'content' =&gt; $content]);
+        Flash::success('Post criado!');
+        Response::redirect('/posts'); // GET após POST
+        
+    } catch (Exception $e) {
+        Flash::error('Erro ao criar post');
+        Response::redirect('/posts/create'); // Volta ao formulário
+    }
+}
+</code></pre>
+<p>Desse modo, o padrão PRG ajuda a manter a integridade dos dados e a experiência do usuário.</p>
+<h2 id="resumo-e-próximos-passos"><a class="header" href="#resumo-e-próximos-passos">Resumo e Próximos Passos</a></h2>
+<p>As classes <strong>Request</strong> e <strong>Response</strong> completam a abstração HTTP do framework:</p>
+<ul>
+<li><strong>Request</strong>: Captura segura de dados POST/GET com sanitização automática</li>
+<li><strong>Response</strong>: Geração padronizada de respostas com códigos de status corretos</li>
+<li><strong>Segurança</strong>: Proteção contra XSS e validação de entrada integradas</li>
+<li><strong>Padrões</strong>: PRG, tratamento centralizado de erros e feedback ao usuário</li>
+</ul>
+<p>No próximo capítulo (8.6), entraremos na segunda parte do capítulo 8, onde abordaremos a implementação de <strong>Services</strong> e como eles se integram à arquitetura MVC da nossa aplicação.</p>
 
                     </main>
 

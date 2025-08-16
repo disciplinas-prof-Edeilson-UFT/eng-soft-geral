@@ -84,3 +84,20 @@
     - [Exibir perfil do usuário ](./t06-6.2.4-crud-php.md)
 
     - [Exibir no perfil do usuário suas respectivas postagens](./t06-6.2.5-crud-php.md)
+- [Capítulo 7 - Composer e Dependências]()
+
+- [Capítulo 8 - Model-View-Controller](./t08-8.0-mvc.md)
+
+  - [Visão Geral do Mini-Framework (Objetivos e Arquitetura)](./t08-8.0-mini-framework-mvc.md)
+
+  - [Parte I - Fundamentos do Framework](./t08-8.1-mini-framework-mvc.md)
+    - [Router: de URL para Controller e Middlewares](./t08-8.2-mini-framework-mvc.md)
+    - [Controllers: Coordenação e Orquestração](./t08-8.3-mini-framework-mvc.md)
+    - [Views: Templates, Layouts e Components](./t08-8.4-mini-framework-mvc.md)
+    - [Abstração HTTP (Request/Response)](./t08-8.5-mini-framework-mvc.md)
+
+  - [Parte II - Aplicação Prática do Framework]()
+    - [Services e Entidades de Domínio (Regras e Invariantes)]()
+    - [DAOs e Domain Objects (Persistência e Entidades)]()
+    - [Mappers e ViewModels (Conversão e Apresentação)]()
+  - [Integração, Testes e Próximos Passos]()

@@ -1,0 +1,448 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Views: Templates, Layouts e Components</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="highlight.css">
+        <link rel="stylesheet" href="tomorrow-night.css">
+        <link rel="stylesheet" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="toc.js"></script>
+    </head>
+    <body>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title"></h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="capítulo-8---mvc-model-view-controller"><a class="header" href="#capítulo-8---mvc-model-view-controller">Capítulo 8 - MVC (Model-View-Controller)</a></h1>
+<h2 id="823-views-templates-layouts-e-components"><a class="header" href="#823-views-templates-layouts-e-components">8.2.3. Views: Templates, Layouts e Components</a></h2>
+<p>No capítulo anterior (8.3), vimos como controllers orquestram o fluxo de dados e chamam "$this-&gt;view('profile', $viewData)" para renderizar a resposta. Agora vamos entender como o <strong>Sistema de Views</strong> transforma esses dados estruturados em interfaces HTML finais, mantendo a separação clara entre lógica de apresentação e lógica de negócio.</p>
+<blockquote>
+<p>Objetivos de aprendizagem</p>
+<ul>
+<li>Compreender layouts, views e components e quando usar cada um</li>
+<li>Entender o fluxo de renderização "View::render()" e output buffering</li>
+<li>Renderizar dados sem "vazar" regras de negócio para a view</li>
+</ul>
+</blockquote>
+<blockquote>
+<p>Pré‑requisitos</p>
+<ul>
+<li>Sistema de Controllers (8.3) e como controllers chamam views</li>
+<li>Conceitos de HTML, CSS e separação de responsabilidades</li>
+</ul>
+</blockquote>
+<h2 id="do-controller-à-resposta-html"><a class="header" href="#do-controller-à-resposta-html">Do Controller à Resposta HTML</a></h2>
+<p>Recapitulando o fluxo do capítulo anterior: após o controller processar a lógica de negócio, ele chama "$this-&gt;view('profile', $viewData)" para renderizar a resposta.</p>
+<p>Agora veremos como esse processo funciona internamente:</p>
+<pre><code class="language-php">// t08-mvc/src/controllers/BaseController.php (visto em 8.3)
+public function view(string $view, $data = []) {
+    $globalData = $this-&gt;getGlobalViewData(); 
+    $viewData = array_merge($globalData, $data); 
+    
+    echo View::render($view, $viewData); // Aqui acontece a magia
+}
+</code></pre>
+<h3 id="anatomia-do-viewrender"><a class="header" href="#anatomia-do-viewrender">Anatomia do View::render()</a></h3>
+<p>O método <code>View::render()</code> é responsável por transformar dados em HTML usando templates PHP:</p>
+<pre><code class="language-php">// t08-mvc/core/mvc/View.php
+public static function render(string $view, $params = []): string {
+    // 1. Extrai parâmetros como variáveis locais
+    extract($params); // $user, $posts, $pageTitle ficam disponíveis
+    
+    // 2. Renderiza a view específica
+    ob_start(); // Inicia captura de output
+    include __DIR__ . '/../../view/' . $view . '.php'; // profile.php
+    $viewContent = ob_get_clean(); // Captura HTML da view
+    
+    // 3. Renderiza o layout principal
+    ob_start();
+    include __DIR__ . '/../../view/layouts/main.php'; // Layout com {{content}}
+    $layoutContent = ob_get_clean();
+    
+    // 4. Combina view + layout
+    return str_replace('{{content}}', $viewContent, $layoutContent);
+}
+</code></pre>
+<h3 id="fluxo-detalhado-de-renderização"><a class="header" href="#fluxo-detalhado-de-renderização">Fluxo Detalhado de Renderização</a></h3>
+<p>Vamos acompanhar o processo usando <code>$this-&gt;view('profile', $viewData)</code>:</p>
+<h4 id="etapa-1-preparação-de-dados"><a class="header" href="#etapa-1-preparação-de-dados"><strong>Etapa 1: Preparação de Dados</strong></a></h4>
+<pre><code class="language-php">// ViewModel já preparou os dados 
+$viewData = [
+    'user' =&gt; $profileData,
+    'userPosts' =&gt; $postsData,
+    'pageTitle' =&gt; 'Perfil de João',
+    'pageCSS' =&gt; 'profile',
+    'isAuthenticated' =&gt; true,
+    'loggedUserId' =&gt; 123
+];
+</code></pre>
+<h4 id="etapa-2-extração-de-variáveis"><a class="header" href="#etapa-2-extração-de-variáveis"><strong>Etapa 2: Extração de Variáveis</strong></a></h4>
+<pre><code class="language-php">// extract($params) torna disponível na view:
+&lt;?= $pageTitle ?&gt; // "Perfil de João"
+&lt;?= $user['name'] ?&gt;  // Dados do usuário
+&lt;?php if ($isAuthenticated): ?&gt; // Controle de acesso
+</code></pre>
+<h4 id="etapa-3-renderização-da-view"><a class="header" href="#etapa-3-renderização-da-view"><strong>Etapa 3: Renderização da View</strong></a></h4>
+<pre><code class="language-php">// t08-mvc/view/profile.php (simplificado)
+&lt;div class="profile-container"&gt;
+    &lt;div class="profile-header"&gt;
+        &lt;img src="&lt;?= $user['profilePhoto'] ?&gt;" alt="Foto de perfil"&gt;
+        &lt;h1&gt;&lt;?= htmlspecialchars($user['username']) ?&gt;&lt;/h1&gt;
+        &lt;p&gt;&lt;?= htmlspecialchars($user['bio']) ?&gt;&lt;/p&gt;
+    &lt;/div&gt;
+    
+    &lt;div class="profile-posts"&gt;
+        &lt;?php if ($userPosts['hasUserPosts']): ?&gt;
+            &lt;?php foreach ($userPosts['userPosts'] as $post): ?&gt;
+                &lt;div class="post-item"&gt;
+                    &lt;img src="/public/uploads/feed/&lt;?= $post['photoUrl'] ?&gt;" alt="Post"&gt;
+                    &lt;p&gt;&lt;?= htmlspecialchars($post['description']) ?&gt;&lt;/p&gt;
+                &lt;/div&gt;
+            &lt;?php endforeach; ?&gt;
+        &lt;?php else: ?&gt;
+            &lt;p&gt;&lt;?= $userPosts['noPostsMessage'] ?&gt;&lt;/p&gt;
+        &lt;?php endif; ?&gt;
+    &lt;/div&gt;
+&lt;/div&gt;
+</code></pre>
+<h4 id="etapa-4-aplicação-do-layout"><a class="header" href="#etapa-4-aplicação-do-layout"><strong>Etapa 4: Aplicação do Layout</strong></a></h4>
+<pre><code class="language-php">// t08-mvc/view/layouts/main.php
+&lt;!DOCTYPE html&gt;
+&lt;html lang="pt-BR"&gt;
+&lt;head&gt;
+    &lt;meta charset="UTF-8"&gt;
+    &lt;title&gt;&lt;?= $pageTitle ?? 'Conex' ?&gt;&lt;/title&gt;
+    &lt;link rel="stylesheet" href="/public/css/main.css"&gt;
+    &lt;?php if (isset($pageCSS)): ?&gt;
+        &lt;link rel="stylesheet" href="/public/css/&lt;?= $pageCSS ?&gt;.css"&gt;
+    &lt;?php endif; ?&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;?php include __DIR__ . '/../components/flash.php'; ?&gt;
+    
+    &lt;aside class="side-bar"&gt;
+        &lt;!-- Menu lateral da aplicação --&gt;
+        &lt;?php if ($isAuthenticated ?? false): ?&gt;
+            &lt;a href="/profile/&lt;?= $loggedUserId ?&gt;"&gt;Meu Perfil&lt;/a&gt;
+        &lt;?php else: ?&gt;
+            &lt;a href="/auth/login"&gt;Entrar&lt;/a&gt;
+        &lt;?php endif; ?&gt;
+    &lt;/aside&gt;
+    
+    &lt;main class="content"&gt;
+        {{content}} &lt;!-- Substituído pelo conteúdo da view --&gt;
+    &lt;/main&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+</code></pre>
+<h2 id="organização-do-sistema-de-views"><a class="header" href="#organização-do-sistema-de-views">Organização do Sistema de Views</a></h2>
+<h3 id="estrutura-de-diretórios"><a class="header" href="#estrutura-de-diretórios">Estrutura de Diretórios</a></h3>
+<pre><code>view/
+├── layouts/           # Templates base da aplicação
+│   └── main.php      # Layout principal
+├── components/        # Componentes reutilizáveis
+│   └── flash.php    # Mensagens flash
+├── error/          # Views de erro
+│   ├── 404.php       # Página não encontrada
+│   └── 500.php       # Erro interno do servidor
+├── profile.php       # View específica do perfil
+├── feed.php          # View do feed principal
+└── login.php         # View de login
+...                 # Outras views
+</code></pre>
+<h3 id="components-reutilização-de-interface"><a class="header" href="#components-reutilização-de-interface">Components: Reutilização de Interface</a></h3>
+<pre><code class="language-php">// t08-mvc/view/components/flash.php
+&lt;?php
+use Conex\MiniFramework\utils\Flash;
+$flashMessages = Flash::get();
+?&gt;
+
+&lt;?php if (!empty($flashMessages)): ?&gt;
+    &lt;div class="flash-container"&gt;
+        &lt;?php foreach ($flashMessages as $type =&gt; $message): ?&gt;
+            &lt;div class="flash-message &lt;?= $type ?&gt;" data-flash="&lt;?= $type ?&gt;"&gt;
+                &lt;button class="close-btn" onclick="closeFlash(this)"&gt;&amp;times;&lt;/button&gt;
+                &lt;?= htmlspecialchars($message) ?&gt;
+            &lt;/div&gt;
+        &lt;?php endforeach; ?&gt;
+    &lt;/div&gt;
+&lt;?php endif; ?&gt;
+</code></pre>
+<p><strong>Uso em layouts:</strong></p>
+<pre><code class="language-php">// Incluído automaticamente no layout principal
+&lt;?php include __DIR__ . '/../components/flash.php'; ?&gt;
+</code></pre>
+<h3 id="renderização-sem-layout"><a class="header" href="#renderização-sem-layout">Renderização Sem Layout</a></h3>
+<p>O sistema de views permite renderizar uma view sem aplicar o layout padrão. Isso é útil para casos especiais (AJAX, emails, fragmentos):</p>
+<pre><code class="language-php">// t08-mvc/core/mvc/View.php
+public static function renderView(string $view, $params = []): string {
+    extract($params);
+    
+    ob_start();
+    include __DIR__ . '/../../view/' . $view . '.php';
+    return ob_get_clean(); // Retorna apenas a view, sem layout
+}
+</code></pre>
+<h2 id="segurança-e-boas-práticas"><a class="header" href="#segurança-e-boas-práticas">Segurança e Boas Práticas</a></h2>
+<p><strong>Escape de Dados do Usuário</strong></p>
+<pre><code class="language-php">&lt;!-- CORRETO: Sempre escape dados do usuário --&gt;
+&lt;h1&gt;&lt;?= htmlspecialchars($user['name']) ?&gt;&lt;/h1&gt;
+&lt;p&gt;&lt;?= htmlspecialchars($post['description']) ?&gt;&lt;/p&gt;
+
+&lt;!-- PERIGOSO: Output direto (XSS vulnerability) --&gt;
+&lt;h1&gt;&lt;?= $user['name'] ?&gt;&lt;/h1&gt;
+&lt;p&gt;&lt;?= $post['description'] ?&gt;&lt;/p&gt;
+</code></pre>
+<p><strong>Validação de Existência</strong></p>
+<pre><code class="language-php">&lt;!-- CORRETO: Verifica se dados existem --&gt;
+&lt;?php if (isset($user) &amp;&amp; !empty($user['posts'])): ?&gt;
+    &lt;div class="posts-grid"&gt;
+        &lt;?php foreach ($user['posts'] as $post): ?&gt;
+            &lt;div class="post"&gt;&lt;?= htmlspecialchars($post['title']) ?&gt;&lt;/div&gt;
+        &lt;?php endforeach; ?&gt;
+    &lt;/div&gt;
+&lt;?php else: ?&gt;
+    &lt;p&gt;Nenhum post encontrado.&lt;/p&gt;
+&lt;?php endif; ?&gt;
+
+&lt;!-- PERIGOSO: Assume que dados existem --&gt;
+&lt;div class="posts-grid"&gt;
+    &lt;?php foreach ($user['posts'] as $post): ?&gt;
+        &lt;div class="post"&gt;&lt;?= $post['title'] ?&gt;&lt;/div&gt;
+    &lt;?php endforeach; ?&gt;
+&lt;/div&gt;
+</code></pre>
+<h3 id="separação-de-responsabilidades"><a class="header" href="#separação-de-responsabilidades">Separação de Responsabilidades</a></h3>
+<p><strong>Lógica de negócio na view (violando MVC):</strong></p>
+<pre><code class="language-php">&lt;!-- View fazendo lógica de negócio --&gt;
+&lt;?php
+$following = $followDAO-&gt;isFollowing($userId, $loggedUserId); // DAO na view
+$followText = $following ? 'Deixar de seguir' : 'Seguir'; // Lógica na view
+?&gt;
+&lt;button&gt;&lt;?= $followText ?&gt;&lt;/button&gt;
+</code></pre>
+<p><strong>View apenas apresentando dados preparados:</strong></p>
+<pre><code class="language-php">&lt;!-- View apenas exibe dados já preparados pelo controller --&gt;
+&lt;button data-action="&lt;?= $user['followAction'] ?&gt;"&gt;
+    &lt;?= htmlspecialchars($user['followButtonText']) ?&gt;
+&lt;/button&gt;
+</code></pre>
+<h2 id="boas-práticas-para-views"><a class="header" href="#boas-práticas-para-views">Boas Práticas para Views</a></h2>
+<div class="table-wrapper"><table><thead><tr><th><strong>FAÇA</strong></th><th><strong>NÃO FAÇA</strong></th></tr></thead><tbody>
+<tr><td>Sempre escape dados do usuário</td><td>Output direto sem sanitização</td></tr>
+<tr><td>Use layouts para estrutura comum</td><td>Copie HTML entre views</td></tr>
+<tr><td>Componentize elementos reutilizáveis</td><td>Duplique código de UI</td></tr>
+<tr><td>Valide existência de variáveis</td><td>Assuma que dados existem</td></tr>
+<tr><td>Separe lógica de apresentação</td><td>Lógica de negócio na view</td></tr>
+<tr><td>Use output buffering corretamente</td><td>Misture echo com includes</td></tr>
+</tbody></table>
+</div>
+<h2 id="próximos-passos"><a class="header" href="#próximos-passos">Próximos Passos</a></h2>
+<p>Com essa base sólida de views organizadas e seguras, estamos prontos para explorar como os <strong>Services</strong> (8.5) organizam nossa lógica de negócio de forma limpa e testável!</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="t08-8.3-mini-framework-mvc.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="t08-8.5-mini-framework-mvc.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="t08-8.3-mini-framework-mvc.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="t08-8.5-mini-framework-mvc.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+        <!-- Livereload script (if served using the cli tool) -->
+        <script>
+            const wsProtocol = location.protocol === 'https:' ? 'wss:' : 'ws:';
+            const wsAddress = wsProtocol + "//" + location.host + "/" + "__livereload";
+            const socket = new WebSocket(wsAddress);
+            socket.onmessage = function (event) {
+                if (event.data === "reload") {
+                    socket.close();
+                    location.reload();
+                }
+            };
+
+            window.onbeforeunload = function() {
+                socket.close();
+            }
+        </script>
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>
