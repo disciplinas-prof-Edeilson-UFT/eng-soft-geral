@@ -5,7 +5,6 @@ namespace src\services;
 
 use src\database\dao\PostDAO;
 use src\database\domain\Post;
-use src\viewmodels\PostFeedItem;
 use src\database\mappers\PostMapper;
 
 
@@ -22,16 +21,16 @@ class FeedService
 
     public function getFeedData(): array {
         $rows = $this->postDAO->getAllPosts();
-        $items = [];
+        $posts = [];
         foreach ($rows as $r) {
             $post = $this->postMapper->mapToPost($r);
-            $items[] = new PostFeedItem(
-                $post,
-                (string)($r['username'] ?? 'Usuário'),
-                $r['profile_pic_url'] ?? null
-            );
+            $posts[] = [
+                'post' => $post,
+                'username' => (string)($r['username'] ?? 'Usuário'),
+                'profile_pic_url' => $r['profile_pic_url'] ?? null
+            ];
         }
-        return $items;
+        return $posts;
     }
 
     public function createPost(int $userId, array $file, ?string $description = null): Post

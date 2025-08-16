@@ -4,6 +4,7 @@ namespace src\controllers\site;
 use src\controllers\BaseController;
 use src\services\FeedService;
 use src\database\dao\PostDAO;
+use src\viewmodels\PostFeedItem;
 use Conex\MiniFramework\utils\Flash;
 
 class FeedController extends BaseController {
@@ -17,8 +18,13 @@ class FeedController extends BaseController {
 
     public function show(): void {
         try {
-            $feedItems = $this->feedService->getFeedData();
-            $preparedPosts = array_map(fn($item) => $item->getFormattedData(), $feedItems);
+            $feedData = $this->feedService->getFeedData();
+            
+            $preparedPosts = [];
+            foreach ($feedData as $item) {
+                $postViewModel = new PostFeedItem($item['post'],$item['username'],$item['profile_pic_url']);
+                $preparedPosts[] = $postViewModel->getFormattedData();
+            }
 
             $this->view('feed', ['posts' => $preparedPosts, 'pageTitle' => 'Feed', 'pageCSS' => 'feed']);
 
@@ -26,10 +32,9 @@ class FeedController extends BaseController {
             //error_log("Erro ao carregar feed: " . $e->getMessage());
             Flash::error('Erro ao carregar feed');
         }
-    }
-
-    public function store(int $userId): void
-    {
+    }    
+    
+    public function store(int $userId): void{
         try {
             $file= $this->file('file');
             $description = $this->input('description');
