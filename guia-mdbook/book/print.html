@@ -3310,7 +3310,7 @@ $userProfileData = [
 <p>A criação de um mini-framework MVC nos permite entender na prática como cada um dos componentes da arquitetura interage e se comunica. Além disso, nos proporciona uma base sólida para desenvolver aplicações web de forma organizada e escalável.</p>
 <p>Com o mini-framework, entenderemos conceitos como, roteamento, controllers, views e models de forma integrada.</p>
 <h2 id="overview-teórico-das-responsabilidades-por-camada-na-arquitetura-mvc"><a class="header" href="#overview-teórico-das-responsabilidades-por-camada-na-arquitetura-mvc">Overview teórico das responsabilidades por camada na arquitetura MVC</a></h2>
-<p>Resumidamente, MVC é uma arquitetura que separa a aplicação em três camadas: Model (Modelo); View (Visão); e Controller (Controlador).</p>
+<p>Esta arquitetura separa a aplicação em três camadas principais, cada uma com responsabilidades bem definidas.</p>
 <p>O <strong>Model (Modelo)</strong> é responsável pelas regras de negócio e dados da aplicação. Esta camada interage diretamente com o banco de dados, seja diretamente ou através de DAOs (Data Access Objects).</p>
 <p>A <strong>View (Visão)</strong> cuida exclusivamente da apresentação da informação. Ela recebe dados já processados do Controller e os formata adequadamente para exibição.</p>
 <p>Por fim, o <strong>Controller (Controlador)</strong> atua como coordenador do fluxo da aplicação. É ele quem recebe as requisições HTTP, valida as entradas, decide qual ação tomar, orquestra as chamadas necessárias para as outras camadas da aplicação.</p>
@@ -3412,21 +3412,21 @@ Demonstra como utilizar o framework na construção de uma aplicação real, inc
 <h3 id="objetivos-desta-parte"><a class="header" href="#objetivos-desta-parte">Objetivos desta parte</a></h3>
 <p>Ao final da Parte I, você terá desenvolvido o mini-framework MVC com e compreendido os seguintes componentes:</p>
 <ul>
-<li><strong>Sistema de Roteamento Avançado (Router Groups + Middlewares)</strong>: Um mecanismo sofisticado para mapear requisições HTTP para controladores específicos, incluindo suporte a parâmetros dinâmicos, grupos de rotas e middlewares</li>
-<li><strong>Arquitetura de Controladores</strong>: Um sistema de dispatch que facilita a separação de responsabilidades e promove código limpo e testável</li>
-<li><strong>Engine de Renderização</strong>: Um mecanismo flexível para geração de respostas (HTML, JSON, etc.), suportando templates, layouts e componentes reutilizáveis</li>
+<li><strong>Sistema de Roteamento Avançado (Router + Middlewares)</strong>: Um mecanismo sofisticado para mapear requisições HTTP para controladores específicos, incluindo suporte a parâmetros dinâmicos, grupos de rotas e middlewares</li>
+<li><strong>Arquitetura de Controladores</strong>: Um sistema de dispatch para controladores que facilita a separação de responsabilidades.</li>
+<li><strong>Engine de Renderização</strong>: Um mecanismo flexível para geração de respostas (HTML), suportando templates, layouts e componentes reutilizáveis</li>
 <li><strong>Abstração HTTP (Request e Response)</strong>: Interfaces consistentes para manipulação de requisições e respostas, abstraindo complexidades do protocolo HTTP</li>
 <li><strong>Flash Messages</strong>: Um sistema para armazenar mensagens temporárias entre requisições, útil para feedback ao usuário</li>
-<li><strong>Gerenciamento completo de Sessões</strong>: Um sistema para gerenciar o estado do usuário entre requisições, permitindo a persistência de dados temporários</li>
+<li><strong>Gerenciamento completo de Sessões</strong>: Um sistema para gerenciar o estado do usuário entre requisições, permitindo a persistência, no browser, de dados temporários</li>
 </ul>
 <p>Esta base teórica sólida servirá como fundamento para a implementação prática que desenvolveremos na Parte II, onde aplicaremos estes conceitos na construção de uma aplicação web completa.</p>
 <blockquote>
 <p><strong>Navegação e sequência de estudo</strong></p>
-<p>Este capítulo foi estruturado para fornecer uma progressão lógica do conhecimento. Recomenda-se seguir a sequência proposta, pois cada seção constrói sobre conceitos apresentados anteriormente. Após concluir os fundamentos teóricos aqui apresentados, você estará preparado para mergulhar na implementação prática iniciando pela seção 8.2 (Sistema de Roteamento), onde veremos o primeiro componente em ação.</p>
+<p>Este capítulo foi estruturado para fornecer uma progressão lógica do conhecimento. Recomenda-se seguir a sequência proposta, pois cada seção constrói sobre conceitos apresentados anteriormente. Após concluir os fundamentos teóricos aqui apresentados, você estará preparado para mergulhar na implementação prática iniciando pela seção 8.2.1. (Router: de URL para Controller e Middlewares), onde veremos o primeiro componente em ação.</p>
 </blockquote>
 <h3 id="arquitetura-model-view-controller-fundamentos-e-filosofia"><a class="header" href="#arquitetura-model-view-controller-fundamentos-e-filosofia">Arquitetura Model-View-Controller: Fundamentos e Filosofia</a></h3>
 <p>Antes de mergulharmos na implementação prática do nosso mini-framework, é crucial entender mais a fundo os fundamentos teóricos que sustentam a arquitetura Model-View-Controller. O padrão MVC representa uma das contribuições mais significativas para a engenharia de software, transcendendo sua origem na década de 1970 para tornar-se um paradigma fundamental no desenvolvimento de aplicações modernas. Sua longevidade e relevância derivam não apenas de sua eficácia técnica, mas de sua capacidade de refletir princípios fundamentais do desenvolvimento de software: modularidade, abstração e separação de preocupações.</p>
-<h3 id="os-três-pilares-do-mvc"><a class="header" href="#os-três-pilares-do-mvc">Os Três Pilares do MVC</a></h3>
+<h4 id="os-três-pilares-do-mvc"><a class="header" href="#os-três-pilares-do-mvc">Os Três Pilares do MVC</a></h4>
 <p>O padrão MVC funciona dividindo sua aplicação em três partes bem definidas, cada uma com sua própria responsabilidade. Pense nisso como uma equipe onde cada membro tem um papel específico:</p>
 <p><strong>A Dimensão dos Dados e Regras de Negócio (Model)</strong>: Esta camada encapsula não apenas a representação dos dados, mas a semântica e as invariantes (regras de negócio) que definem o domínio da aplicação. O Model funciona como um guardião da integridade dos dados, assegurando que todas as operações respeitem as regras fundamentais que governam o sistema.</p>
 <p>A responsabilidade do Model vai além do simples armazenamento de dados, feitos por comandos SQL diretos ou abstrações fornecidas por ORMs. Para incluir a modelagem de processos de negócio complexos, validação de invariantes de domínio, e a manutenção de consistência transacional se fazem necessários. Esta camada deve ser agnóstica em relação aos mecanismos de apresentação, permitindo que a mesma lógica de negócio seja reutilizada para diferentes clients (web, mobile, APIs, etc.).</p>
@@ -3435,8 +3435,8 @@ Demonstra como utilizar o framework na construção de uma aplicação real, inc
 <p><strong>A Dimensão do Controle e Orquestração (Controller)</strong>: O Controller representa o núcleo organizacional da aplicação, funcionando como um maestro que coordena a interação entre Model e View. Sua responsabilidade principal é interpretar as intenções do usuário, traduzindo-as em operações específicas sobre o Model e determinando as respostas apropriadas através da View.</p>
 <p>Esta camada implementa a lógica de fluxo da aplicação, gerenciando estados transitórios (ex.: sessões de usuário), validando autorizações, fazendo redirecionamentos e exibindo mensagens ao usuário. O Controller deve permanecer focado em sua função de coordenação, delegando responsabilidades específicas para as camadas apropriadas e mantendo-se como uma interface limpa entre o mundo externo e a lógica interna da aplicação.</p>
 <h3 id="dinâmica-de-fluxo-e-comunicação"><a class="header" href="#dinâmica-de-fluxo-e-comunicação">Dinâmica de Fluxo e Comunicação</a></h3>
-<p>Em uma implementação MVC bem estruturada, o fluxo de informações segue um protocolo rigoroso que preserva a integridade arquitetural:</p>
-<p><strong>Fase de Iniciação</strong>: Requisições externas são sempre recebidas pelo Controller, que atua como ponto de entrada único para o sistema. Esta centralização permite implementação consistente de políticas transversais como autenticação, logging e tratamento de erros.</p>
+<p>Em uma implementação MVC bem estruturada, o fluxo de informações segue um protocolo para preservar a integridade arquitetural:</p>
+<p><strong>Fase de Iniciação</strong>: Requisições externas geralmente entram por um ponto central, o Router (ou Front Controller, como no exemplo do t07), que atua como camada de roteamento inicial. Ele interpreta a URL e parâmetros da requisição, mapeando-os para o Controller adequado. Essa centralização facilita a aplicação consistente de políticas transversais, como autenticação, registro de logs e tratamento de erros, com o uso de middlewares no nível de roteamento.</p>
 <p><strong>Fase de Processamento</strong>: O Controller interpreta a requisição, identifica as operações necessárias sobre o Model, e coordena a execução dessas operações. Durante esta fase, o Controller pode realizar validações de entrada, como sanitização do input e aplicar regras de autorização, como verificação de permissões com base na role do usuário (esses dados são mantidos no contexto da sessão).</p>
 <p><strong>Fase de Resposta</strong>: Com base nos resultados obtidos do Service/model, o Controller seleciona a View apropriada e fornece os dados necessários para serem renderizados. A View processa estes dados de acordo com templates e regras de apresentação específicas, gerando a resposta final.</p>
 <p>Este fluxo unidirecional e bem definido garante que responsabilidades permaneçam apropriadamente distribuídas e que o sistema mantenha comportamento mais previsível para os devs, mesmo em cenários complexos.</p>
@@ -3775,7 +3775,7 @@ public function view(string $view, $data = [])
     echo View::render($view, $viewData); // Renderiza template com dados
 }
 </code></pre>
-<h4 id="o-fluxo-completo-em-ação"><a class="header" href="#o-fluxo-completo-em-ação">O Fluxo Completo em Ação</a></h4>
+<h3 id="o-fluxo-completo-em-ação"><a class="header" href="#o-fluxo-completo-em-ação">O Fluxo Completo em Ação</a></h3>
 <p>Vamos acompanhar uma requisição real passo a passo com todos os detalhes:</p>
 <ol>
 <li><strong>Usuário acessa</strong>: <code>GET /profile/123</code></li>
@@ -3789,7 +3789,7 @@ public function view(string $view, $data = [])
 <li><strong>Resposta enviada</strong>: HTML final chega ao browser do usuário</li>
 </ol>
 <p>Este processo acontece de forma transparente e eficiente, com cada componente tendo uma responsabilidade específica e bem definida, permitindo que desenvolvedores se concentrem na lógica de negócio enquanto o framework cuida de todo o roteamento.</p>
-<h2 id="fluxo-completo-visual-de-uma-requisição"><a class="header" href="#fluxo-completo-visual-de-uma-requisição">Fluxo Completo Visual de uma Requisição</a></h2>
+<h3 id="fluxo-completo-visual-de-uma-requisição"><a class="header" href="#fluxo-completo-visual-de-uma-requisição">Fluxo Completo Visual de uma Requisição</a></h3>
 <p><img src="./imgs/profile_view_request.svg" alt="Fluxo Completo de uma Requisição" /></p>
 <h2 id="próximos-passos-2"><a class="header" href="#próximos-passos-2">Próximos Passos</a></h2>
 <p>Na próxima seção, vamos ver como o Controller recebe essas informações do Router e processa a lógica de negócio.</p>
@@ -3811,7 +3811,7 @@ public function view(string $view, $data = [])
 <li>Familiaridade com a ideia de Services (aprofundaremos em 8.5)</li>
 </ul>
 </blockquote>
-<h2 id="do-roteamento-à-execução"><a class="header" href="#do-roteamento-à-execução">Do Roteamento à Execução</a></h2>
+<h3 id="do-roteamento-à-execução"><a class="header" href="#do-roteamento-à-execução">Do Roteamento à Execução</a></h3>
 <p>Recapitulando o fluxo do capítulo anterior: após o Router processar "GET /profile/123", ele identifica que deve executar "site\ProfileController@show" com parâmetro "[123]".</p>
 <p>Agora veremos como o sistema executa essa informação através da classe "Controller":</p>
 <pre><code class="language-php">// t08-mvc/core/mvc/Router.php (final do dispatch)
@@ -4012,24 +4012,7 @@ abstract class BaseController
     }
 }
 </code></pre>
-<h2 id="tratamento-de-erros-e-segurança"><a class="header" href="#tratamento-de-erros-e-segurança">Tratamento de Erros e Segurança</a></h2>
-<h3 id="validação-de-parâmetros"><a class="header" href="#validação-de-parâmetros">Validação de Parâmetros</a></h3>
-<pre><code class="language-php">public function show(int $userId): void {
-    // PHP valida tipo automaticamente
-    if ($userId &lt;= 0) {
-        Response::errorView(400); // Bad Request
-        return;
-    }
-    
-    try {
-        $profile = $this-&gt;profileService-&gt;getProfileData($userId);
-        // ... resto da lógica
-    } catch (UserNotFoundException $e) {
-        Response::errorView(404); // Not Found
-    }
-}
-</code></pre>
-<h3 id="lidando-com-autenticação-no-controller"><a class="header" href="#lidando-com-autenticação-no-controller">Lidando com Autenticação no Controller</a></h3>
+<h4 id="lidando-com-autenticação-no-controller"><a class="header" href="#lidando-com-autenticação-no-controller">Lidando com Autenticação no Controller</a></h4>
 <p>Com o uso de middlewares não precisamos nos preocupar em verificar a autenticação em cada controller, pois, como vimos no módulo anterior, ele intercepta as requisições antes de chegarem ao controller.</p>
 <pre><code class="language-php">// Aplicado pelo Router antes de chegar ao controller
 'profile' =&gt; [

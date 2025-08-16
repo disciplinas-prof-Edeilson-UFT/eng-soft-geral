@@ -170,7 +170,7 @@
 <li>Familiaridade com a ideia de Services (aprofundaremos em 8.5)</li>
 </ul>
 </blockquote>
-<h2 id="do-roteamento-à-execução"><a class="header" href="#do-roteamento-à-execução">Do Roteamento à Execução</a></h2>
+<h3 id="do-roteamento-à-execução"><a class="header" href="#do-roteamento-à-execução">Do Roteamento à Execução</a></h3>
 <p>Recapitulando o fluxo do capítulo anterior: após o Router processar "GET /profile/123", ele identifica que deve executar "site\ProfileController@show" com parâmetro "[123]".</p>
 <p>Agora veremos como o sistema executa essa informação através da classe "Controller":</p>
 <pre><code class="language-php">// t08-mvc/core/mvc/Router.php (final do dispatch)
@@ -371,24 +371,7 @@ abstract class BaseController
     }
 }
 </code></pre>
-<h2 id="tratamento-de-erros-e-segurança"><a class="header" href="#tratamento-de-erros-e-segurança">Tratamento de Erros e Segurança</a></h2>
-<h3 id="validação-de-parâmetros"><a class="header" href="#validação-de-parâmetros">Validação de Parâmetros</a></h3>
-<pre><code class="language-php">public function show(int $userId): void {
-    // PHP valida tipo automaticamente
-    if ($userId &lt;= 0) {
-        Response::errorView(400); // Bad Request
-        return;
-    }
-    
-    try {
-        $profile = $this-&gt;profileService-&gt;getProfileData($userId);
-        // ... resto da lógica
-    } catch (UserNotFoundException $e) {
-        Response::errorView(404); // Not Found
-    }
-}
-</code></pre>
-<h3 id="lidando-com-autenticação-no-controller"><a class="header" href="#lidando-com-autenticação-no-controller">Lidando com Autenticação no Controller</a></h3>
+<h4 id="lidando-com-autenticação-no-controller"><a class="header" href="#lidando-com-autenticação-no-controller">Lidando com Autenticação no Controller</a></h4>
 <p>Com o uso de middlewares não precisamos nos preocupar em verificar a autenticação em cada controller, pois, como vimos no módulo anterior, ele intercepta as requisições antes de chegarem ao controller.</p>
 <pre><code class="language-php">// Aplicado pelo Router antes de chegar ao controller
 'profile' =&gt; [
