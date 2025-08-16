@@ -20,7 +20,7 @@ class FeedService
         $this->postMapper = new PostMapper();
     }
 
-    public function getAllPostsFeed(): array {
+    public function getFeedData(): array {
         $rows = $this->postDAO->getAllPosts();
         $items = [];
         foreach ($rows as $r) {
