@@ -4046,7 +4046,7 @@ abstract class BaseController
 <tr><td>Aplique ViewModels para formatação</td><td>Preparação de dados no controller</td></tr>
 <tr><td>Trate erros de forma consistente</td><td>Ignore exceções silenciosamente</td></tr>
 <tr><td>Valide tipos de parâmetros</td><td>Confie cegamente nos dados de entrada</td></tr>
-<tr><td>Use injeção de dependência</td><td>Instancie classes com <code>new</code> hardcoded</td></tr>
+<tr><td>Use injeção de dependência</td><td>Instancie classes com "new" hardcoded</td></tr>
 </tbody></table>
 </div>
 <h3 id="próximos-passos-3"><a class="header" href="#próximos-passos-3">Próximos Passos</a></h3>
@@ -4276,7 +4276,7 @@ $followText = $following ? 'Deixar de seguir' : 'Seguir'; // Lógica na view
 </tbody></table>
 </div>
 <h2 id="próximos-passos-4"><a class="header" href="#próximos-passos-4">Próximos Passos</a></h2>
-<p>Com essa base sólida de views organizadas e seguras, estamos prontos para explorar como os <strong>Services</strong> (8.5) organizam nossa lógica de negócio de forma limpa e testável!</p>
+<p>Com essa base sólida de views organizadas e reutilizáveis, podemos prosseguir para a ultima etapa do nosso mini-framework, que é são as classes de Request e Response, responsáveis por gerenciar de forma abstrata as requisições HTTP e as respostas do servidor.</p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="capítulo-8---mvc-model-view-controller-6"><a class="header" href="#capítulo-8---mvc-model-view-controller-6">Capítulo 8 - MVC (Model-View-Controller)</a></h1>
 <h2 id="824-abstração-http-requestresponse"><a class="header" href="#824-abstração-http-requestresponse">8.2.4. Abstração HTTP (Request/Response)</a></h2>
 <p>No capítulo anterior (8.4), vimos como o Sistema de Views renderiza dados em HTML final usando "View::render()". Agora vamos compreender como o framework gerencia a comunicação HTTP entre cliente e servidor através das classes "Request" e "Response", responsáveis por capturar dados de entrada e enviar respostas padronizadas.</p>
