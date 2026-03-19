@@ -1,0 +1,16 @@
+{
+    "name": "conex/t07-composer",
+    "description": "Arquivo para composer.",
+    "autoload": {
+        "psr-4": {
+            "Conex\\T07Composer\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "maraemanuella",
+            "email": "maraemanuella132@gmail.com"
+        }
+    ],
+    "require": {}
+}

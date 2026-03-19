@@ -1,10 +1,9 @@
 <?php
-require_once __DIR__ . '/../../../database.php';
-require_once __DIR__ . '/../../dao/follow-dao.php';
-require_once __DIR__ . '/../../dao/user-dao.php';
+require_once __DIR__ . '/../../dao/FollowDAO.php';
+require_once __DIR__ . '/../../dao/UserDAO.php';
 require_once __DIR__ . '/../../../dir-config.php';
-require_once __DIR__ . '/../../dao/posts-dao.php';
-require_once __DIR__ . "/../../utils/follow-handler.php";
+require_once __DIR__ . '/../../dao/PostDAO.php';
+require_once __DIR__ . "/../../utils/FollowHandler.php";
 
 session_start();
 if (!isset($_SESSION['user_id'] )) {
@@ -21,7 +20,6 @@ $user = $userDao->getUserProfileById($user_id);
 if (!$user) {
     die("<p>Usuário não encontrado.</p>");
 }
-
 
 $userName = $user['username']; 
 $profilePhoto = !empty($user['profile_pic_url'])

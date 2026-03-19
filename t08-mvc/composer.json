@@ -1,0 +1,21 @@
+{
+    "name": "conex/t08-mvc",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "src\\": "src/",
+            "Conex\\MiniFramework\\": "core/"
+        },
+        "files": [
+            "Routes.php",
+            "Database.php"
+        ]
+    },
+    "authors": [
+        {
+            "name": "lauroolim",
+            "email": "lauroolimota743@gmail.com"
+        }
+    ],
+    "require": {}
+}

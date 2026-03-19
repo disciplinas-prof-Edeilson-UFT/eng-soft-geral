@@ -1,0 +1,434 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Cadastro de usuários no sistema</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="highlight.css">
+        <link rel="stylesheet" href="tomorrow-night.css">
+        <link rel="stylesheet" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="toc.js"></script>
+    </head>
+    <body>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title"></h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="cadastro-de-usuários-no-sistema"><a class="header" href="#cadastro-de-usuários-no-sistema">Cadastro de usuários no sistema</a></h1>
+<h3 id="criar-conexão-com-banco-de-dados-via-pdo-exemplo-do-projeto-conex"><a class="header" href="#criar-conexão-com-banco-de-dados-via-pdo-exemplo-do-projeto-conex">Criar conexão com banco de dados via PDO (<em>exemplo do projeto conex</em>)</a></h3>
+<p>Arquivo: t04-db/database.php</p>
+<pre><code class="language-php">
+class Database
+{
+    private static $instance = null;
+    private $conn;
+
+    private function __construct()
+    {
+        $config = require __DIR__ . '/config.php';
+
+        if (!isset($config['database']['host'], $config['database']['port'], $config['database']['username'], $config['database']['password'], $config['database']['dbname'])) {
+            throw new Exception("Configuração do banco de dados incompleta");
+        }
+
+        $dsn = "mysql:host={$config['database']['host']};port={$config['database']['port']};dbname={$config['database']['dbname']};charset=utf8mb4";
+
+        try {
+            $this-&gt;conn = new PDO($dsn, $config['database']['username'], $config['database']['password'], [
+                PDO::ATTR_ERRMODE =&gt; PDO::ERRMODE_EXCEPTION,
+                PDO::ATTR_DEFAULT_FETCH_MODE =&gt; PDO::FETCH_ASSOC
+            ]);
+        } catch (PDOException $e) {
+            throw new Exception("Falha na conexão com o banco de dados: " . $e-&gt;getMessage());
+        }
+    }
+
+    public static function getInstance()
+    {
+        if (self::$instance === null) {
+            self::$instance = new self();
+        }
+        return self::$instance;
+    }
+
+    public function getConnection()
+    {
+        return $this-&gt;conn;
+    }
+}
+</code></pre>
+<p><em>Código responsável por estabelecer a conexão com o banco de dados.</em></p>
+<p>No exemplo apresentado, a classe "Database" é implementada utilizando o design pattern "Singleton". Esse pattern tem como objetivo garantir que exista apenas uma instância da classe durante o tempo de execução da aplicação, facilitando o gerenciamento e o reuso da conexão com o banco de dados.</p>
+<h3 id="observações"><a class="header" href="#observações">Observações</a></h3>
+<hr />
+<pre><code class="language-php">$config = require __DIR__ . '/config.php';
+</code></pre>
+<p><em>Aqui, o código carrega um arquivo chamado config.php que contém as configurações do banco de dados.</em></p>
+<pre><code class="language-php">if (!isset($config['database']['host'], $config['database']['port'], $config['database']['username'], $config['database']['password'], $config['database']['dbname'])) {
+            throw new Exception("Configuração do banco de dados incompleta");
+        }
+</code></pre>
+<p><em>Aqui, o código verifica se todas as chaves necessárias (host, port, username, password, dbname) existem no array $config['database'].</em></p>
+<pre><code class="language-php"> $dsn = "mysql:host={$config['database']['host']};port={$config['database']['port']};dbname={$config['database']['dbname']};charset=utf8mb4";
+</code></pre>
+<p><em>O DSN é a string usada pelo PDO para conectar ao banco de dados.</em></p>
+<p><em>Host (<code>host</code>), Porta (<code>port</code>), Nome do banco (<code>dbname</code>), Charset (<code>utf8mb4</code>)</em></p>
+<pre><code class="language-php">try {
+    $this-&gt;conn = new PDO($dsn, $config['database']['username'], $config['database']['password'], [
+        PDO::ATTR_ERRMODE =&gt; PDO::ERRMODE_EXCEPTION,
+        PDO::ATTR_DEFAULT_FETCH_MODE =&gt; PDO::FETCH_ASSOC
+    ]);
+} catch (PDOException $e) {
+    throw new Exception("Falha na conexão com o banco de dados: " . $e-&gt;getMessage());
+}
+</code></pre>
+<p><em>Aqui, o código tenta criar uma conexão com o banco de dados usando a classe PDO.</em></p>
+<hr />
+<p>Arquivo: t04-db/config.php</p>
+<pre><code class="language-php">&lt;?php
+return [
+    'database' =&gt; [
+        'host' =&gt; 'localhost',
+        'port' =&gt; '3306',
+        'username' =&gt; 'root',
+        'password' =&gt; '',
+        'dbname' =&gt; 'conex'
+    ]
+];
+</code></pre>
+<blockquote>
+<p><strong>🚨 Para usuários de XAMPP:</strong></p>
+<ul>
+<li>Teste e Validação:</li>
+</ul>
+<ol>
+<li>Salve o arquivo <code>database.php</code> no diretório do seu servidor (htdocs no XAMPP).</li>
+<li>Acesse <code>http://localhost/database.php</code> no navegador.</li>
+<li>Caso a conexão seja bem-sucedida, a página ficará em branco.</li>
+</ol>
+</blockquote>
+<h3 id="implementar-backend-da-view-signupphp-exemplo-do-projeto-conex"><a class="header" href="#implementar-backend-da-view-signupphp-exemplo-do-projeto-conex">Implementar backend da view "signup.php" (<em>exemplo do projeto conex</em>)</a></h3>
+<p>Arquivo: t04-db\view\signup.php</p>
+<pre><code class="language-html">    &lt;form class="form-group" method="POST" action="../src/post-user.php"&gt;
+      &lt;div class="icon"&gt;
+        &lt;img src="../public/img/logo.svg" alt="logo" class="logo" /&gt;
+      &lt;/div&gt;
+
+      &lt;!-- resto do código... --&gt;
+</code></pre>
+<p><em>Com esssa alteração o form de cadastro agora está referenciado ao codigo de controle de cadastro de usuários, seguido do verbo http POST</em></p>
+<hr />
+<p>Arquivo: Arquivo: t04-db\src\post-user.php</p>
+<pre><code class="language-php">&lt;?php
+
+require_once __DIR__ . '/../database.php';
+require_once __DIR__ . '/users.php';
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $name = trim($_POST['name']);
+    $phone = trim($_POST['phone']);
+    $email = trim($_POST['email']);
+    $password = $_POST['password'];
+    $password_confirm = $_POST['password-confirm'];
+
+    if (empty($name) || empty($phone) || empty($email) || empty($password) || empty($password_confirm)) {
+        $_SESSION['error'] = "Todos os campos são obrigatórios!";
+        header("Location: /view/signup.php?error=todos-os-campos-obrigatorios");
+        exit();
+    }
+
+    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        $_SESSION['error'] = "Email inválido!";
+        header("Location: /view/signup.php?error=email-invalido");
+        exit();
+    }
+
+    if ($password !== $password_confirm) {
+        $_SESSION['error'] = "As senhas não coincidem!";
+        header("Location: /view/signup.php?error=confirmação-de-senha-diferente");
+        exit();
+    }
+
+    $database = Database::getInstance();
+    $users = new Users($database);
+
+    if ($users-&gt;checkEmailExists($email)) {
+        $_SESSION['error'] = "Este email já está registrado!";
+        header("Location: /view/signup.php?error=email-ja-registrado");
+        exit();
+    }
+
+    $password_hash = password_hash($password, PASSWORD_ARGON2I);
+
+    if ($users-&gt;createUser($name, $email, $password_hash, $phone)) {
+        $_SESSION['success'] = "Usuário cadastrado com sucesso!";
+        header("Location: /");
+        exit();
+    } else {
+        $_SESSION['error'] = "Erro ao cadastrar o usuário!";
+        header("Location: /view/signup.php?error=erro-ao-cadastrar-usuario");
+        exit();
+    }
+}
+</code></pre>
+<p>Aqui, o código processa o formulário de cadastro de usuários (<code>signup.php</code>) enviado via método POST. Ele valida os dados recebidos, verifica se o e-mail já está cadastrado, cria um novo usuário no banco de dados e redireciona o usuário com mensagens de sucesso ou erro.</p>
+<p><strong>O objetivo principal deste código é:</strong></p>
+<ol>
+<li>
+<p>Processar o formulário de cadastro de usuários.</p>
+</li>
+<li>
+<p>Validar os dados fornecidos pelo usuário (campos obrigatórios, formato de e-mail, confirmação de senha).</p>
+</li>
+<li>
+<p>Verificar se o e-mail já está cadastrado no banco de dados.</p>
+</li>
+<li>
+<p>Criar um novo usuário no banco de dados com os dados fornecidos.</p>
+</li>
+<li>
+<p>Redirecionar o usuário com feedback adequado (sucesso ou erro).</p>
+</li>
+</ol>
+<hr />
+<p>Arquivo: t04-db\src\users.php</p>
+<pre><code class="language-php">class Users
+{
+    private $db;
+
+    public function __construct(Database $db)
+    {
+        $this-&gt;db = $db-&gt;getConnection();
+    }
+
+    public function createUser($username, $email, $password, $phone)
+    {
+        $sql = "INSERT INTO users (username, email, password_hash, phone) VALUES (:username, :email, :password_hash, :phone)";
+        $stmt = $this-&gt;db-&gt;prepare($sql);
+        return $stmt-&gt;execute([
+            ':username' =&gt; $username,
+            ':email' =&gt; $email,
+            ':password_hash' =&gt; $password,
+            ':phone' =&gt; $phone
+        ]);
+    }
+
+    public function checkEmailExists($email)
+    {
+        $sql = "SELECT id FROM users WHERE email = :email";
+        $stmt = $this-&gt;db-&gt;prepare($sql);
+        $stmt-&gt;execute([':email' =&gt; $email]);
+        return $stmt-&gt;fetch() ? true : false;
+    }
+}
+</code></pre>
+<p><em>Aqui, o código define uma classe chamada Users que tem como objetivo gerenciar operações relacionadas a usuários no banco de dados, especificamente a criação de novos usuários e a verificação se um e-mail já está cadastrado.</em></p>
+<h2 id="conclusão"><a class="header" href="#conclusão">Conclusão</a></h2>
+<p>Este tópico abordou de maneira prática a criação, conexão e cadastro de um usuário em um banco de dados.</p>
+<p>O exemplo demonstrou como configurar a conexão ao banco de dados utilizando <code>PDO</code> no <code>PHP</code>, garantindo que a comunicação entre o servidor e o banco seja segura e eficiente. Além disso, o código abordou o processo de cadastro de um novo usuário, incluindo validações de entrada, como a verificação de e-mail e confirmação de senha, bem como a utilização de hashing para armazenamento seguro da senha no banco de dados.</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="t04-4.4-php-gitflow.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="t04-4.5-php-gitflow.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="t04-4.4-php-gitflow.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="t04-4.5-php-gitflow.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+        <!-- Livereload script (if served using the cli tool) -->
+        <script>
+            const wsProtocol = location.protocol === 'https:' ? 'wss:' : 'ws:';
+            const wsAddress = wsProtocol + "//" + location.host + "/" + "__livereload";
+            const socket = new WebSocket(wsAddress);
+            socket.onmessage = function (event) {
+                if (event.data === "reload") {
+                    socket.close();
+                    location.reload();
+                }
+            };
+
+            window.onbeforeunload = function() {
+                socket.close();
+            }
+        </script>
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>

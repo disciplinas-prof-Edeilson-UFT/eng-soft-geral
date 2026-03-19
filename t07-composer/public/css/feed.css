@@ -1,0 +1,97 @@
+/* Reset básico */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Inter', sans-serif; /* Fonte moderna */
+}
+
+body {
+    background-color: #ffffff; /* Fundo suave */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 20px;
+}
+
+/* Container principal */
+.container {
+    width: 100%;
+    max-width: 600px; /* Largura máxima para melhor leitura */
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* Cada post */
+.post {
+    background: white;
+    border-radius: 12px; /* Bordas mais arredondadas */
+    padding: 20px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05); /* Sombra suave */
+}
+
+/* Cabeçalho do post */
+.user-info {
+    display: flex;
+    align-items: center;
+    gap: 16px; /* Espaçamento maior entre a foto e o nome */
+    margin-bottom: 16px;
+}
+
+.avatar {
+    width: 64px; /* Tamanho maior para a foto */
+    height: 64px; /* Tamanho maior para a foto */
+    border-radius: 50%; /* Foto redonda */
+    overflow: hidden; /* Garante que a imagem não ultrapasse o container */
+    border: 1px solid #eee; /* Borda sutil */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.avatar img {
+    width: 100%; /* Ocupa 100% do container */
+    height: 100%; /* Ocupa 100% do container */
+    object-fit: cover; /* Mantém a proporção e cobre o espaço */
+}
+
+.username {
+    font-weight: 600; /* Peso da fonte mais forte */
+    font-size: 18px; /* Tamanho maior */
+    color: #333; /* Cor escura para contraste */
+}
+
+/* Imagem do post */
+.image-placeholder {
+    width: 100%;
+    border-radius: 8px; /* Bordas arredondadas */
+    overflow: hidden;
+    background-color: #f0f0f0; /* Cor de fundo suave */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.image-placeholder img {
+    width: 100%;
+    height: 100%; /* Ocupa 100% do container */
+    object-fit: cover; /* Mantém a proporção e cobre o espaço */
+    max-height: 500px; /* Altura máxima para evitar imagens muito grandes */
+}
+
+/* Linha divisória */
+.divider {
+    border: none;
+    height: 1px;
+    background: #eee; /* Linha mais suave */
+    margin: 20px 0;
+}
+
+/* home.css */
+.home-page .search-box {
+    background-color: #ffffff; /* Cor sólida */
+    opacity: 1; /* Garantir que não há transparência */
+    z-index: 9999; /* Garantir que fique acima de tudo */
+}

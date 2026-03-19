@@ -1,8 +1,7 @@
 <?php
 session_start();
 
-require_once __DIR__ . '/../../../database.php';
-require_once __DIR__ . '/../../dao/user-dao.php';
+require_once __DIR__ . '/../../dao/UserDAO.php';
 require_once __DIR__ . '/../../../dir-config.php';
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
@@ -21,8 +20,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         exit();
     }
 
-    $database = Database::getInstance();
-    $userDao = new UserDao($database);
+    $userDao = new UserDao();
 
     $user = $userDao->getUserAuthDataByEmail($email);
 

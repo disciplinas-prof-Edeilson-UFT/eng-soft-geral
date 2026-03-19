@@ -1,0 +1,566 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Exibir perfil do usuário </title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="highlight.css">
+        <link rel="stylesheet" href="tomorrow-night.css">
+        <link rel="stylesheet" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="toc.js"></script>
+    </head>
+    <body>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title"></h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="exibir-perfil-do-usuário"><a class="header" href="#exibir-perfil-do-usuário">Exibir perfil do usuário</a></h1>
+<h2 id="planejamento-arquitetural-do-sistema"><a class="header" href="#planejamento-arquitetural-do-sistema">Planejamento Arquitetural do Sistema</a></h2>
+<ul>
+<li>
+<p>View (profile.php):</p>
+<ul>
+<li>
+<p>Exibe as informações do perfil do usuário, como nome, foto de perfil, bio, número de seguidores, número de usuários seguidos e posts do usuário.</p>
+</li>
+<li>
+<p>Renderiza os componentes de layout, como a barra lateral e o formulário de upload de foto (apenas para o próprio usuário).</p>
+</li>
+</ul>
+</li>
+<li>
+<p>Controller (profile-user.php):</p>
+<ul>
+<li>
+<p>Recupera os dados do perfil do usuário e seus posts utilizando o DAO.</p>
+</li>
+<li>
+<p>Passa os dados para a view.</p>
+</li>
+</ul>
+</li>
+<li>
+<p>DAO (user-dao.php e posts-dao.php):</p>
+<ul>
+<li>Executa as queries SQL para buscar as informações do usuário e seus posts.</li>
+</ul>
+</li>
+</ul>
+<h2 id="na-prática"><a class="header" href="#na-prática">Na Prática</a></h2>
+<p>Arquivo: view/profile.php</p>
+<pre><code class="language-html">&lt;?php
+require_once __DIR__ . "/../dir-config.php";
+require_once __DIR__ . '/../src/controllers/users/profile-user.php';
+?&gt;
+
+&lt;!DOCTYPE html&gt;
+&lt;html lang="en"&gt;
+  &lt;head&gt;
+    &lt;meta charset="UTF-8" /&gt;
+    &lt;meta name="viewport" content="width=device-width, initial-scale=1.0" /&gt;
+    &lt;title&gt;Perfil&lt;/title&gt;
+    &lt;link rel="stylesheet" href="&lt;?= BASE_URL ?&gt;public/css/profile.css" /&gt;
+  &lt;/head&gt;
+
+  &lt;body&gt;
+    &lt;?php include __DIR__ . '/components/side-bar.php'; ?&gt;
+
+    &lt;main class="profile-container"&gt;
+      &lt;!-- Seção de informações do usuário --&gt;
+      &lt;section class="info-section"&gt;
+        &lt;div class="photo-container"&gt;
+          &lt;!-- Exibe a foto de perfil do usuário --&gt;
+          &lt;img
+            src="&lt;?= $profilePhoto; ?&gt;"
+            alt="Foto de Perfil"
+            class="profile-picture"
+          /&gt;
+
+          &lt;!-- Botão de edição de perfil (apenas para o próprio usuário) --&gt;
+          &lt;?php if ((int)$user_id === (int)$logged_in_user_id): ?&gt;
+          &lt;button class="btn-edit"&gt;
+            &lt;a href="&lt;?= BASE_URL ?&gt;view/profile-update.php?id=&lt;?= $user_id; ?&gt;"
+              &gt;Editar Perfil&lt;/a
+            &gt;
+          &lt;/button&gt;
+          &lt;?php endif; ?&gt;
+        &lt;/div&gt;
+
+        &lt;div class="user-info"&gt;
+          &lt;!-- Exibe o nome do usuário --&gt;
+          &lt;h1 class="user-name"&gt;&lt;?php echo $userName; ?&gt;&lt;/h1&gt;
+          &lt;div class="stats-container"&gt;
+            &lt;!-- Exibe o número de seguidores e usuários seguidos --&gt;
+            &lt;span class="following"
+              &gt;&lt;?= $following; ?&gt;
+              seguindo&lt;/span
+            &gt;
+            &lt;span class="followers"
+              &gt;&lt;?= $followers; ?&gt;
+              seguidores&lt;/span
+            &gt;
+          &lt;/div&gt;
+
+          &lt;!-- Formulário para seguir/deixar de seguir (apenas para outros usuários) --&gt;
+          &lt;?php if ((int)$user_id !== (int)$logged_in_user_id): ?&gt;
+          &lt;form method="POST"&gt;
+            &lt;input
+              type="hidden"
+              name="action"
+              value="&lt;?= $isFollowing ? 'unfollow' : 'follow' ?&gt;"
+            /&gt;
+            &lt;button type="submit" class="btn-follow"&gt;
+              &lt;?= $isFollowing ? 'Deixar de seguir' : 'Seguir' ?&gt;
+            &lt;/button&gt;
+          &lt;/form&gt;
+          &lt;?php endif; ?&gt;
+        &lt;/div&gt;
+
+        &lt;!-- Botão de postagem (apenas para o próprio usuário) --&gt;
+        &lt;?php if ((int)$user_id === (int)$logged_in_user_id &amp;&amp; !empty($userPosts)): ?&gt;
+        &lt;div class="upload-more-photos"&gt;
+          &lt;div class="upload-container"&gt;
+            &lt;form
+              action="&lt;?= BASE_URL ?&gt;src/controllers/posts/upload-feed-photo.php"
+              method="POST"
+              enctype="multipart/form-data"
+            &gt;
+              &lt;label for="photo-top"&gt; Adicionar foto &lt;/label&gt;
+              &lt;input type="file" id="photo-top" name="photo" accept="image/*" /&gt;
+              &lt;button type="submit" class="btn-upload"&gt;Enviar&lt;/button&gt;
+            &lt;/form&gt;
+          &lt;/div&gt;
+        &lt;/div&gt;
+        &lt;?php endif; ?&gt;
+      &lt;/section&gt;
+
+      &lt;!-- Seção da foto do feed --&gt;
+      &lt;section class="info-section"&gt;
+        &lt;div class="feed-photo-container"&gt;
+          &lt;?php if ($userPosts): ?&gt;
+          &lt;?php
+                    if (isset($userPosts[0]['photo_url'])) {
+                        $relativePath = BASE_URL . "uploads/feed/" . htmlspecialchars($userPosts[0]['photo_url']);
+                        ?&gt;
+          &lt;img
+            src="&lt;?= $relativePath; ?&gt;"
+            alt="Imagem do Feed"
+            class="feed-image"
+          /&gt;
+          &lt;?php } ?&gt;
+          &lt;?php endif; ?&gt;
+        &lt;/div&gt;
+
+        &lt;!-- Formulário de upload de foto (apenas para o próprio usuário e se não houver foto) --&gt;
+        &lt;?php if (empty($userPosts) &amp;&amp; (int)$user_id === (int)$logged_in_user_id): ?&gt;
+        &lt;div class="pai-do-upload-container"&gt;
+          &lt;div class="upload-container"&gt;
+            &lt;form
+              action="&lt;?= BASE_URL ?&gt;src/controllers/posts/upload-feed-photo.php"
+              method="POST"
+              enctype="multipart/form-data"
+            &gt;
+              &lt;label for="photo"&gt;
+                &lt;img
+                  src="&lt;?= BASE_URL ?&gt;public/img/add-photo.svg"
+                  class="icon"
+                /&gt;
+                &lt;br /&gt;
+                Adicionar foto
+              &lt;/label&gt;
+              &lt;input type="file" id="photo" name="photo" accept="image/*" /&gt;
+              &lt;button type="submit" class="btn-upload"&gt;Enviar&lt;/button&gt;
+            &lt;/form&gt;
+          &lt;/div&gt;
+        &lt;/div&gt;
+        &lt;?php endif; ?&gt;
+      &lt;/section&gt;
+    &lt;/main&gt;
+  &lt;/body&gt;
+&lt;/html&gt;
+</code></pre>
+<ul>
+<li>
+<p>Responsabilidade:</p>
+<ul>
+<li>
+<p>Exibe as informações do perfil do usuário, como nome, foto de perfil, bio, número de seguidores e usuários seguidos.</p>
+</li>
+<li>
+<p>Renderiza os posts do usuário (se houver).</p>
+</li>
+<li>
+<p>Exibe um formulário de upload de foto apenas para o próprio usuário.</p>
+</li>
+<li>
+<p>Inclui a barra lateral e outros componentes de layout.</p>
+</li>
+</ul>
+</li>
+</ul>
+<hr />
+<p>Arquivo: src/controllers/users/profile-user.php</p>
+<pre><code class="language-php">&lt;?php
+require_once __DIR__ . '/../../../database.php';
+require_once __DIR__ . '/../../dao/follow-dao.php';
+require_once __DIR__ . '/../../dao/user-dao.php';
+require_once __DIR__ . '/../../../dir-config.php';
+require_once __DIR__ . '/../../dao/posts-dao.php';
+require_once __DIR__ . "/../../utils/follow-handler.php";
+
+session_start();
+if (!isset($_SESSION['user_id'])) {
+    header("Location: " . BASE_URL . "view/login.php");
+    exit;
+}
+
+$user_id = isset($_GET['id']) ? intval($_GET['id']) : $_SESSION['user_id'];
+$logged_in_user_id = $_SESSION['user_id'];
+
+$userDao = new UserDao();
+$user = $userDao-&gt;getUserProfileById($user_id);
+
+if (!$user) {
+    die("&lt;p&gt;Usuário não encontrado.&lt;/p&gt;");
+}
+
+$userName = $user['username'];
+$profilePhoto = !empty($user['profile_pic_url'])
+    ? BASE_URL . 'uploads/avatars/' . htmlspecialchars($user['profile_pic_url'])
+    : BASE_URL . 'public/img/profile.svg';
+
+$followDao = new FollowDao();
+$isFollowing = $followDao-&gt;isFollowing($user_id, $logged_in_user_id);
+
+$followers = $followDao-&gt;getFollowers($user_id);
+$following = $followDao-&gt;getFollowing($user_id);
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST' &amp;&amp; isset($_POST['action'])) {
+    $action = $_POST['action'];
+
+    $followHandler = new FollowHandler();
+    $followHandler-&gt;handleFollow($user_id, $logged_in_user_id, $isFollowing, $action);
+}
+
+$postsDao = new PostsDao();
+$userPosts = $postsDao-&gt;getPostsById($user_id);
+
+$userProfileData = [
+    'username' =&gt; htmlspecialchars($user['username']),
+    'user_id' =&gt; $user_id,
+    'logged_in_user_id' =&gt; $logged_in_user_id,
+    'profile_Pic_Url' =&gt; htmlspecialchars($profilePhoto ?? ''),
+    'is_Following' =&gt; $isFollowing,
+    'followers' =&gt; $followers,
+    'following' =&gt; $following,
+    'bio' =&gt; htmlspecialchars($user['bio'] ?? ''),
+    'photos' =&gt; $userPosts,
+];
+?&gt;
+</code></pre>
+<ul>
+<li>
+<p>Responsabilidade:</p>
+<ul>
+<li>
+<p>Inicia a sessão e verifica se o usuário está logado.</p>
+</li>
+<li>
+<p>Recupera o ID do usuário a partir da URL ou da sessão.</p>
+</li>
+<li>
+<p>Busca as informações do perfil do usuário utilizando o UserDao.</p>
+</li>
+<li>
+<p>Verifica se o usuário logado está seguindo o perfil exibido.</p>
+</li>
+<li>
+<p>Busca o número de seguidores e usuários seguidos.</p>
+</li>
+<li>
+<p>Busca os posts do usuário utilizando o PostsDao.</p>
+</li>
+<li>
+<p>Passa os dados para a view.</p>
+</li>
+</ul>
+</li>
+</ul>
+<hr />
+<p>Arquivo: src/dao/user-dao.php</p>
+<pre><code class="language-php">public function getUserProfileById($id) {
+    $query = "SELECT id, username, email, phone, bio, profile_pic_url, count_followers, count_following FROM users WHERE id = :id";
+    $stmt = $this-&gt;db-&gt;prepare($query);
+    $stmt-&gt;execute([':id' =&gt; $id]);
+
+    return $stmt-&gt;fetch();
+}
+</code></pre>
+<ul>
+<li>
+<p>Responsabilidade:</p>
+<ul>
+<li>
+<p>Executa uma query SQL para buscar as informações do perfil do usuário (nome, e-mail, telefone, bio, foto de perfil, número de seguidores e usuários seguidos).</p>
+</li>
+<li>
+<p>Retorna um array associativo com os dados do usuário.</p>
+</li>
+</ul>
+</li>
+</ul>
+<hr />
+<p>Arquivo: src/dao/posts-dao.php</p>
+<pre><code class="language-php">public function getPostsById($userId) {
+    $sql = "SELECT p.id, p.photo_url, p.upload_date, p.description, u.username, u.profile_pic_url
+            FROM posts p
+            JOIN users u ON p.user_id = u.id
+            WHERE p.user_id = :userId
+            ORDER BY p.upload_date DESC";
+
+    $stmt = $this-&gt;db-&gt;prepare($sql);
+    $stmt-&gt;execute([':userId' =&gt; $userId]);
+    return $stmt-&gt;fetchAll(PDO::FETCH_ASSOC);
+}
+</code></pre>
+<ul>
+<li>
+<p>Responsabilidade:</p>
+<ul>
+<li>
+<p>Executa uma query SQL para buscar os posts do usuário, juntamente com as informações do usuário que fez o post.</p>
+</li>
+<li>
+<p>Ordena os posts pela data de upload (do mais recente para o mais antigo).</p>
+</li>
+<li>
+<p>Retorna um array associativo com os dados dos posts.</p>
+</li>
+</ul>
+</li>
+</ul>
+<hr />
+<h2 id="fluxo-completo"><a class="header" href="#fluxo-completo">Fluxo Completo</a></h2>
+<ol>
+<li>
+<p>O usuário acessa a página de perfil (<code>profile.php</code>).</p>
+</li>
+<li>
+<p>O controller (<code>profile-user.php</code>) é chamado para recuperar os dados do perfil e os posts do usuário.</p>
+</li>
+<li>
+<p>O controller utiliza o <code>UserDao</code> para buscar as informações do perfil e o <code>PostsDao</code> para buscar os posts.</p>
+</li>
+<li>
+<p>Os dados são passados para a view (<code>profile.php</code>).</p>
+</li>
+<li>
+<p>A view renderiza as informações do perfil e os posts do usuário</p>
+</li>
+</ol>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="t06-6.2.1-crud-php.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="t06-6.2.5-crud-php.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="t06-6.2.1-crud-php.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="t06-6.2.5-crud-php.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+        <!-- Livereload script (if served using the cli tool) -->
+        <script>
+            const wsProtocol = location.protocol === 'https:' ? 'wss:' : 'ws:';
+            const wsAddress = wsProtocol + "//" + location.host + "/" + "__livereload";
+            const socket = new WebSocket(wsAddress);
+            socket.onmessage = function (event) {
+                if (event.data === "reload") {
+                    socket.close();
+                    location.reload();
+                }
+            };
+
+            window.onbeforeunload = function() {
+                socket.close();
+            }
+        </script>
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>

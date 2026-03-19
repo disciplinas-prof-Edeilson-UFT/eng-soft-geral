@@ -5,34 +5,43 @@ class Users
 
     public function __construct(Database $db)
     {
-        $this->db = $db->getConnection();
+        $this->db = $db->get_connection();
     }
 
-    public function createUser($name, $email, $password, $phone)
+    public function create_user($username, $email, $password, $phone)
     {
-        $sql = "INSERT INTO users (name, email, password_hash, phone) VALUES (:name, :email, :password, :phone)";
-        $stmt = $this->db->prepare($sql);
-        return $stmt->execute([
-            ':name' => $name,
-            ':email' => $email,
-            ':password' => $password,
-            ':phone' => $phone
-        ]);
+        try{
+            $sql = "INSERT INTO users (username, email, password_hash, phone) VALUES (:username, :email, :password, :phone)";
+            $stmt = $this->db->prepare($sql);
+            return $stmt->execute([':username' => $username, ':email' => $email, ':password' => $password, ':phone' => $phone]);
+        }catch (PDOException $e) {
+            throw new Exception("Falha ao inserir usuário no banco: " . $e->getMessage());
+        }
     }
 
-    public function checkEmailExists($email)
+    public function check_email_exists($email)
     {
-        $sql = "SELECT id FROM users WHERE email = :email";
-        $stmt = $this->db->prepare($sql);
-        $stmt->execute([':email' => $email]);
-        return $stmt->fetch() ? true : false;
+        try{
+            $sql = "SELECT id FROM users WHERE email = :email";
+            $stmt = $this->db->prepare($sql);
+            $stmt->execute([':email' => $email]);
+            return $stmt->fetch() ? true : false;
+        }catch (PDOException $e) {
+            throw new Exception("Falha ao verificar email: " . $e->getMessage());
+        }
+        
     }
 
-    public function getUserByEmail($email)
+    public function get_user_by_email($email)
     {
-        $sql = "SELECT id, name, email, password_hash, phone FROM users WHERE email = :email";
-        $stmt = $this->db->prepare($sql);
-        $stmt->execute([':email' => $email]);
-        return $stmt->fetch();
+        try{
+            $sql = "SELECT id, username, email, password_hash, phone FROM users WHERE email = :email";
+            $stmt = $this->db->prepare($sql);
+            $stmt->execute([':email' => $email]);
+            return $stmt->fetch();
+        } catch (Exception $e) {
+            throw new Exception("Erro ao validar email: " . $e->getMessage());
+        }   
+        
     }
 }

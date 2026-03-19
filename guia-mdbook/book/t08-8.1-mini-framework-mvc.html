@@ -1,0 +1,290 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Parte I - Fundamentos do Framework</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="highlight.css">
+        <link rel="stylesheet" href="tomorrow-night.css">
+        <link rel="stylesheet" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="toc.js"></script>
+    </head>
+    <body>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title"></h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="capítulo-8---mvc-model-view-controller"><a class="header" href="#capítulo-8---mvc-model-view-controller">Capítulo 8 - MVC (Model-View-Controller)</a></h1>
+<h2 id="82-parte-i---fundamentos-do-framework"><a class="header" href="#82-parte-i---fundamentos-do-framework">8.2. Parte I - Fundamentos do Framework</a></h2>
+<p>A construção de um framework MVC representa uma jornada de compreensão profunda dos princípios fundamentais que regem a arquitetura de software moderna. Nesta primeira parte, estabeleceremos os alicerces conceituais e técnicos necessários para implementar um sistema robusto, escalável e manutenível.</p>
+<h3 id="objetivos-desta-parte"><a class="header" href="#objetivos-desta-parte">Objetivos desta parte</a></h3>
+<p>Ao final da Parte I, você terá desenvolvido o mini-framework MVC com e compreendido os seguintes componentes:</p>
+<ul>
+<li><strong>Sistema de Roteamento Avançado (Router + Middlewares)</strong>: Um mecanismo sofisticado para mapear requisições HTTP para controladores específicos, incluindo suporte a parâmetros dinâmicos, grupos de rotas e middlewares</li>
+<li><strong>Arquitetura de Controladores</strong>: Um sistema de dispatch para controladores que facilita a separação de responsabilidades.</li>
+<li><strong>Engine de Renderização</strong>: Um mecanismo flexível para geração de respostas (HTML), suportando templates, layouts e componentes reutilizáveis</li>
+<li><strong>Abstração HTTP (Request e Response)</strong>: Interfaces consistentes para manipulação de requisições e respostas, abstraindo complexidades do protocolo HTTP</li>
+<li><strong>Flash Messages</strong>: Um sistema para armazenar mensagens temporárias entre requisições, útil para feedback ao usuário</li>
+<li><strong>Gerenciamento completo de Sessões</strong>: Um sistema para gerenciar o estado do usuário entre requisições, permitindo a persistência, no browser, de dados temporários</li>
+</ul>
+<p>Esta base teórica sólida servirá como fundamento para a implementação prática que desenvolveremos na Parte II, onde aplicaremos estes conceitos na construção de uma aplicação web completa.</p>
+<blockquote>
+<p><strong>Navegação e sequência de estudo</strong></p>
+<p>Este capítulo foi estruturado para fornecer uma progressão lógica do conhecimento. Recomenda-se seguir a sequência proposta, pois cada seção constrói sobre conceitos apresentados anteriormente. Após concluir os fundamentos teóricos aqui apresentados, você estará preparado para mergulhar na implementação prática iniciando pela seção 8.2.1. (Router: de URL para Controller e Middlewares), onde veremos o primeiro componente em ação.</p>
+</blockquote>
+<h3 id="arquitetura-model-view-controller-fundamentos-e-filosofia"><a class="header" href="#arquitetura-model-view-controller-fundamentos-e-filosofia">Arquitetura Model-View-Controller: Fundamentos e Filosofia</a></h3>
+<p>Antes de mergulharmos na implementação prática do nosso mini-framework, é crucial entender mais a fundo os fundamentos teóricos que sustentam a arquitetura Model-View-Controller. O padrão MVC representa uma das contribuições mais significativas para a engenharia de software, transcendendo sua origem na década de 1970 para tornar-se um paradigma fundamental no desenvolvimento de aplicações modernas. Sua longevidade e relevância derivam não apenas de sua eficácia técnica, mas de sua capacidade de refletir princípios fundamentais do desenvolvimento de software: modularidade, abstração e separação de preocupações.</p>
+<h4 id="os-três-pilares-do-mvc"><a class="header" href="#os-três-pilares-do-mvc">Os Três Pilares do MVC</a></h4>
+<p>O padrão MVC funciona dividindo sua aplicação em três partes bem definidas, cada uma com sua própria responsabilidade. Pense nisso como uma equipe onde cada membro tem um papel específico:</p>
+<p><strong>A Dimensão dos Dados e Regras de Negócio (Model)</strong>: Esta camada encapsula não apenas a representação dos dados, mas a semântica e as invariantes (regras de negócio) que definem o domínio da aplicação. O Model funciona como um guardião da integridade dos dados, assegurando que todas as operações respeitem as regras fundamentais que governam o sistema.</p>
+<p>A responsabilidade do Model vai além do simples armazenamento de dados, feitos por comandos SQL diretos ou abstrações fornecidas por ORMs. Para incluir a modelagem de processos de negócio complexos, validação de invariantes de domínio, e a manutenção de consistência transacional se fazem necessários. Esta camada deve ser agnóstica em relação aos mecanismos de apresentação, permitindo que a mesma lógica de negócio seja reutilizada para diferentes clients (web, mobile, APIs, etc.).</p>
+<p><strong>A Dimensão da Apresentação e Interação (View)</strong>: A camada de View náo se restringe somente à renderização de dados para encompassar toda a experiência do usuário. Ela é responsável por traduzir estruturas de dados em representações compreensíveis e interativas, adaptando-se às capacidades e limitações específicas de cada meio de apresentação.</p>
+<p>Desse modo, a View deve manter uma separação rigorosa entre lógica de apresentação e lógica de negócio, funcionando como um intérprete que converte o estado interno da aplicação em linguagens visuais apropriadas. Esta separação permite que mudanças na apresentação sejam implementadas sem afetar a lógica fundamental do sistema, facilitando adaptações para novos formatos de saída (ex.: HTML, JSON) ou paradigmas de interface (ex.: mobile, desktop).</p>
+<p><strong>A Dimensão do Controle e Orquestração (Controller)</strong>: O Controller representa o núcleo organizacional da aplicação, funcionando como um maestro que coordena a interação entre Model e View. Sua responsabilidade principal é interpretar as intenções do usuário, traduzindo-as em operações específicas sobre o Model e determinando as respostas apropriadas através da View.</p>
+<p>Esta camada implementa a lógica de fluxo da aplicação, gerenciando estados transitórios (ex.: sessões de usuário), validando autorizações, fazendo redirecionamentos e exibindo mensagens ao usuário. O Controller deve permanecer focado em sua função de coordenação, delegando responsabilidades específicas para as camadas apropriadas e mantendo-se como uma interface limpa entre o mundo externo e a lógica interna da aplicação.</p>
+<h3 id="dinâmica-de-fluxo-e-comunicação"><a class="header" href="#dinâmica-de-fluxo-e-comunicação">Dinâmica de Fluxo e Comunicação</a></h3>
+<p>Em uma implementação MVC bem estruturada, o fluxo de informações segue um protocolo para preservar a integridade arquitetural:</p>
+<p><strong>Fase de Iniciação</strong>: Requisições externas geralmente entram por um ponto central, o Router (ou Front Controller, como no exemplo do t07), que atua como camada de roteamento inicial. Ele interpreta a URL e parâmetros da requisição, mapeando-os para o Controller adequado. Essa centralização facilita a aplicação consistente de políticas transversais, como autenticação, registro de logs e tratamento de erros, com o uso de middlewares no nível de roteamento.</p>
+<p><strong>Fase de Processamento</strong>: O Controller interpreta a requisição, identifica as operações necessárias sobre o Model, e coordena a execução dessas operações. Durante esta fase, o Controller pode realizar validações de entrada, como sanitização do input e aplicar regras de autorização, como verificação de permissões com base na role do usuário (esses dados são mantidos no contexto da sessão).</p>
+<p><strong>Fase de Resposta</strong>: Com base nos resultados obtidos do Service/model, o Controller seleciona a View apropriada e fornece os dados necessários para serem renderizados. A View processa estes dados de acordo com templates e regras de apresentação específicas, gerando a resposta final.</p>
+<p>Este fluxo unidirecional e bem definido garante que responsabilidades permaneçam apropriadamente distribuídas e que o sistema mantenha comportamento mais previsível para os devs, mesmo em cenários complexos.</p>
+<h3 id="variações-evolutivas-do-padrão-mvc"><a class="header" href="#variações-evolutivas-do-padrão-mvc">Variações Evolutivas do Padrão MVC</a></h3>
+<p>O padrão MVC, ao longo de suas décadas de evolução, deu origem a diversas variações que respondem a necessidades específicas de diferentes paradigmas de desenvolvimento e contextos tecnológicos. Cada variação representa uma adaptação fundamental dos princípios originais para atender demandas particulares:</p>
+<div align="center">
+<img src="./imgs/mvc_architecture.svg" alt="MVC Architecture Diagram" width="180">
+</div>
+<p><strong>Model-View-Presenter (MVP)</strong>: Esta variação emerge como resposta à necessidade de maior testabilidade em interfaces de usuário complexas. No MVP, o Presenter assume responsabilidades expandidas, tornando-se um intermediário mais ativo que remove praticamente toda a lógica da View. Esta abordagem resulta em Views quase completamente passivas, que funcionam principalmente como receptores de comandos do Presenter. A principal vantagem desta arquitetura reside na capacidade de testar completamente a lógica de apresentação sem depender de componentes de interface gráfica, facilitando desenvolvimento orientado por testes (TDD) em aplicações com interfaces complexas.</p>
+<div align="center">
+<img src="./imgs/mvp_pattern.svg" alt="MVP Architecture Diagram" width="180">
+</div>
+<p><strong>Model-View-ViewModel (MVVM)</strong>: Desenvolvido especificamente para aproveitar capacidades de data binding bidirecional (dados que fluem em ambas as direções), presentes em frameworks modernos, o MVVM introduz o conceito de ViewModel como uma abstração da View que expõe propriedades e comandos bindáveis. Esta arquitetura permite sincronização automática entre estado da interface e dados subjacentes, reduzindo significativamente o código boilerplate necessário para manter consistência entre apresentação e dados. O ViewModel funciona como uma representação orientada à apresentação do Model, transformando dados de domínio em formatos otimizados para consumo pela interface.</p>
+<div align="center">
+<img src="./imgs/mvvm_architecture.svg" alt="MVVM Architecture Diagram" width="180">
+</div>
+<blockquote>
+<p>Obs.: Usar ViewModel em algumas circunstâncias de desenvolvimento de uma aplicação MVC não necessariamente indica que a arquitetura MVVM está sendo adotada. Em vez disso, pode ser uma estratégia para melhorar a separação de preocupações e facilitar a testabilidade, mantendo a estrutura básica do MVC. Para ser de fato MVVM, a aplicação deve adotar o data binding bidirecional e a comunicação entre View e ViewModel deve ser feita através de propriedades e comandos bindáveis, ou seja, é necessário que a View se conecte ao ViewModel de forma mais direta, sem intermediários.</p>
+</blockquote>
+<p><strong>Component-Based Architecture</strong>: Esta evolução reconhece que aplicações modernas frequentemente beneficiam-se de decomposição em componentes autocontidos que encapsulam suas próprias responsabilidades de Model, View e Controller. Cada componente mantém um ciclo de vida independente e comunica-se com outros componentes através de interfaces bem definidas. Esta abordagem facilita reutilização, manutenção e desenvolvimento paralelo por equipes distribuídas.</p>
+<div align="center">
+<img src="./imgs/component_architecture.svg" alt="Component Architecture Diagram" width="180">
+</div>
+<h3 id="desafios-arquiteturais-e-considerações-práticas"><a class="header" href="#desafios-arquiteturais-e-considerações-práticas">Desafios Arquiteturais e Considerações Práticas</a></h3>
+<p>A implementação eficaz do padrão MVC requer navegação cuidadosa através de diversos desafios inerentes à sua natureza modular:</p>
+<p><strong>Gestão da Complexidade Inicial</strong>: Aplicações simples podem parecer desnecessariamente complexas quando submetidas à estrutura completa do MVC. Este paradoxo surge porque o padrão foi concebido para gerenciar complexidade emergente, não simplificar aplicações inerentemente simples. A decisão de quando aplicar MVC completo versus abordagens mais diretas requer julgamento arquitetural baseado em projeções realistas sobre a evolução futura da aplicação.</p>
+<p><strong>Coordenação Inter-Camadas</strong>: A comunicação inadequada entre componentes pode resultar em acoplamento implícito que mina os benefícios da separação de responsabilidades. Design Patterns como Observer, Mediator e Event Sourcing frequentemente são necessários para manter comunicação limpa entre camadas. A implementação destes padrões de design deve ser considerada parte integral da arquitetura MVC, não adições posteriores.</p>
+<p><strong>Considerações de Performance</strong>: A introdução de múltiplas camadas inevitavelmente adiciona overhead computacional através de indireções adicionais. Este overhead deve ser balanceado contra benefícios de manutenibilidade e escalabilidade. Em sistemas de alta performance, técnicas como lazy loading, caching inteligente e otimizações específicas de cada camada tornam-se essenciais.</p>
+<h3 id="aplicação-específica-no-desenvolvimento-web"><a class="header" href="#aplicação-específica-no-desenvolvimento-web">Aplicação Específica no Desenvolvimento Web</a></h3>
+<p>O domínio web apresenta características que tornam o padrão MVC particularmente adequado, porém também impõem a necessidade de adaptações específicas:</p>
+<p><strong>Roteamento como Abstração Fundamental</strong>: No contexto web, o sistema de roteamento funciona como uma camada adicional que mapeia URLs para Controllers específicos. Esta abstração permite que URLs sejam tratadas como uma DSL (Domain Specific Language) que expressa intenções do usuário em termos de operações sobre recursos da aplicação. Roteamento avançado inclui capacidades como rotas com parâmetros dinâmicos, constraints de validação (ex.: regex), agrupamento hierárquico de rotas e aplicação de middlewares.</p>
+<p><strong>Estado e Sessões</strong>: A natureza stateless (sem estado) do HTTP requer mecanismos especiais para manutenção de estado entre requisições. Sessions, cookies e tokens devem ser integrados ao fluxo MVC de forma que preserve o fluxo de autenticação e autorização. O Model deve ser capaz de reconstituir estado necessário a partir de informações de sessão, enquanto o Controller gerencia ciclo de vida de sessões e o View adapta apresentação baseada em estado de autenticação e autorização.</p>
+<p><strong>Middlewares</strong>: Aplicações web frequentemente requerem funcionalidades transversais como autenticação, logging, rate limiting e transformação de dados. Estas preocupações devem ser implementadas como middleware, permitindo que sejam aplicadas de forma consistente em todas as rotas e controladores, sem a necessidade de duplicação de código. Os middlewares interceptam requisições e respostas, permitindo a aplicação de lógica adicional antes ou depois do processamento principal.</p>
+<p>Essas camadas adicionais de abstração são fundamentais para a construção de aplicações robustas e escaláveis para a web, tanto em MVC quanto em outras arquiteturas.</p>
+<h3 id="preparando-o-terreno"><a class="header" href="#preparando-o-terreno">Preparando o Terreno</a></h3>
+<p>A compreensão profunda destes fundamentos teóricos prepara o terreno para a implementação prática que desenvolveremos nas seções subsequentes. Cada componente que construiremos, Router, Controller, View, Request/Response, será fundamentado nestes princípios.</p>
+<p>Na próxima seção, vamos começar a construir nosso mini-framework implementando o componente mais importante: o <strong>Router</strong>. Ele será responsável por receber todas as requisições e direcioná-las para o controller correto.</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="t08-8.0-mini-framework-mvc.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="t08-8.2-mini-framework-mvc.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="t08-8.0-mini-framework-mvc.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="t08-8.2-mini-framework-mvc.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+        <!-- Livereload script (if served using the cli tool) -->
+        <script>
+            const wsProtocol = location.protocol === 'https:' ? 'wss:' : 'ws:';
+            const wsAddress = wsProtocol + "//" + location.host + "/" + "__livereload";
+            const socket = new WebSocket(wsAddress);
+            socket.onmessage = function (event) {
+                if (event.data === "reload") {
+                    socket.close();
+                    location.reload();
+                }
+            };
+
+            window.onbeforeunload = function() {
+                socket.close();
+            }
+        </script>
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>

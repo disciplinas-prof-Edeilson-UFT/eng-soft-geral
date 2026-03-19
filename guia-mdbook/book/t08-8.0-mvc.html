@@ -1,0 +1,281 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Capítulo 8 - Model-View-Controller</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="highlight.css">
+        <link rel="stylesheet" href="tomorrow-night.css">
+        <link rel="stylesheet" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="toc.js"></script>
+    </head>
+    <body>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title"></h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="capítulo-8---mvc-model-view-controller"><a class="header" href="#capítulo-8---mvc-model-view-controller">Capítulo 8 - MVC (Model-View-Controller)</a></h1>
+<p>Neste capítulo, vamos explorar o padrão de arquitetura MVC (Model-View-Controller) enquanto construímos um mini-framework que usaremos ao longo deste módulo. A ideia é entender as responsabilidades de cada camada e como elas colaboram do request até a resposta.</p>
+<blockquote>
+<p>Objetivos de aprendizagem</p>
+<ul>
+<li>Entender, de forma prática, o que são Models, Views e Controllers e onde cada um atua</li>
+<li>Reconhecer limites de responsabilidade e evitar mistura de preocupações</li>
+<li>Visualizar o fluxo: HTTP request (client) -&gt; controller -&gt; service -&gt; model -&gt; view</li>
+<li>Conectar os conceitos ao que implementaremos no nosso mini-framework</li>
+<li>Compreender a importância da separação de preocupações e como isso impacta na manutenibilidade do código</li>
+</ul>
+</blockquote>
+<blockquote>
+<p>Pré-requisitos</p>
+<ul>
+<li>Noções básicas de PHP e HTTP (rotas, métodos, status)</li>
+<li>Revisão do t07 (organização com Composer, DAOs e controllers)</li>
+</ul>
+</blockquote>
+<h2 id="o-que-é-mvc"><a class="header" href="#o-que-é-mvc">O que é MVC?</a></h2>
+<p>Resumidamente, MVC é uma arquitetura que separa a aplicação em três camadas: Model (Modelo); View (Visão); e Controller (Controlador).</p>
+<p>É uma arquitetura comumente associada e implementada com o uso de frameworks PHP como o Laravel e o Symfony, mas o conceito não depende de nenhum framework específico.</p>
+<blockquote>
+<p>Importante: MVC não exige que o projeto tenha exatamente três pastas chamadas “model”, “view” e “controller”. O que importa é a separação de responsabilidades, não os nomes de diretórios.</p>
+</blockquote>
+<h2 id="porque-criar-o-mini-framework"><a class="header" href="#porque-criar-o-mini-framework">Porque criar o mini-framework?</a></h2>
+<p>A criação de um mini-framework MVC nos permite entender na prática como cada um dos componentes da arquitetura interage e se comunica. Além disso, nos proporciona uma base sólida para desenvolver aplicações web de forma organizada e escalável.</p>
+<p>Com o mini-framework, entenderemos conceitos como, roteamento, controllers, views e models de forma integrada.</p>
+<h2 id="overview-teórico-das-responsabilidades-por-camada-na-arquitetura-mvc"><a class="header" href="#overview-teórico-das-responsabilidades-por-camada-na-arquitetura-mvc">Overview teórico das responsabilidades por camada na arquitetura MVC</a></h2>
+<p>Esta arquitetura separa a aplicação em três camadas principais, cada uma com responsabilidades bem definidas.</p>
+<p>O <strong>Model (Modelo)</strong> é responsável pelas regras de negócio e dados da aplicação. Esta camada interage diretamente com o banco de dados, seja diretamente ou através de DAOs (Data Access Objects).</p>
+<p>A <strong>View (Visão)</strong> cuida exclusivamente da apresentação da informação. Ela recebe dados já processados do Controller e os formata adequadamente para exibição.</p>
+<p>Por fim, o <strong>Controller (Controlador)</strong> atua como coordenador do fluxo da aplicação. É ele quem recebe as requisições HTTP, valida as entradas, decide qual ação tomar, orquestra as chamadas necessárias para as outras camadas da aplicação.</p>
+<p>Na seção 8.2. deste capítulo falaremos de maneira mais aprofundada sobre cada uma dessas camadas e suas interações.</p>
+<h2 id="fluxo-simplificado-request---response"><a class="header" href="#fluxo-simplificado-request---response">Fluxo simplificado (request -&gt; response)</a></h2>
+<p>O fluxo simplificado da arquitetura MVC pode ser descrito em 4 etapas:</p>
+<ol>
+<li>Chega uma requisição HTTP (método + path)
+ex.: GET /produtos</li>
+<li>O roteador direciona para um Controller e método
+ex.: ProdutosController@index</li>
+<li>O Controller chama a regra (service/model), obtém dados prontos
+ex.: $this-&gt;productService-&gt;listar();</li>
+<li>A View renderiza a resposta (HTML/JSON) e retorna ao cliente
+ex.: $this-&gt;view-&gt;render($produtos);</li>
+</ol>
+<p>Não se preocupe com a complexidade do fluxo neste momento. Neste primeiro contato o objetivo é entender de maneira geral as responsabilidades de cada camada. Em breve, veremos como implementar isso de maneira completa na prática.</p>
+<h2 id="papéis-adicionais-que-usaremos-neste-tópico"><a class="header" href="#papéis-adicionais-que-usaremos-neste-tópico">Papéis adicionais que usaremos neste tópico</a></h2>
+<p>Para tornar o MVC mais robusto neste projeto, vamos usar algumas camadas adicionais na nossa arquitetura:</p>
+<ul>
+<li>Service: orquestra as regras de negócio, sem  acesso direto ao banco com SQL</li>
+<li>DAO: acesso a dados (consultas, joins, paginação), sem regra de negócio, apenas SQL e mapeamento de dados em alguns casos.</li>
+<li>Domain Entities: objetos que expressam invariantes do domínio, ou seja, regras e comportamentos que são fundamentais para o negócio. Nesta camada, vamos garantir que as regras de negócio sejam respeitadas, com validações e invariantes.</li>
+<li>Mapper: conversão entre linhas do banco e objetos de domínio.</li>
+<li>ViewModel: estrutura voltada à apresentação (dados agregados para a View)</li>
+</ul>
+<p>Esses papéis complementam o MVC e serão detalhados nos próximos sub-módulos.</p>
+<h2 id="próximos-passos"><a class="header" href="#próximos-passos">Próximos passos</a></h2>
+<p>Agora que tivemos um overview geral do capítulo e de como uma arquitetura MVC funciona, o nosso próximo passo será entender de fato como cada componente do mini-framework se encaixa e interage com a nossa aplicação, além de entender o que motivou cada decisão de design.</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="t06-6.2.5-crud-php.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="t08-8.0-mini-framework-mvc.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="t06-6.2.5-crud-php.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="t08-8.0-mini-framework-mvc.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+        <!-- Livereload script (if served using the cli tool) -->
+        <script>
+            const wsProtocol = location.protocol === 'https:' ? 'wss:' : 'ws:';
+            const wsAddress = wsProtocol + "//" + location.host + "/" + "__livereload";
+            const socket = new WebSocket(wsAddress);
+            socket.onmessage = function (event) {
+                if (event.data === "reload") {
+                    socket.close();
+                    location.reload();
+                }
+            };
+
+            window.onbeforeunload = function() {
+                socket.close();
+            }
+        </script>
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>

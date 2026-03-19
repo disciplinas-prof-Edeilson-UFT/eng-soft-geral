@@ -20,23 +20,29 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         exit();
     }
 
-    $database = Database::getInstance();
-    $users = new Users($database);
+    try{
+        $database = Database::get_instance();
+        $users = new Users($database);
 
-    $user = $users->getUserByEmail($email);
+        $user = $users->get_user_by_email($email);
 
-    if ($user && password_verify($password, $user['password_hash'])) {
-        $id = $_SESSION['user_id'] = $user['id'];
-        $_SESSION['user_name'] = $user['name'];
-        $_SESSION['user_email'] = $user['email'];
-        $_SESSION['LAST_ACTIVITY'] = time();
-        $_SESSION['success'] = "Login realizado com sucesso!";
-        
-        header("Location: /view/profile.php?id={$id}&success=login-realizado-com-sucesso");
-        exit();
-    } else {
-        $_SESSION['error'] = "Credenciais inválidas!";
-        header("Location: /view/login.php?error=credencial-errada");
+        if ($user && password_verify($password, $user['password_hash'])) {
+            $_SESSION['user_id'] = $user['id'];
+            $_SESSION['username'] = $user['username'];
+            $_SESSION['user_email'] = $user['email'];
+            $_SESSION['LAST_ACTIVITY'] = time();
+            $_SESSION['success'] = "Login realizado com sucesso!";
+            
+            header("Location: /?success=login-realizado-com-sucesso");
+            exit();
+        } else {
+            $_SESSION['error'] = "Credenciais inválidas!";
+            header("Location: /view/login.php?error=credencial-errada");
+            exit();
+        }
+    }catch (Exception $e) {
+        $_SESSION['error'] = "Erro ao conectar ao banco de dados: " . $e->getMessage();
+        header("Location: /view/login.php?error=" . urlencode($e->getMessage()));
         exit();
     }
 }

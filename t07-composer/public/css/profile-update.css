@@ -1,0 +1,130 @@
+@import url(global.css);
+
+:root {
+    --primary-color: #007bff;
+    --secondary-color: #0056b3;
+    --background-color: #f2f2f2;
+    --border-color: rgb(235, 233, 233);
+    --text-color: black;
+    --text-gray: gray;
+    --white: #ffffff;
+    --danger-color: #ff3838;
+}
+
+body {
+    align-items: center;
+    justify-content: center;
+    background-color: var(--background-color);
+    font-family: Arial, sans-serif;
+}
+
+.form-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: var(--white);
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    max-width: 800px; 
+    width: 90%; 
+    margin: 0 auto;
+}
+
+.form-container h1 {
+    font-size: 24px;
+    font-weight: 600;
+    color: var(--text-color);
+    margin-bottom: 1.5rem;
+}
+
+.form-wrapper {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    gap: 1rem;
+}
+
+.form-control {
+    width: 100%;
+}
+
+.form-control label {
+    display: block;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text-gray);
+    margin-bottom: 0.5rem;
+}
+
+.form-control input {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    font-size: 14px;
+    color: var(--text-color);
+    background-color: var(--background-color);
+    outline: none;
+    transition: border-color 0.3s ease;
+}
+
+.form-control input:focus {
+    border-color: var(--primary-color);
+}
+
+.form-control input[type="file"] {
+    padding: 0.5rem;
+    background-color: var(--white);
+}
+
+.btn-wrapper {
+    display: flex;
+    flex-direction: column; 
+    align-items: center; 
+    gap: 1rem; 
+    width: 100%;
+    margin-top: 2rem;
+}
+
+.btn-edit {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    margin-top: 1.5rem;
+    margin-bottom: 1rem; 
+}
+
+.btn-edit .btn {
+    width: 100%;
+    max-width: 300px;
+}
+
+.btn {
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--white);
+    background-color: var(--primary-color);
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    width: 100%; 
+    max-width: 300px; 
+}
+
+.btn-danger:hover {
+    background-color: #d32f2f; 
+}
+
+.btn-danger {
+    background-color: var(--danger-color);
+    color: var(--white);
+}
+
+@media (max-width: 768px) {
+
+}

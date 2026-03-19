@@ -1,0 +1,441 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Exibição dos posts de todos os usuários no feed</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="highlight.css">
+        <link rel="stylesheet" href="tomorrow-night.css">
+        <link rel="stylesheet" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="toc.js"></script>
+    </head>
+    <body>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title"></h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="exibição-dos-posts-de-todos-os-usuários-no-feed"><a class="header" href="#exibição-dos-posts-de-todos-os-usuários-no-feed">Exibição dos posts de todos os usuários no feed</a></h1>
+<h2 id="planejamento-arquitetural-do-sistema"><a class="header" href="#planejamento-arquitetural-do-sistema">Planejamento Arquitetural do Sistema</a></h2>
+<ul>
+<li>
+<p>View (feed.php):</p>
+<ul>
+<li>
+<p>Exibe os posts de todos os usuários em um feed.</p>
+</li>
+<li>
+<p>Itera sobre a lista de posts e renderiza cada um deles com informações como foto de perfil, nome do usuário e imagem do post.</p>
+</li>
+</ul>
+</li>
+<li>
+<p>Controller (get-all-posts.php):</p>
+<ul>
+<li>
+<p>Recupera todos os posts do banco de dados utilizando o DAO.</p>
+</li>
+<li>
+<p>Passa os dados dos posts para a view.</p>
+</li>
+</ul>
+</li>
+<li>
+<p>DAO (posts-dao.php):</p>
+<ul>
+<li>Executa a query SQL para buscar todos os posts, juntamente com as informações do usuário que fez o post.</li>
+</ul>
+</li>
+</ul>
+<h2 id="na-prática"><a class="header" href="#na-prática">Na prática</a></h2>
+<p>Arquivo: Arquivo: view/feed.php</p>
+<pre><code class="language-html">&lt;?php
+require_once __DIR__ . '/../dir-config.php';
+require_once __DIR__ . '/../src/controllers/posts/get-all-posts.php';
+?&gt;
+
+&lt;!DOCTYPE html&gt;
+&lt;html lang="pt-br"&gt;
+  &lt;head&gt;
+    &lt;meta charset="UTF-8" /&gt;
+    &lt;meta name="viewport" content="width=device-width, initial-scale=1.0" /&gt;
+    &lt;title&gt;Página Principal&lt;/title&gt;
+    &lt;link rel="stylesheet" href="&lt;?= BASE_URL ?&gt;public/css/home.css" /&gt;
+  &lt;/head&gt;
+
+  &lt;body class="home-page"&gt;
+    &lt;?php include __DIR__ . '/components/side-bar.php'; ?&gt;
+
+    &lt;!-- Conteúdo Principal --&gt;
+    &lt;main class="container"&gt;
+      &lt;!-- Seção de Feed de Posts --&gt;
+      &lt;section class="feed"&gt;
+        &lt;?php if ($posts): ?&gt;
+        &lt;!-- Itera sobre cada post --&gt;
+        &lt;?php foreach ($posts as $post): ?&gt;
+        &lt;article class="post"&gt;
+          &lt;!-- Cabeçalho do Post: Informações do Usuário --&gt;
+          &lt;header class="user-info"&gt;
+            &lt;!-- Container da Foto de Perfil --&gt;
+            &lt;div class="avatar" aria-label="Foto do Usuário"&gt;
+              &lt;?php
+                                // Define a foto de perfil do usuário
+                                $profilePhoto = !empty($post['profile_pic_url'])
+                                    ? BASE_URL . 'uploads/' . htmlspecialchars($post['profile_pic_url'])
+                                    : BASE_URL . 'public/img/profile.svg';
+                                ?&gt;
+              &lt;img
+                src="&lt;?= $profilePhoto; ?&gt;"
+                alt="Foto de Perfil"
+                class="profile-picture"
+              /&gt;
+            &lt;/div&gt;
+
+            &lt;!-- Link para o Perfil do Usuário --&gt;
+            &lt;a
+              href="&lt;?= BASE_URL ?&gt;view/profile.php?id=&lt;?= htmlspecialchars($post['user_id'] ?? '') ?&gt;"
+              class="username"
+            &gt;
+              &lt;?= htmlspecialchars($post['username'] ?? '') ?&gt;
+            &lt;/a&gt;
+          &lt;/header&gt;
+
+          &lt;!-- Container da Imagem do Post --&gt;
+          &lt;div class="image-placeholder" aria-label="Imagem do Post"&gt;
+            &lt;?php if (!empty($post['photo_url'])): ?&gt;
+            &lt;!-- Exibe a imagem do post, se houver --&gt;
+            &lt;img
+              src="&lt;?= BASE_URL . 'uploads/feed/' . htmlspecialchars($post['photo_url']) ?&gt;"
+              alt="Imagem do post"
+            /&gt;
+            &lt;?php endif; ?&gt;
+          &lt;/div&gt;
+        &lt;/article&gt;
+
+        &lt;!-- Divisor entre os posts --&gt;
+        &lt;hr class="divider" /&gt;
+        &lt;?php endforeach; ?&gt;
+        &lt;?php else: ?&gt;
+        &lt;p&gt;0 postagens no seu feed&lt;/p&gt;
+        &lt;?php endif; ?&gt;
+      &lt;/section&gt;
+    &lt;/main&gt;
+  &lt;/body&gt;
+&lt;/html&gt;
+</code></pre>
+<ul>
+<li>
+<p>Responsabilidade:</p>
+<ul>
+<li>
+<p>Exibe os posts de todos os usuários.</p>
+</li>
+<li>
+<p>Itera sobre a lista de posts (<code>$posts</code>) e renderiza cada post com:</p>
+<ul>
+<li>
+<p>Foto de perfil do usuário.</p>
+</li>
+<li>
+<p>Nome do usuário (com link para o perfil).</p>
+</li>
+<li>
+<p>Imagem do post.</p>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p>Se não houver posts, exibe uma mensagem informando que não há postagens.</p>
+</li>
+</ul>
+<hr />
+<p>Arquivo: src/controllers/posts/get-all-posts.php</p>
+<pre><code class="language-php">&lt;?php
+require __DIR__ . '/../../dao/posts-dao.php';
+
+if (!isset($_SESSION['user_id'])) {
+    header("Location: " . BASE_URL . "view/login.php");
+    exit;
+}
+
+try {
+    $postsDao = new PostsDao();
+    $posts = $postsDao-&gt;getAllPosts();
+} catch (PDOException $e) {
+    die("Erro ao buscar dados: " . $e-&gt;getMessage());
+}
+</code></pre>
+<ul>
+<li>
+<p>Responsabilidade:</p>
+<ul>
+<li>
+<p>Verifica se o usuário está logado (caso contrário, redireciona para a página de login).</p>
+</li>
+<li>
+<p>Instancia o <code>PostsDao</code> e chama o método <code>getAllPosts</code> para recuperar todos os posts.</p>
+</li>
+<li>
+<p>Em caso de erro, exibe uma mensagem de erro.</p>
+</li>
+</ul>
+</li>
+</ul>
+<hr />
+<p>Arquivo: src/dao/posts-dao.php</p>
+<pre><code class="language-php">public function getAllPosts() {
+    $sql = "SELECT p.id, p.photo_url, p.user_id, p.upload_date, p.description, u.username, u.profile_pic_url
+            FROM posts p
+            JOIN users u ON p.user_id = u.id
+            ORDER BY p.upload_date DESC";
+
+    $stmt = $this-&gt;db-&gt;prepare($sql);
+    $stmt-&gt;execute();
+    return $stmt-&gt;fetchAll(PDO::FETCH_ASSOC);
+}
+</code></pre>
+<ul>
+<li>
+<p>Responsabilidade:</p>
+<ul>
+<li>
+<p>Executa uma query SQL para buscar todos os posts, juntamente com as informações do usuário que fez o post (nome e foto de perfil).</p>
+</li>
+<li>
+<p>Ordena os posts pela data de upload (do mais recente para o mais antigo).</p>
+</li>
+<li>
+<p>Retorna um array associativo com os dados dos posts.</p>
+</li>
+</ul>
+</li>
+</ul>
+<hr />
+<h2 id="fluxo-completo"><a class="header" href="#fluxo-completo">Fluxo Completo</a></h2>
+<ol>
+<li>
+<p>O usuário acessa a página de feed (<code>feed.php</code>).</p>
+</li>
+<li>
+<p>O controller (<code>get-all-posts.php</code>) é chamado para recuperar os posts do banco de dados.</p>
+</li>
+<li>
+<p>O controller utiliza o DAO (<code>posts-dao.php</code>) para buscar todos os posts.</p>
+</li>
+<li>
+<p>Os dados dos posts são passados para a view (<code>feed.php</code>).</p>
+</li>
+<li>
+<p>A view itera sobre os posts e renderiza cada um deles com as informações do usuário e a imagem do post.</p>
+</li>
+<li>
+<p>Se não houver posts, a view exibe uma mensagem informando que não há postagens.</p>
+</li>
+</ol>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="t06-6.2.2-crud-php.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="t06-6.2.1-crud-php.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="t06-6.2.2-crud-php.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="t06-6.2.1-crud-php.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+        <!-- Livereload script (if served using the cli tool) -->
+        <script>
+            const wsProtocol = location.protocol === 'https:' ? 'wss:' : 'ws:';
+            const wsAddress = wsProtocol + "//" + location.host + "/" + "__livereload";
+            const socket = new WebSocket(wsAddress);
+            socket.onmessage = function (event) {
+                if (event.data === "reload") {
+                    socket.close();
+                    location.reload();
+                }
+            };
+
+            window.onbeforeunload = function() {
+                socket.close();
+            }
+        </script>
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>

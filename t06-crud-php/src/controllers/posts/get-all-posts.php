@@ -1,5 +1,5 @@
 <?php
-require __DIR__ . '/../../dao/posts-dao.php';
+require __DIR__ . '/../../dao/PostDAO.php';
 
 if (!isset($_SESSION['user_id'])) {
     header("Location: " . BASE_URL . "view/login.php");

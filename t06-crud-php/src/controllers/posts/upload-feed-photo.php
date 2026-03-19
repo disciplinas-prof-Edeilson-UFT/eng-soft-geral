@@ -1,10 +1,10 @@
 <?php
 session_start();
 
-require_once __DIR__ . "/../../dao/posts-dao.php"; 
-require_once __DIR__ . "/../../dao/user-dao.php";
+require_once __DIR__ . "/../../dao/PostDAO.php"; 
+require_once __DIR__ . "/../../dao/UserDAO.php";
 require_once __DIR__ . "/../../../dir-config.php";
-require_once __DIR__ . "/../../utils/upload-handler.php";
+require_once __DIR__ . "/../../utils/UploadHandler.php";
 
 if (!isset($_SESSION['user_id'], $_SESSION['user_name'])) {
     header("Location: " . BASE_URL . "view/login.php");

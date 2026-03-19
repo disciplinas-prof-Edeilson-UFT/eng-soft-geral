@@ -1,0 +1,36 @@
+graph TD
+    A[Cliente/Browser] -->|GET /profile/123| B[index.php]
+    B --> C[Router::dispatch]
+    
+    C --> D[Request::getMethod]
+    C --> E[Router::getCleanUri]
+    
+    D --> F[Router::processAllRoutes]
+    E --> F
+    
+    F --> G{Rota Encontrada?}
+    
+    G -->|Sim| H[Aplicar Middlewares]
+    G -->|Não| I[Response::errorView404]
+    
+    H --> J{Middleware 'auth'}
+    J -->|Falha| K[Redirect /auth/login]
+    J -->|Sucesso| L[Controller::execute]
+    
+    L --> M[Parameters::getRouterParams]
+    M --> N[Instanciar ProfileController]
+    N --> O[Chamar show123]
+    
+    O --> P[BaseController::view]
+    P --> Q[View::render'profile']
+    Q --> R[HTML Renderizado]
+    
+    R --> S[Cliente Recebe Página]
+    I --> S
+    K --> S
+
+    class C,F,G,M routerClass
+    class L,N,O,P controllerClass
+    class D,E requestClass
+    class Q,R responseClass
+    class I,K errorClass

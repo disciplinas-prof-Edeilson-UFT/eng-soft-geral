@@ -1,0 +1,54 @@
+sequenceDiagram
+    participant User as User
+    participant Browser as Browser
+    participant Router as Router
+    participant Parameters as Parameters
+    participant Middleware as Middleware
+    participant Controller as Controller
+    participant Service as Service
+    participant DAO as DAO
+    participant Database as Database
+    participant View as View
+    
+    User->>Browser: Clica "Ver Perfil"
+    Browser->>Router: GET /profile/123
+    
+    Note over Router: 1. Análise da requisição
+    Router->>Router: Routes::getRouter
+    Router->>Router: Request::getMethod retorna "get"
+    Router->>Router: getCleanUri retorna "/profile/123"
+    
+    Note over Router: 2. Busca da rota
+    Router->>Router: processAllRoutes
+    Router->>Router: matchRoute para "/{user_id}" retorna true
+    Router-->>Router: ProfileController@show encontrado
+    
+    Note over Router: 3. Aplicação de middleware
+    Router->>Middleware: applyMiddlewares com auth
+    Middleware->>Middleware: checkAuth
+    Middleware-->>Router: Sessão válida
+    
+    Note over Router: 4. Extração de parâmetros
+    Router->>Parameters: getRouterParams para "ProfileController@show"
+    Parameters->>Router: extractRouteParams com "/profile/{user_id}" e "/profile/123"
+    Parameters-->>Router: Array com "123"
+    
+    Note over Router: 5. Execução do controller
+    Router->>Controller: Controller::execute com "ProfileController@show"
+    Controller->>Controller: new ProfileController
+    Controller->>Controller: método show com parâmetro 123
+    
+    Note over Controller: 6. Processamento da lógica
+    Controller->>Service: getProfileData com 123
+    Service->>DAO: getUserById com 123
+    DAO->>Database: SELECT FROM users WHERE id=123
+    Database-->>DAO: User data
+    DAO-->>Service: User object
+    Service-->>Controller: Profile data
+    
+    Note over Controller: 7. Renderização da view
+    Controller->>View: view com template profile e viewData
+    View->>View: View::render com template profile e data
+    View-->>Controller: HTML content
+    Controller-->>Browser: HTTP Response
+    Browser-->>User: Página do perfil exibida
